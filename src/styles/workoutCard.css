@@ -1,0 +1,113 @@
+/* 
+.workoutcardcontainer{
+width: 80%;
+height: 40%;
+background-color: red;
+margin: 1rem;
+flex-shrink: 0;
+}  */
+
+
+
+.workoutcardcontainer {
+      background-color: white;
+
+  border-radius: 16px;
+  padding: 20px;
+  margin: 16px auto;
+  width: 80%;
+  max-width: 450px;
+  /* max-height: 80%; */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border-left: 6px solid #ffcc00;
+}
+
+.workoutcardcontainer:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.workoutcardcontainer h2 {
+  color: #222;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: capitalize;
+}
+
+.exerciseList {
+  list-style: none;
+  padding: 0;
+}
+
+.exerciseList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* background: #f7f7f7; */
+  padding: 8px 10px;
+  border-radius: 8px;
+  margin: 5px 0;
+  color: #333;
+  font-weight: 500;
+}
+
+.deleteBtn {
+  background: none;
+  border: none;
+  color: #f44336;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.titleInput {
+  width: 100%;
+  font-size: 1.1rem;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.addExerciseContainer {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.addExerciseContainer input {
+  flex: 1;
+  padding: 8px;
+  /* border: 1px solid #ddd; */
+  border-radius: 8px;
+}
+
+.addBtn {
+  background: #ffcc00;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.addBtn:hover {
+  background: #ffb700;
+}
+
+.editBtn,
+.saveBtn {
+  background-color: #ffcc00;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+.editBtn:hover,
+.saveBtn:hover {
+  background-color: #ffb700;
+}

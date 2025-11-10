@@ -1,0 +1,27 @@
+/* .WorkoutCard{
+    width: 98%;
+    height: 95%;
+    background-color: black;
+    border-radius: 1rem;
+     flex-shrink: 0;
+     margin: 0% 1%;
+   
+
+} */
+ .WorkoutCard {
+  width: 85%;
+  height: 70%;
+  background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+  border-radius: 1.4rem;
+  margin: 1% 1%;
+  padding: 1.5rem;
+  color: white;
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease-in-out;
+  border: 1px solid black;
+}
+

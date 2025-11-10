@@ -1,0 +1,8 @@
+.LogWorkoutScreenHeading{
+  width: 100%;
+  height: 10%;
+  /* background-color: azure; */
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
+}

@@ -1,0 +1,27 @@
+.SignUpContainer{
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.SignUpFormHeading{
+    font-size: 2rem;
+    font-weight: 500;
+}
+.SignupinLogin{
+     margin-top: 0.2rem;
+    margin-bottom: 0.4rem;
+}
+.SignUpForm{
+    width: 80%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* background-color: aqua;
+    s */
+    
+}

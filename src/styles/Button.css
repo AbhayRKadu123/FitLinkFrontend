@@ -1,0 +1,53 @@
+.CustomButton {
+    padding: 0.7rem 1.5rem;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.25s ease-in-out;
+    width: fit-content;
+}
+
+/* 🔸 Primary Button (e.g., Save, Next) */
+.CustomButton.primary {
+    background-color: #ffcc00;
+    color: #000;
+    box-shadow: 0 3px 8px rgba(255, 204, 0, 0.4);
+}
+
+.CustomButton.primary:hover {
+    background-color: #ffdb4d;
+    transform: scale(1.03);
+}
+
+/* 🔹 Secondary Button (e.g., Cancel, Back) */
+.CustomButton.secondary {
+    background-color: #eee;
+    color: #333;
+}
+
+.CustomButton.secondary:hover {
+    background-color: #ddd;
+    transform: scale(1.03);
+}
+
+/* ⚪ Outline Button (minimal look) */
+.CustomButton.outline {
+    background-color: white;
+    border: 2px solid #ffcc00;
+    color: #ffcc00;
+}
+
+.CustomButton.outline:hover {
+    background-color: #ffcc00;
+    color: #000;
+    transform: scale(1.03);
+}
+
+/* Disabled State */
+.CustomButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}

@@ -1,0 +1,7 @@
+.CommunityContainer{
+     width: 100%;
+    height: 90%;
+    background-color: whitesmoke;
+    display: flex;
+    flex-direction: column;
+}

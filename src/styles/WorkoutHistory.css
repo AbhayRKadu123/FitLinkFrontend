@@ -1,0 +1,127 @@
+.WorkoutHistoryContainer{
+    width: 100%;
+    height: 90%;
+    background-color: white;
+    color: black;
+
+
+}
+/* *{
+    color: black;
+} */
+
+.WorkoutHistoryCardContainer{
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-y: auto;
+    /* border: 0.1rem solid rgba(255, 255, 255, 0.15) ; */
+    /* box-shadow: 0 0 20px rgba(255, 255, 255, 0.15); */
+
+}
+.WorkoutHistoryTopMenu{
+    width: 100%;
+    height: 10%;
+    background-color: white;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-x: auto;
+    /* background-color: antiquewhite; */
+
+}
+.WorkoutHistoryTopMenu::-webkit-scrollbar{
+    display: none;
+}
+.WorkoutHistoryCardContainer::-webkit-scrollbar{
+    display: none;
+}
+.WorkoutHistoryCard{
+    width: 78%;
+    height: 35%;
+    border-radius: 0.5rem;
+    /* background-color: aquamarine; */
+    /* background-color: white; */
+    flex-shrink: 0;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+      border: 1px solid rgb(152, 150, 150);
+    box-shadow: 0 0 20px rgb(152, 150, 150); 
+
+}
+.WorkoutHistoryCardHeading{
+    width: 100%;
+    height: 20%;
+    font-size: 1.7rem;
+    text-align: center;
+}
+.WorkoutHistoryCardDate{
+    width: 100%;
+    height: 40%;
+    display: flex;
+}
+
+.WorkoutHistoryCardTitle{
+    width: 100%;
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+.WorkoutHistoryCardDateContainer{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.WorkoutHistoryCardPlanContainer{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.WorkoutHistoryCardTitle{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+
+}
+/* .WorkoutRoutineBadg{
+    width: 30%;
+    height: 80%;
+} */
+
+.WorkoutRoutineBadge {
+  display: inline-block;
+  background: linear-gradient(145deg, #000, #222);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 999px; /* pill shape */
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid #555;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  margin-left: 0.2rem;
+  margin-right: 0.2rem;
+}
+
+.WorkoutRoutineBadge:hover {
+  background: linear-gradient(145deg, #fff, #e5e5e5);
+  color: #000;
+  border-color: #000;
+  transform: scale(1.05);
+}

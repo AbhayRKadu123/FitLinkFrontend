@@ -1,0 +1,134 @@
+.DetailWorkoutHistoryContainer{
+    width: 100%;
+    height: 90%;
+}
+
+.ExerciseHistory{
+    width: 100%;
+    height: 90%;
+    /* background-color: aquamarine; */
+}
+
+.ExerciseHistoryTable {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  background-color: transparent;
+}
+
+.ExerciseHistoryTable table {
+  width: 85%;
+  border-collapse: separate;
+  border-spacing: 0;
+   background-color: transparent;
+
+  font-family: "Poppins", sans-serif;
+  color: #111;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.ExerciseHistoryTable th,
+.ExerciseHistoryTable td {
+  padding: 14px 18px;
+  text-align: center;
+}
+
+.ExerciseHistoryTable th {
+  background: #000;
+  color: white;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.6px;
+}
+
+.ExerciseHistoryTable tr:not(:last-child) td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.ExerciseHistoryTable tr:hover td {
+    background-color: transparent;
+
+  transition: background-color 0.2s ease;
+}
+
+/* Dropdown Button */
+/* Compact & Modern Dropdown Button */
+.dropdown-btn {
+  background: transparent;
+  color: #111;
+  border: 1px solid #111;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.dropdown-btn:hover {
+  background: #000;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-btn:active {
+  transform: scale(0.96);
+  box-shadow: none;
+}
+
+
+/* Inner Table Styling */
+.inner-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.inner-table th {
+  background-color: #222;
+  color: white;
+  font-size: 0.85rem;
+  padding: 10px 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.inner-table td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 10px;
+  font-size: 0.9rem;
+}
+
+.inner-table tr:last-child td {
+  border-bottom: none;
+}
+
+.no-data {
+  text-align: center;
+  color: #777;
+  font-style: italic;
+  padding: 1rem;
+}
+
+/* Smooth animation for dropdown */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

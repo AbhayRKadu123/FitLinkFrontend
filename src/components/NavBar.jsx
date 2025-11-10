@@ -1,0 +1,39 @@
+import { act, useEffect, useState } from "react"
+import "../styles/NavBar.css"
+// import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
+function NavIcon({url,label,isActiveTab,OnClick}) {
+     const location = useLocation();
+    console.log('location.pathname=',location.pathname)
+    return <span onClick={OnClick}  className={`${isActiveTab ? "BackgroundColorActiveTab" : ""}`} style={{
+        display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center",height:'100%',width:"4rem"
+    }}><img style={{ width: '2rem', height: '2rem' }} src={url}></img><span style={{ fontSize: "0.8rem", marginTop: "0.2rem" }}>{label}</span></span>
+}
+
+export default function NavBar({NotActive,isLoginSignUp}) {
+    let [activetab,setactivetab]=useState('home')
+    useEffect(()=>{
+        if(NotActive){
+setactivetab('')
+
+        }
+    },[NotActive])
+    const navigate=useNavigate();
+//     useEffect(()=>{
+// navigate(`/${activetab}`)
+//     },[activetab])
+    return <div style={(location.pathname === '/login'||location.pathname === '/signup') ? { display: 'none' } : {}}  className="NavBar">
+        {/* <span style={{
+            display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", marginTop: "0.2rem", marginBottom: "0.1rem"
+        }}><img style={{ width: '2rem', height: '2rem' }} src="../../public/Images/homewhite.png"></img><span style={{ fontSize: "0.8rem", marginTop: "0.2rem" }}>Home</span></span> */}
+        <NavIcon url={activetab==="home"?"../../public/Images/homeRed.png":"../../public/Images/homewhite.png"} label={'Home'} isActiveTab={activetab==='home'} OnClick={()=>{setactivetab('home'),navigate("/");}}></NavIcon>
+        <NavIcon url={activetab==="social"?'../../public/Images/peoplegroupred.png':"../../public/Images/peoplegroup.png"} label={'Social'} isActiveTab={activetab==="social"} OnClick={()=>{setactivetab('social'),navigate("/Community")}}></NavIcon>
+        <NavIcon url={activetab==="nutrition"?'../../public/Images/applered.png':"../../public/Images/applewhite.png"} label={'Nutrition'} isActiveTab={activetab==="nutrition"} OnClick={()=>{setactivetab('nutrition'),navigate("/Nutrition")}}></NavIcon>
+        <NavIcon url={activetab==="profile"?'../../public/Images/avatarred.png':"../../public/Images/avatarwhite.png"} label={'Profile'} isActiveTab={activetab==="profile"} OnClick={()=>{setactivetab('profile'),navigate("/Profile")}}></NavIcon>
+
+
+    </div>
+}
+// #F5290B

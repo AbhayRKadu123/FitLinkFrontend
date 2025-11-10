@@ -1,0 +1,170 @@
+.ProfileContainer{
+    width: 100%;
+    height: 90%;
+    background-color: whitesmoke;
+    display: flex;
+    flex-direction: column;
+}
+
+.ProfileHeader{
+    width: 100%;
+    height: 30%;
+    margin-top: 0.3rem;
+    /* background-color: aqua; */
+}
+
+.SignOutBtnContainer{
+    width: 100%;
+    height: 20%;
+    /* background-color: azure; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* padding-right: 2rem;
+    padding-left: 2rem; */
+    /* padding: 0.1rem; */
+}
+.UserProfileName{
+    width: 100%;
+    height: 40%;
+    display: flex;
+    margin-bottom: 0.4rem;
+    /* background-color: aqua; */
+}
+.SignOutBtn{
+    margin-right: 0.5rem;
+    margin-top:'0.2rem'
+}
+.ProfileWish{
+    height: 100%;
+    width: 60%;
+    /* background-color: aquamarine; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:flex-start;
+    
+}
+.ProfileWish>h4{
+    margin-left: 0.8rem;
+    font-size: 2rem;
+
+    font-weight: 600;
+    color: black;
+}
+.ProfileWish>p{
+    margin-left: 0.8rem;
+    color: black;
+}
+
+.ProfilePhoto{
+    height: 100%;
+    width: 40%;
+    /* background-color: antiquewhite; */
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.ProfilePhoto>img{
+    width: 2.7rem;
+    height: 2.7rem;
+    border-radius: 50%;
+    border: 0.1rem solid black;
+    padding: 0.2rem;
+    margin-right: 0.5rem;
+}
+
+.Posts_follower{
+    width: 100%;
+    height: 40%;
+    /* background-color: aqua; */
+    display: flex;
+    margin-top: 1rem;
+}
+.Posts{
+    height: 100%;
+    width: 50%;
+    border-right: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: black;
+}
+
+.Friends{
+    height: 100%;
+    width: 50%;
+    border-left: 1px solid black;
+     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: black;
+
+}
+
+.ProfileMainSection{
+    width: 100%;
+    height: 70%;
+    padding-bottom: 0.3rem;
+    /* display: flex;
+    flex-direction: column;
+    overflow-y: auto; */
+    /* padding: 0.2rem; */
+    /* background-color: brown; */
+}
+.Settingheading{
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.SettingOptions{
+    width: 100%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    justify-content: flex-start;
+    /* background-color: aqua; */
+}
+.SettingOptions::-webkit-scrollbar{
+    display: none;
+}
+
+.Settingheading>h4{
+    margin-left: 0.8rem;
+    font-size: 2rem;
+
+    font-weight: 600;
+    color: black;
+
+}
+
+.ProfileSettingOptions{
+    width: 100%;
+    height: 20%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+      display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    /* margin-bottom: 0.2rem; */
+
+    /* margin-left: 0.2rem;
+    margin-right: 0.2rem; */
+}
+
+
+.ProfileSettingOptions>h4{
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: black;
+    margin-left: 0.5rem;
+}

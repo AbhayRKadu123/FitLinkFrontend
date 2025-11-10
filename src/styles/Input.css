@@ -1,0 +1,33 @@
+.InputContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0.8rem 0;
+}
+
+.InputLabel {
+    font-size: 0.95rem;
+    color: #222;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.CustomInput {
+    padding: 0.7rem 1rem;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.2s ease-in-out;
+    outline: none;
+    background-color: #fff;
+    color: #222;
+}
+
+.CustomInput:focus {
+    border-color: #ffcc00;
+    box-shadow: 0 0 6px rgba(255, 204, 0, 0.4);
+}
+
+.CustomInput::placeholder {
+    color: #aaa;
+}
