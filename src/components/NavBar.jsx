@@ -28,10 +28,10 @@ setactivetab('')
         {/* <span style={{
             display: 'flex', flexDirection: "column", justifyContent: "center", alignItems: "center", marginTop: "0.2rem", marginBottom: "0.1rem"
         }}><img style={{ width: '2rem', height: '2rem' }} src="../../public/Images/homewhite.png"></img><span style={{ fontSize: "0.8rem", marginTop: "0.2rem" }}>Home</span></span> */}
-        <NavIcon url={activetab==="home"?"../../public/Images/homeRed.png":"../../public/Images/homewhite.png"} label={'Home'} isActiveTab={activetab==='home'} OnClick={()=>{setactivetab('home'),navigate("/");}}></NavIcon>
-        <NavIcon url={activetab==="social"?'../../public/Images/peoplegroupred.png':"../../public/Images/peoplegroup.png"} label={'Social'} isActiveTab={activetab==="social"} OnClick={()=>{setactivetab('social'),navigate("/Community")}}></NavIcon>
-        <NavIcon url={activetab==="nutrition"?'../../public/Images/applered.png':"../../public/Images/applewhite.png"} label={'Nutrition'} isActiveTab={activetab==="nutrition"} OnClick={()=>{setactivetab('nutrition'),navigate("/Nutrition")}}></NavIcon>
-        <NavIcon url={activetab==="profile"?'../../public/Images/avatarred.png':"../../public/Images/avatarwhite.png"} label={'Profile'} isActiveTab={activetab==="profile"} OnClick={()=>{setactivetab('profile'),navigate("/Profile")}}></NavIcon>
+        <NavIcon url={activetab==="home"?"Images/homeRed.png":"Images/homewhite.png"} label={'Home'} isActiveTab={activetab==='home'} OnClick={()=>{setactivetab('home'),navigate("/");}}></NavIcon>
+        <NavIcon url={activetab==="social"?'Images/peoplegroupred.png':"Images/peoplegroup.png"} label={'Social'} isActiveTab={activetab==="social"} OnClick={()=>{setactivetab('social'),navigate("/Community")}}></NavIcon>
+        <NavIcon url={activetab==="nutrition"?'Images/applered.png':"Images/applewhite.png"} label={'Nutrition'} isActiveTab={activetab==="nutrition"} OnClick={()=>{setactivetab('nutrition'),navigate("/Nutrition")}}></NavIcon>
+        <NavIcon url={activetab==="profile"?'Images/avatarred.png':"Images/avatarwhite.png"} label={'Profile'} isActiveTab={activetab==="profile"} OnClick={()=>{setactivetab('profile'),navigate("/Profile")}}></NavIcon>
 
 
     </div>
