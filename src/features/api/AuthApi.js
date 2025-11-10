@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const authApi = createApi({
     reducerPath: 'api', // name for the slice
     // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8080' }),
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8080' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://fitlink-vbdq.onrender.com' }),
 
     endpoints: (builder) => ({
 

@@ -4,7 +4,7 @@ export const WorkoutApi = createApi({
   reducerPath: 'WorkoutApi', // name for the slice
   baseQuery: fetchBaseQuery({
     // baseUrl: 'http://localhost:8080',
-    // baseUrl: 'http://localhost:8080',
+    baseUrl: 'https://fitlink-vbdq.onrender.com',
 
     
 
