@@ -7,8 +7,8 @@ import { useNavigate } from "react-router-dom";
 
 
 export default function OnGoingworkoutcard({ value, ele }) {
-    const { data: GetExerciseData,isError} = useGetUserWorkoutRoutinQuery();
-    let navigate=useNavigate();
+    const { data: GetExerciseData, isError } = useGetUserWorkoutRoutinQuery();
+    let navigate = useNavigate();
 
     const daysOfWeek = {
         Monday: 'mon',
@@ -21,8 +21,8 @@ export default function OnGoingworkoutcard({ value, ele }) {
     };
     function StartWorkout() {
         let ID = GetExerciseData?.result?._id;
-        let NestedId=GetExerciseData?.result?.[ReqDay]?._id
-        console.log('ID=',ID)
+        let NestedId = GetExerciseData?.result?.[ReqDay]?._id
+        console.log('ID=', ID)
         navigate(`/LogWorkoutScreen?Id=${ID}&NestedId=${NestedId}&ReqDay=${ReqDay}`)
 
 
@@ -51,7 +51,7 @@ export default function OnGoingworkoutcard({ value, ele }) {
             }}
             className="WorkoutCard"
             data-id={value}
-            onClick={()=>{StartWorkout()}}
+            onClick={() => { StartWorkout() }}
         >
             <h2>{Heading}</h2>
             <h4>Plan type - (Custom)</h4>

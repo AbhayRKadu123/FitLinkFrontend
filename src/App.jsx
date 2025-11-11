@@ -14,14 +14,57 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import WorkoutHistory from "./pages/WorkoutHistory";
 import DetailWorkoutHistory from "./pages/DetailWorkoutHistory";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 function App() {
   const [isloginorsignup,setisloginorsignup]=useState(false)
 
 const [NotActive,setNotActive]=useState(false)
+function isTokenExpired() {
+  const token = localStorage.getItem("token");
+  if (!token) return true;
+
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return true; // invalid structure
+
+    const payload = JSON.parse(atob(parts[1]));
+    const currentTime = Date.now() / 1000;
+
+    // If no exp field, consider it invalid too
+    if (!payload.exp) return true;
+
+    return payload.exp < currentTime;
+  } catch (err) {
+    console.error("Invalid or tampered token:", err);
+    return true;
+  }
+}
+
+
+// Component wrapper that checks token on route change
+function TokenChecker({ children }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isTokenExpired()) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      // alert("Your session has expired. Please log in again.");
+      navigate("/login");
+    }
+  }, [location.pathname, navigate]);
+
+  return children;
+}
   return (
+     <Router>
     <div className="container">
       <div className="MainLayoutContainer">
-        <Router>
+       
+           <TokenChecker>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={< Login ></Login>}></Route>
@@ -44,11 +87,12 @@ const [NotActive,setNotActive]=useState(false)
 
           </Routes>
         <NavBar isLoginSignUp={isloginorsignup} Active={NotActive} NotActive={NotActive}></NavBar>
-
-        </Router>
+</TokenChecker>
         {/* <Home></Home> */}
       </div>
     </div>
+        </Router>
+
   )
 }
 

@@ -1,14 +1,14 @@
 import HeadingContainer from "../components/HeadingContainer"
 import "../styles/WorkoutHistory.css"
-import { useGetWorkoutHistoryQuery} from "../features/api/WorkoutApi"
+import { useGetWorkoutHistoryQuery } from "../features/api/WorkoutApi"
 import { useNavigate } from "react-router-dom"
 export default function WorkoutHistory() {
     let { data } = useGetWorkoutHistoryQuery({})
-    let navigate=useNavigate()
-    
+    let navigate = useNavigate()
+
     console.log('data', data)
-    function WorkoutHistory({Heading,Date,PlanType,Title,OnClick}) {
-        return <div className="WorkoutHistoryCard" onClick={()=>{OnClick()}}>
+    function WorkoutHistory({ Heading, Date, PlanType, Title, OnClick }) {
+        return <div className="WorkoutHistoryCard" onClick={() => { OnClick() }}>
             <div className="WorkoutHistoryCardHeading"><h5>{Heading}</h5></div>
             <div className="WorkoutHistoryCardDate">
                 <span className="WorkoutHistoryCardDateContainer">
@@ -35,12 +35,12 @@ export default function WorkoutHistory() {
     return <div className="WorkoutHistoryContainer">
         <HeadingContainer Title={'Workout History'}></HeadingContainer>
         <div className="WorkoutHistoryCardContainer">
-            {data && data.map((ele)=>{
-            return <WorkoutHistory OnClick={()=>{navigate(`/DetailWorkoutHistory?id=${ele?._id}`);console.log("on click btn ",ele?._id)}} Heading={`${ele?.planType} Workout Card`} Date={ele?.date} PlanType={ele?.planType} Title={ele?.Title}></WorkoutHistory>
+            {data && data.map((ele) => {
+                return <WorkoutHistory OnClick={() => { navigate(`/DetailWorkoutHistory?id=${ele?._id}`); console.log("on click btn ", ele?._id) }} Heading={`${ele?.planType} Workout Card`} Date={ele?.date} PlanType={ele?.planType} Title={ele?.Title}></WorkoutHistory>
 
 
             })}
-           
+
         </div>
         <div className="WorkoutHistoryTopMenu">
             <span className="WorkoutRoutineBadge">Custom</span><span className="WorkoutRoutineBadge">Fst7</span><span className="WorkoutRoutineBadge">{`GVT (German Volume Training)`}</span>

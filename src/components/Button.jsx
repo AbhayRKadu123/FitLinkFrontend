@@ -2,6 +2,7 @@ import React from "react";
 import "../styles/Button.css";
 
 export default function Button({
+    isLoading,
     label,
     onClick,
     type = "button",
@@ -14,6 +15,7 @@ export default function Button({
             onClick={onClick}
             type={type}
             disabled={disabled}
+            
         >
             {label}
         </button>

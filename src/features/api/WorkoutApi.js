@@ -1,7 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { customBaseQuery } from './CustomBaseQuery';
 
 export const WorkoutApi = createApi({
-  reducerPath: 'WorkoutApi', // name for the slice
+  reducerPath: 'WorkoutApi',
+    baseQuery:customBaseQuery,
+
+  
+  // name for the slice
   baseQuery: fetchBaseQuery({
     // baseUrl: 'http://localhost:8080',
     baseUrl: 'https://fitlink-vbdq.onrender.com',

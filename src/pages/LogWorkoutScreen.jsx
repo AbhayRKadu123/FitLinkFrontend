@@ -32,6 +32,7 @@ export default function LogWorkoutScreen() {
         data: dailySession,
         isLoading: isDailySessionLoading,
         error: dailySessionError,
+        refetch
     } = useGetDailySessionQuery({
         planType: "custom",
         Date: new Date().toISOString().split("T")[0],
@@ -56,16 +57,16 @@ export default function LogWorkoutScreen() {
         if (dailySession?.getworkoutsession) {
             let Exercises = workoutData.result.exercises;
             console.log('Exercises', Exercises)
-            
+
             // dailySession.getworkoutsession?.exercises
-            function GetFromWorkoutSession(ele){
-                let arr=dailySession.getworkoutsession?.exercises;
-                let SetObj={name:ele,sets:[]}
-                for(let i=0;i<arr.length;i++){
+            function GetFromWorkoutSession(ele) {
+                let arr = dailySession.getworkoutsession?.exercises;
+                let SetObj = { name: ele, sets: [] }
+                for (let i = 0; i < arr.length; i++) {
 
-                    if(ele.trim()==arr[i]?.name){
+                    if (ele.trim() == arr[i]?.name) {
 
-                        SetObj={name:arr[i]?.name,sets:arr[i]?.sets}
+                        SetObj = { name: arr[i]?.name, sets: arr[i]?.sets }
                         break
 
                     }
@@ -76,22 +77,23 @@ export default function LogWorkoutScreen() {
 
 
             }
-            let UpdatedExercise=Exercises.map((ele)=>{
+            let UpdatedExercise = Exercises.map((ele) => {
 
                 return GetFromWorkoutSession(ele)
-                
+
 
             })
-            console.log('UpdatedExercise',UpdatedExercise)
+            console.log('UpdatedExercise', UpdatedExercise)
             let Obj = {
-                _id:dailySession?.getworkoutsession?._id,
+                _id: dailySession?.getworkoutsession?._id,
                 username: dailySession?.getworkoutsession?.username,
                 planType: dailySession?.getworkoutsession?.planType,
                 Title: dailySession?.getworkoutsession?.Title,
                 day: dailySession?.getworkoutsession?.day,
                 date: dailySession?.getworkoutsession?.date,
-                exercises: UpdatedExercise }
-            setSessionObject({...Obj});
+                exercises: UpdatedExercise
+            }
+            setSessionObject({ ...Obj });
             return;
         }
 
@@ -204,6 +206,7 @@ export default function LogWorkoutScreen() {
 
         try {
             const res = await addWorkout(sessionObject).unwrap();
+            refetch()
             alert("Workout saved successfully!");
             console.log("Workout saved result:", res);
         } catch (err) {
@@ -305,12 +308,17 @@ export default function LogWorkoutScreen() {
                 >
                     <Button
                         onClick={dailySession?.getworkoutsession ? updateworkout : handleSave}
-                        disabled={isSaving}
-                        label={dailySession?.getworkoutsession ? 'Update Workout' : 'Save Workout'}
+                        disabled={isSaving || isupdating || isDailySessionLoading || isWorkoutLoading}
+                        label={
+                            (isSaving || isupdating || isDailySessionLoading || isWorkoutLoading)
+                                ? "Processing..."
+                                : dailySession?.getworkoutsession
+                                    ? "Update Workout"
+                                    : "Save Workout"
+                        }
+                    />
 
-                    >
-                        {/* {isSaving ? "Saving..." : "Save Workout"} */}
-                    </Button>
+
                 </div>
             )}
 
