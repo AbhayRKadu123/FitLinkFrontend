@@ -2,9 +2,13 @@ import HeadingContainer from "../components/HeadingContainer"
 import "../styles/WorkoutHistory.css"
 import { useGetWorkoutHistoryQuery } from "../features/api/WorkoutApi"
 import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
 export default function WorkoutHistory() {
-    let { data } = useGetWorkoutHistoryQuery({})
+    let { data ,refetch } = useGetWorkoutHistoryQuery({})
     let navigate = useNavigate()
+    useEffect(()=>{
+refetch()
+    },[])
 
     console.log('data', data)
     function WorkoutHistory({ Heading, Date, PlanType, Title, OnClick }) {
