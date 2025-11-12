@@ -6,6 +6,7 @@ import { useGetWorkoutHistoryDetailQuery } from "../features/api/WorkoutApi";
 import { useLocation,useSearchParams} from "react-router-dom";
 // import {
 import HeadingContainer from "../components/HeadingContainer"
+import SimpleBarChart from "../components/SimpleBarCharts";
  function ExerciseHistoryTable({ exercises }) {
   const [openIndex, setOpenIndex] = useState(null);
   console.log('datadata',exercises)
@@ -76,6 +77,7 @@ import HeadingContainer from "../components/HeadingContainer"
           )}
         </tbody>
       </table>
+     
     </div>
   );
 }
@@ -95,6 +97,10 @@ export default function DetailWorkoutHistory() {
         <div className="ExerciseHistory">
             {/* <div className="ExerciseHistoryTable"></div> */}
             <ExerciseHistoryTable exercises={data?.Result[0]?.exercises}></ExerciseHistoryTable>
+             <div style={{width:'100%',height:'50%',display:'flex',justifyContent:'center'}}>
+      <SimpleBarChart></SimpleBarChart>
+
+      </div>
 
 
         </div>

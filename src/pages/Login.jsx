@@ -65,7 +65,7 @@ setError(true)
             <Input label={'Enter Password'}
                 placeholder={'Enter Password'} labelcolor={'white'} value={Login.password} onChange={(event) => { setLogin((prev) => { return { ...prev, password: event.target.value } }) }}></Input>
 
-            <span className="SignupinLogin">dont have a account ? <NavLink style={{ marginLeft: '0.1rem', fontSize: "0.4" }} to={"/signup"}>SignUp</NavLink> </span>
+            <span className="SignupinLogin">dont have a account ? <span style={{ marginLeft: '0.1rem', fontSize: "0.4" }} onClick={()=>{navigate("/signup")}}>SignUp</span> </span>
 
             <Button isLoading={isLoading} label={isLoading?'Logging in':'Login'} disabled={isLoading} onClick={() => { LoginUser(Login); console.log(Login) }}></Button>
 
