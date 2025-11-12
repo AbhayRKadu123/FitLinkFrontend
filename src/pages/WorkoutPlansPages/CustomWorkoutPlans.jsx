@@ -16,11 +16,11 @@ export default function CustomWorkoutPlan({ setNotActive }) {
     const [selecteddays, setselecteddays] = useState([])
     const [CreateWorkoutPlan, setCreateWorkoutPlan] = useState(false)
     const [exercise, setexercise] = useState("")
-    const [addWorkoutRoutine, { data, error:errorAddingWorkout, isLoading, isSuccess }] = useAddWorkoutRoutinMutation();
-    const [UpdateUserActivePlan, { data: ActivePlan,error:Updatingerror, isLoading: ActivePlanLoading, isSuccess: PlanChanged }] = useUpdateUserActiveWorkoutPlanMutation();
+    const [addWorkoutRoutine, { data, error: errorAddingWorkout, isLoading, isSuccess }] = useAddWorkoutRoutinMutation();
+    const [UpdateUserActivePlan, { data: ActivePlan, error: Updatingerror, isLoading: ActivePlanLoading, isSuccess: PlanChanged }] = useUpdateUserActiveWorkoutPlanMutation();
     const [DeleteRoutinMutation, { data: deleteroutin, error: errordeleting, isSuccess: DataDeleted }] = useDeleteRoutineMutation();
     // const [UpdateRoutin, { data: UpdatedRoutin, isSuccess: RoutinUpdated }] = useUpdateWorkoutRoutinMutation();
-    const { data: GetExerciseData, refetch,error:errorgettingworkout, isError, isSuccess: dataFetched } = useGetUserWorkoutRoutinQuery();
+    const { data: GetExerciseData, refetch, error: errorgettingworkout, isError, isSuccess: dataFetched } = useGetUserWorkoutRoutinQuery();
     // let navigate=useNavigate();
     useEffect(() => {
         let token = localStorage.getItem('token')
@@ -170,7 +170,7 @@ export default function CustomWorkoutPlan({ setNotActive }) {
 
                         <div className="AddExercisesDays">{selecteddays.map((ele) => <span style={{ backgroundColor: selectedday == ele && '#ffcc00', border: selectedday == ele && '#ffcd07ff' }} onClick={() => { setselectedday(ele); console.log('slected day', ele) }} className="SelectedExerciseDays">{ele}</span>)}</div>
                         <div className="AddExerciseCotent">
-                            <h2 style={{ textAlign: 'center', fontWeight: '600', color: "black" }}>{selectedday}</h2>
+                            <h2 style={{ textAlign: 'center',marginTop:"2rem", fontWeight: '600', color: "black" }}>{selectedday}</h2>
                             {/* <input placeholder="Enter Title"></input> */}
                             <Input label={'Enter Title'}
                                 placeholder={'Enter Exercise Title'}
@@ -265,11 +265,13 @@ export default function CustomWorkoutPlan({ setNotActive }) {
                         <div className="DaysSelector">{daysarr.map((day) => {
                             return <span style={{ backgroundColor: selecteddays.includes(day) ? '#ffcc00' : 'white' }} key={day} onClick={() => { ToggleDay(day) }}>{day}</span>
                         })}</div>
-                        <Button label={'Save And Next'} onClick={() => {
-                            // setCreateWorkoutPlan(true)
+                        <div>
+                            <Button label={'Save And Next'} onClick={() => {
+                                // setCreateWorkoutPlan(true)
 
-                            handleSaveAndNext()
-                        }}>Save And Next</Button>
+                                handleSaveAndNext()
+                            }}>Save And Next</Button>
+                        </div>
                     </div>}
 
 

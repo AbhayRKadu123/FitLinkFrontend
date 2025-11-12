@@ -1,20 +1,3 @@
-// import "../styles/workoutCard.css"
-// export default function WorkoutCard({day,exerise}){
-
-//     return <div className="workoutcardcontainer" >
-// <h1>Chest and Bicep</h1>
-// <ul>
-//     <li>Flat Bench Press</li>
-//     <li>Incline Bench Press</li>
-//     <li>Decline Bench Press</li>
-//     <li>Tricep Extension</li>
-//     <li>Skull Crusher</li>
-
-// </ul>
-// <button>Edit</button>
-//     </div>
-// }
-
 
 
 
