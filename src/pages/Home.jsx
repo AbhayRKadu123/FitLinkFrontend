@@ -102,6 +102,7 @@ export default function Home() {
                 {/* {Array.from({ length: 10 }).map((_, i) => (
                         <OnGoingworkoutcard key={i} value={i} />
                     ))} */}
+                    {console.log("Dates",Dates)}
                 {Dates.map((ele, index) => <OnGoingworkoutcard key={index} value={index} ele={ele} />
 
                 )}

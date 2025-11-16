@@ -11,13 +11,13 @@ refetch()
     },[])
 
     console.log('data', data)
-    function WorkoutHistory({ Heading, Date, PlanType, Title, OnClick }) {
+    function WorkoutHistory({ Heading, Date, PlanType,day, Title, OnClick }) {
         return <div className="WorkoutHistoryCard" onClick={() => { OnClick() }}>
             <div className="WorkoutHistoryCardHeading"><h5>{Heading}</h5></div>
             <div className="WorkoutHistoryCardDate">
                 <span className="WorkoutHistoryCardDateContainer">
                     <span style={{ fontWeight: '500' }}>Date</span>
-                    <span>{Date}</span>
+                    <span>{`(${day}) ${Date}`}</span>
                 </span>
                 <span className="WorkoutHistoryCardPlanContainer">
                     <span style={{ fontWeight: '500' }}>Plan</span>
@@ -40,7 +40,7 @@ refetch()
         <HeadingContainer Title={'Workout History'}></HeadingContainer>
         <div className="WorkoutHistoryCardContainer">
             {data && data.map((ele) => {
-                return <WorkoutHistory OnClick={() => { navigate(`/DetailWorkoutHistory?id=${ele?._id}`); console.log("on click btn ", ele?._id) }} Heading={`${ele?.planType} Workout Card`} Date={ele?.date} PlanType={ele?.planType} Title={ele?.Title}></WorkoutHistory>
+                return <WorkoutHistory OnClick={() => { navigate(`/DetailWorkoutHistory?id=${ele?._id}`); console.log("on click btn ", ele?._id) }} Heading={`${ele?.planType} Workout Card`} Date={ele?.date} day={ele?.day} PlanType={ele?.planType} Title={ele?.Title}></WorkoutHistory>
 
 
             })}

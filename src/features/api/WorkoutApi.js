@@ -98,6 +98,16 @@ export const WorkoutApi = createApi({
     query:({id})=>`/workout/WorkoutHistoryDetail?id=${id}`
 
   }),
+  // useGetWorkoutBarChartDetailQuery
+  GetWorkoutBarChartDetail:builder.query({
+      query:({id})=>`/workout/GetWorkoutBarChartDetail?id=${id}`
+
+  }),
+  // GetUserProgress
+   GetUserProgress:builder.query({
+      query:({Date})=>`/workout/GetUserProgress?Date=${Date}`
+
+  }),
     UpdateWorkoutSession: builder.mutation({
       query: (sessionobject) => ({
         url: '/Workout/UpdateWorkoutSession',      // your backend API endpoint
@@ -106,6 +116,15 @@ export const WorkoutApi = createApi({
       }),
 
     }),
+    updateDailyWorkoutSession:builder.mutation({
+      query:({TodayDate,ReqDay})=>({
+        url:'/workout/DailyWorkoutSessionUpdate',
+        method:'POST',
+        body:{Date:TodayDate,ReqDay:ReqDay}
+
+      })
+    })
+    // GenerateDailySession:
 
 
   }),
@@ -113,4 +132,4 @@ export const WorkoutApi = createApi({
 
 });
 
-export const { useGetWorkoutHistoryDetailQuery,useGetWorkoutHistoryQuery, useUpdateWorkoutSessionMutation, useGetDailySessionQuery, useGetWorkoutSessoinQuery, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation, useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutSessionMutation } = WorkoutApi;
+export const {useUpdateDailyWorkoutSessionMutation,useGetUserProgressQuery,  useGetWorkoutBarChartDetailQuery,useGetWorkoutHistoryDetailQuery,useGetWorkoutHistoryQuery, useUpdateWorkoutSessionMutation, useGetDailySessionQuery, useGetWorkoutSessoinQuery, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation, useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutSessionMutation } = WorkoutApi;
