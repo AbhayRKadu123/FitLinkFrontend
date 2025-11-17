@@ -11,13 +11,21 @@ import { useNavigate } from "react-router-dom";
 export default function Home() {
     const containerRef = useRef(null);
     const [visibleBox, setVisibleBox] = useState(null);
+    const [Available,setAvailable]=useState(false);
     const { data: GetExerciseData, refetch, error, isError, isSuccess: dataFetched } = useGetUserWorkoutRoutinQuery();
     let navigate = useNavigate()
     const Dates = getNext10Days()
 
     useEffect(() => {
-        console.log('visibleBox=', visibleBox)
-    }, [visibleBox])
+        console.log('GetExerciseData=',GetExerciseData)
+        if(GetExerciseData&&GetExerciseData?.result){
+setAvailable(true)
+setVisibleBox((prev)=>{
+    return prev
+})
+        }
+    }, [GetExerciseData])
+    // GetExerciseData&&GetExerciseData?.result
 
     useEffect(() => {
         console.log("isError", isError)
@@ -39,29 +47,38 @@ export default function Home() {
     }, [])
     console.log('hoome GetExerciseData', GetExerciseData?.result?.mon)
     // console.log('hoome GetExerciseData',Object.entries())
+useEffect(() => {
+    if (!GetExerciseData?.result) return; // ensure cards exist
+    if (!containerRef.current) return;
 
-    useEffect(() => {
-        const boxes = containerRef.current.querySelectorAll(".WorkoutCard");
+    const container = containerRef.current;
 
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        console.log("Visible along X:", entry.target.dataset.id);
-                        setVisibleBox(entry.target.dataset.id);
+    // wait for DOM to paint
+    const boxes = container.querySelectorAll(".WorkoutCard");
+    if (!boxes || boxes.length === 0) return;
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.dataset?.id;
+                    if (id) {
+                        setVisibleBox(id);
                     }
-                });
-            },
-            {
-                root: containerRef.current, // horizontal scroll container
-                threshold: 0.5,
-            }
-        );
+                }
+            });
+        },
+        {
+            root: container,
+            threshold: 0.5,
+        }
+    );
 
-        boxes.forEach((box) => observer.observe(box));
+    boxes.forEach((box) => observer.observe(box));
 
-        return () => observer.disconnect();
-    }, []);
+    return () => observer.disconnect();
+}, [GetExerciseData]);
+
     const daysOfWeek = {
         Monday: 'mon',
         Tuesday: 'tue',
@@ -92,22 +109,20 @@ export default function Home() {
 
     console.log('getTodayDateAndDay', getNext10Days())
     return <>
-        <HeaderTop visibleBox={visibleBox} setVisibleBox={setVisibleBox} isHomeTab={true} Dates={Dates}></HeaderTop>
+        <HeaderTop visibleBox={visibleBox} setVisibleBox={setVisibleBox} isHomeTab={true} Dates={Dates} IsPlanAvailable={Available}></HeaderTop>
 
 
         <div className="HomePageContiner">
             {/* <div className="HomePageMainPage"></div> */}
-            <div className="OngoingPlan" ref={containerRef}>
+           {GetExerciseData&&GetExerciseData?.result&& <div className="OngoingPlan" ref={containerRef}>
 
-                {/* {Array.from({ length: 10 }).map((_, i) => (
-                        <OnGoingworkoutcard key={i} value={i} />
-                    ))} */}
+              
                     {console.log("Dates",Dates)}
                 {Dates.map((ele, index) => <OnGoingworkoutcard key={index} value={index} ele={ele} />
 
                 )}
 
-            </div>
+            </div>}
             <WorkoutPlanCard Url={'/Images/CustomWorkoutRoutin.jpg'} Title={'Custom Workout'} Description={'Create Your Own Custom plan and follow it'} comingSoon={false}></WorkoutPlanCard>
             <WorkoutPlanCard Url={'/Images/fst7backgroundimage.jpeg'} Title={'Fst7 Workout'} Description={'Unlock new levels of size with the FST-7 (Fascia Stretch Training) system'} comingSoon={true}></WorkoutPlanCard>
             {/* High-Intensity Training (HIT) */}

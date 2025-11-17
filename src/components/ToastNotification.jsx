@@ -39,30 +39,34 @@ export default function Notification({ type, message, onClose, onConfirm }) {
 
   const styles = {
     container: {
-      position: "fixed",
-      top: "20px",
-      right: "2rem",
-      padding: "1rem 1.5rem",
-      borderRadius: "10px",
-      color: "white",
-      fontSize: "1rem",
-      boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-      zIndex: 1000,
-      width: "auto",
-      minWidth: "250px",
-      background: getBackground(),
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      gap: "10px",
-      animation: "slideIn 0.3s ease-out",
-    },
+  position: "fixed",
+  top: "10%",
+  left: "50%",
+  transform: "translate(-50%, -10%)",
+
+  padding: "1rem 1.5rem",
+  borderRadius: "10px",
+  color: "white",
+  fontSize: "1rem",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+  zIndex: 1000,
+  width: "auto",
+  minWidth: "250px",
+  background: getBackground(),
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: "10px",
+  animation: "slideIn 0.3s ease-out",
+}
+,
     icon: {
       fontWeight: "bold",
       fontSize: "1.4rem",
     },
     message: {
       flexGrow: 1,
+      color:'black'
     },
     btnContainer: {
       display: "flex",

@@ -5,11 +5,11 @@ import ProgressBar from "./ProgressBarComponent";
 // import LogWorkoutScreen from "../pages/LogWorkoutScreen";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-
+import { useRef } from "react";
 
 export default function OnGoingworkoutcard({ value, ele }) {
     const { data: GetExerciseData, isError } = useGetUserWorkoutRoutinQuery();
-    const [DailyUpdate,{data:Result}]=useUpdateDailyWorkoutSessionMutation();
+    const [DailyUpdate,{data:Result,isLoading}]=useUpdateDailyWorkoutSessionMutation();
 
     
     let navigate = useNavigate();
@@ -57,16 +57,18 @@ console.log('GetProgressBarData',GetProgressBarData?.ProgressPercentage)
         Heading = "Rest";
     }
     let isActive=TodayDate==ele?.date
-useEffect(() => {
-    const run = async () => {
-        if (isActive) {
-            console.log("create todays session DailyUpdate");
-            let result = await DailyUpdate({ TodayDate,ReqDay });
-        }
-    };
+const hasCreatedSession = useRef(false);
 
-    run();
-}, [ele]);
+useEffect(() => {
+    if (!isActive) return;
+
+    if (hasCreatedSession.current) return; // prevent multiple calls
+
+    hasCreatedSession.current = true;
+
+    DailyUpdate({ TodayDate, ReqDay });
+
+}, [isActive]);
 
 
     return (
@@ -88,7 +90,7 @@ useEffect(() => {
 
 
     <Button label="Complete" onClick={()=>{console.log('complete workout')}} disabled={!isActive} />
-    <ProgressBar value={Heading=='Rest Day'?100:GetProgressBarData?.ProgressPercentage||0}></ProgressBar>
+    {isActive&&<ProgressBar value={Heading=='Rest Day'?100:GetProgressBarData?.ProgressPercentage||0}></ProgressBar>}
 </div>
 
     );
