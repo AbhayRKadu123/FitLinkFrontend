@@ -81,8 +81,12 @@ useEffect(() => {
         backgroundRepeat: "no-repeat",
     }}
     className={`WorkoutCard ${isActive ? "active" : "inactive"}`}
+    // className={`WorkoutCard`}
+
     data-id={value}
+    // onClick={() => StartWorkout(Heading)}
     onClick={() => isActive && StartWorkout(Heading)}
+// 
 >
     <h2>{Heading}</h2>
     <h4>Plan type - (Custom)</h4>

@@ -64,7 +64,7 @@ export default function LogWorkoutScreen() {
                 let SetObj = { name: ele, sets: [] }
                 for (let i = 0; i < arr.length; i++) {
 
-                    if (ele.trim() == arr[i]?.name) {
+                    if (ele.trim().toLowerCase() === arr[i]?.name.trim().toLowerCase()) {
 
                         SetObj = { name: arr[i]?.name, sets: arr[i]?.sets }
                         break
@@ -173,7 +173,8 @@ export default function LogWorkoutScreen() {
             console.log("Updating workout with data:", sessionObject);
 
             // ✅ Call the update API
-            const result = await updateWorkout(sessionObject);
+           const result = await updateWorkout(sessionObject)
+           refetch()
 
             // ✅ Handle API response
             if (result?.data) {

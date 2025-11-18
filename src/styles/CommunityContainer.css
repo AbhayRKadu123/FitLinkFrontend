@@ -5,3 +5,99 @@
     display: flex;
     flex-direction: column;
 }
+
+.CommunityContainerHeader{
+    width: 100%;
+    height: 10%;
+    background-color: #0E0E0E;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.CommunityContainerData{
+    width: 100%;
+    height: 90%;
+    padding-top: 0.5rem;
+    background-color: #0E0E0E;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-y: auto;
+    padding-bottom: 1rem;
+}
+.CommunityContainerData::-webkit-scrollbar{
+    display: none;
+}
+
+.CommunityContainerPostCard{
+    background-color: #262626;
+    width: 80%;
+    height: 30%;
+    border-radius: 2rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    flex-shrink: 0;
+    display: flex;
+
+}
+
+.ImageContainer{
+    height: 100%;
+    width: 40%;
+    color: white;
+    border-top-left-radius: 2rem;
+    border-bottom-left-radius: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.PostTextContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.3rem;
+}
+.ImageContainer > .PostImage {
+    width: 80%;
+    height: 80%;
+    object-fit: cover;
+    border-radius: 2rem; 
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.08);
+}
+.PostTitle {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.PostDescription {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.BackBtn{
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.Heading{
+    width: 60%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.LastSpace{
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
