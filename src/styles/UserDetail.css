@@ -1,0 +1,81 @@
+.UserDetailContainer{
+    width: 100%;
+    height: 90%;
+    /* background-color: aquamarine; */
+}
+.UserDetailProfile{
+    width: 100%;
+    height: 90%;
+  
+
+}
+.UserProfile{
+    width: 100%;
+    height: 30%;
+    background-color: black;
+
+}
+.UserProfileUpperSection{
+    width: 100%;
+    height: 70%;
+    /* background-color: aqua; */
+    display: flex;
+}
+.ProfileImageContainer > img {
+    width: 5.6rem;
+    height: 5.6rem;
+    border-radius: 50%;
+
+    border: 2px solid rgba(255, 255, 255, 0.4); /* thin light border */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3); /* soft glow */
+}
+
+.UserProfileLowerSection{
+    width: 100%;
+    height: 30%;
+    /* background-color: blanchedalmond; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ProfileImageContainer{
+    width:30%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: blueviolet; */
+}
+.ProfileUserName{
+    width: 70%;
+    height: 100%;
+    /* background-color: aquamarine; */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 1.5rem;
+}
+
+.ProfileUserName>h3{
+    font-weight: 600;
+    font-size: 1.8rem;
+}
+.ProfileUserName>p{
+    font-weight: 600;
+}
+
+.AddFriendBtn{
+    width: 70%;
+    height: 96%;
+     border: 2px solid rgba(255, 255, 255, 0.4); /* thin light border */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3); /* soft glow */
+
+}
+
+.UserProfileUserStats{
+    width: 100%;
+    height:70% ;
+    background-color: black;
+}

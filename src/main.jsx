@@ -7,7 +7,7 @@ import { store } from './app/store';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       <ErrorBoundary>
         <App />
@@ -17,5 +17,5 @@ createRoot(document.getElementById('root')).render(
 
 
     </Provider>
-  </StrictMode>,
+  // </StrictMode>,
 )

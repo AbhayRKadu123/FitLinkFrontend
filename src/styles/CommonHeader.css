@@ -1,0 +1,15 @@
+.CommunityContainerHeader{
+    width: 100%;
+    height: 10%;
+    background-color: #0E0E0E;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.BackBtn{
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

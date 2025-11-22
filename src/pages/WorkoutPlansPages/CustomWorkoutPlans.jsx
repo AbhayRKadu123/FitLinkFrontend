@@ -7,6 +7,7 @@ import List from "../../components/List";
 import Button from "../../components/Button";
 import Alert from "../../components/Alert";
 import WorkoutCard from "../../components/workoutCard";
+import { useGetUserDetailsQuery } from "../../features/api/UserApi";
 
 import { useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation } from "../../features/api/WorkoutApi";
 export default function CustomWorkoutPlan({ setNotActive }) {
@@ -22,6 +23,7 @@ export default function CustomWorkoutPlan({ setNotActive }) {
     // const [UpdateRoutin, { data: UpdatedRoutin, isSuccess: RoutinUpdated }] = useUpdateWorkoutRoutinMutation();
     const { data: GetExerciseData, refetch, error: errorgettingworkout, isError, isSuccess: dataFetched } = useGetUserWorkoutRoutinQuery();
     // let navigate=useNavigate();
+    const { data: GetUserDetail, error: ErrorLoadingUserDetails, isSuccess: LoadingUserDetailSuccessfull } = useGetUserDetailsQuery({ Id: null });
     useEffect(() => {
         let token = localStorage.getItem('token')
         if (!token) {
@@ -40,6 +42,9 @@ export default function CustomWorkoutPlan({ setNotActive }) {
         // refetch()
 
     }, [DataDeleted])
+    useEffect(() => {
+        console.log('GetUserDetail', GetUserDetail?.Detail[0]?.planName)
+    }, [GetUserDetail])
 
     useEffect(() => {
         console.log('GetExerciseData?.result', GetExerciseData?.result)
@@ -153,7 +158,7 @@ export default function CustomWorkoutPlan({ setNotActive }) {
 
 
                 <Button label={'Delete Workout Routin'} onClick={() => { deleteuserroutin(GetExerciseData?.result?._id) }}></Button>
-                <Button label={'Follow Workout Routin'} onClick={async () => { await UpdateUserActivePlan({ Id: GetExerciseData?.result?._id }); console.log('follow workout routin') }}></Button>
+                {GetUserDetail?.Detail[0]?.planName && GetUserDetail?.Detail[0]?.planName == "CustomPlan" ? <h4 style={{ color: 'black' }}>Plan Activated</h4> : <Button label={'Follow Workout Routin'} onClick={async () => { await UpdateUserActivePlan({ Id: GetExerciseData?.result?._id }); console.log('follow workout routin') }}></Button>}
 
 
 
@@ -170,7 +175,7 @@ export default function CustomWorkoutPlan({ setNotActive }) {
 
                         <div className="AddExercisesDays">{selecteddays.map((ele) => <span style={{ backgroundColor: selectedday == ele && '#ffcc00', border: selectedday == ele && '#ffcd07ff' }} onClick={() => { setselectedday(ele); console.log('slected day', ele) }} className="SelectedExerciseDays">{ele}</span>)}</div>
                         <div className="AddExerciseCotent">
-                            <h2 style={{ textAlign: 'center',marginTop:"2rem", fontWeight: '600', color: "black" }}>{selectedday}</h2>
+                            <h2 style={{ textAlign: 'center', marginTop: "2rem", fontWeight: '600', color: "black" }}>{selectedday}</h2>
                             {/* <input placeholder="Enter Title"></input> */}
                             <Input label={'Enter Title'}
                                 placeholder={'Enter Exercise Title'}

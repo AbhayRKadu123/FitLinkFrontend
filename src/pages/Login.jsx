@@ -36,10 +36,11 @@ setError(true)
 
             localStorage.setItem("token", data?.token);
             localStorage.setItem("username", data?.username);
+            localStorage.setItem("UserId",data?.id)
             setTimeout(()=>{
             navigate("/")
 
-            },1000)
+            },500)
 
 
 

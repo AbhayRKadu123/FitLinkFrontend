@@ -1,0 +1,57 @@
+/* MAIN TOOLTIP BOX */
+.shepherd-element {
+  max-width: 220px !important;    /* keeps box small */
+  padding: 0 !important;
+  border-radius: 10px !important;
+  border: 1px solid #e5e5e5 !important;  /* thin clean border */
+}
+.shepherd-element {
+  margin: 8px !important;   /* keeps some distance from element */
+}
+
+/* CONTENT BOX */
+.shepherd-content {
+  background: #ffffff !important;  /* white box */
+  color: #111 !important;          /* black text */
+  padding: 12px 14px !important;   /* clean spacing */
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  line-height: 1.3 !important;
+}
+
+/* HEADER (OPTIONAL) */
+.shepherd-header {
+  background: #ffffff !important;  
+  color: #111 !important;
+  padding: 8px 14px !important;
+  border-bottom: 1px solid #e5e5e5 !important;
+  border-radius: 10px 10px 0 0 !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+}
+
+/* BUTTONS */
+.shepherd-button {
+  background: #000 !important;     /* black button */
+  color: #fff !important;          /* white text */
+  padding: 5px 12px !important;
+  border-radius: 6px !important;
+  font-size: 0.8rem !important;
+  margin-top: 6px !important;
+  transition: 0.2s ease;
+}
+
+.shepherd-button:hover {
+  background: #222 !important;
+}
+
+/* ARROW */
+.shepherd-arrow:before {
+  background: #ffffff !important;  /* white arrow */
+  border: 1px solid #e5e5e5 !important;  /* thin clean border */
+}
+
+/* REMOVE SHADOW FOR PURE MINIMAL LOOK */
+.shepherd-element.shepherd-theme-arrows {
+  box-shadow: none !important;
+}

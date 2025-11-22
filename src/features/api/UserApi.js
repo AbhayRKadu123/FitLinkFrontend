@@ -28,15 +28,27 @@ export const UserApi = createApi({
     endpoints: (builder) => ({
 
         GetUserDetails: builder.query({
-            query: () => '/User/getUserDetail'
+            query: ({Id}) => `/User/getUserDetail?Id=${Id}`
 
         }),
         GetUserFeed:builder.query({
             query:()=>'/User/GetUserFeed'
-        })
+        }),
+         GetAllFriendRequest:builder.query({
+            query:()=>'/Users//GetAllFriendRequest'
+    }),
+         UpdateAddFriendUser: builder.mutation({
+      query: ({Id}) => ({
+        url: `/User/AddFriendUser`,      // your backend API endpoint
+        method: 'PUT',        // sending data
+        body: {userId:Id},      // data to send in request body
+      }),
+
+    }),
+   
 
 
 
     })
 })
-    export const { useGetUserDetailsQuery,useGetUserFeedQuery } = UserApi;
+    export const {useGetAllFriendRequestQuery,useUpdateAddFriendUserMutation, useGetUserDetailsQuery,useGetUserFeedQuery } = UserApi;

@@ -1,0 +1,27 @@
+.heart-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.heart-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: red;
+  /* color: white; */
+  font-size: 3px;
+  padding: 2px 2px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 5px;
+  min-height: 5px;
+  font-weight: bold;
+}
