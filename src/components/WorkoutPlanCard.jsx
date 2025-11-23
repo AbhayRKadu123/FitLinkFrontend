@@ -1,8 +1,19 @@
 
 import "../styles/WorkoutPlanCard.css"
 import { useNavigate } from "react-router-dom"
+import { useContext } from "react";
+import MyContext from "../../public/utils/MyContext";
 export default function WorkoutPlanCard({ Url, Title, Description,comingSoon,NavGateTo }) {
     const navigate=useNavigate();
+    const {
+  ShowNotification,
+  setShowNotification,
+  NotificatonType,
+  setNotificatioinType,
+  NotificationMessage,
+  setNotificationMessage
+} = useContext(MyContext);
+
     return (
         <div
             style={{

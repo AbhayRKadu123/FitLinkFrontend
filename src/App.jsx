@@ -13,6 +13,8 @@ import React, { useState } from "react";
 import CustomWorkoutPlan from "./pages/WorkoutPlansPages/CustomWorkoutPlans";
 import LogWorkoutScreen from "./pages/LogWorkoutScreen";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { useGetUserDetailsQuery } from "../src/features/api/UserApi"
+import { useRef } from "react";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import WorkoutHistory from "./pages/WorkoutHistory";
@@ -26,22 +28,71 @@ import MyContext from "../public/utils/MyContext";
 import AllNotification from "./pages/AllNotification";
 import TourGuide from "./components/TourGuide";
 import FuturisticRobotBanner from "./components/CustomTourGuide";
+import Notification from "./components/ToastNotification";
+import BannerContext from "../public/utils/BannerContext";
 function App() {
   const [isloginorsignup, setisloginorsignup] = useState(false)
   const [tourStep, setTourStep] = useState(0);
+  const [ShowNotification, setShowNotification] = useState(false);
+  const [NotificatonType, setNotificatioinType] = useState('success');
+  const [NotificationMessage, setNotificationMessage] = useState("")
+  const [selecteddays, setselecteddays] = useState([])
+  const [expanded, setExpanded] = useState(true);
+
+
+
 
   const [NotActive, setNotActive] = useState(false)
-   const [HasNotification, setHasNotification] = useState(false);
-   function RouteWatcher() {
-  const location = useLocation();
+  const [ShowBot, setShowBot] = useState(false)
+  const [bannerText, setbannerText] = useState("")
+  // const bannerTextRef = useRef("");
 
+  const [useDiffBannerText, setuseDiffBannerText] = useState(false);
+  let { data, refetch, isLoading, error } = useGetUserDetailsQuery({ Id: null })
+
+  function RouteWatcher() {
+    const location = useLocation();
+
+    useEffect(() => {
+      console.log("Current path:", location.pathname);
+      if (location.pathname == '/') {
+        setbannerText('Click on CustomWorkoutCard')
+        // bannerTextRef.current='Click on CustomWorkoutCard'
+        // setExpanded(true)
+      } if (location.pathname == '/CustomWorkoutPlan' && useDiffBannerText == false) {
+        setbannerText('Now Select The Days You Want to workout and click on Save and Next')
+        // setExpanded(true)
+
+        // bannerTextRef.current='Now Select The Days You Want to workout and click on Save and Next'
+
+
+      } if(location.pathname=='/Community'){
+        setbannerText('Buy Premium to access Social Tab')
+
+
+      }
+      if(location.pathname=='/Nutrition'){
+        setbannerText('Buy Premium to access Nutrition Tab')
+
+
+      }
+        if(location.pathname=='/Profile'){
+        setbannerText('Update Your Profile ')
+
+
+      }
+    }, [location.pathname]);
+
+    return null; // doesn’t render anything
+  }
   useEffect(() => {
-    console.log("Current path:", location.pathname);
-  }, [location.pathname]);
+    console.log('data from APP.jsx', data?.Detail[0]?.LoginCount)
+    if (data?.Detail && data?.Detail[0]?.LoginCount < 2 && data?.Detail[0]?.CustomWorkoutPlanActivated!=true ) {
+      setShowBot(true)
 
-  return null; // doesn’t render anything
-}
- 
+
+    }
+  }, [data])
   function isTokenExpired() {
     const token = localStorage.getItem("token");
     if (!token) return true;
@@ -67,18 +118,18 @@ function App() {
   // console.log("location.pathname=",location.pathname)
 
 
-useEffect(() => {
-  
-  socket.emit("UserJoined",{Id:localStorage.getItem("UserId")})
-  socket.on("OnlineUsers",(lst)=>{
-    console.log('lst-',lst)
-  })
-  socket.on("Notification",(data)=>{
-    console.log('Notification Data',data)
-  })
-  
-  return () => socket.off("UserJoined");
-}, []);
+  useEffect(() => {
+
+    socket.emit("UserJoined", { Id: localStorage.getItem("UserId") })
+    socket.on("OnlineUsers", (lst) => {
+      console.log('lst-', lst)
+    })
+    socket.on("Notification", (data) => {
+      console.log('Notification Data', data)
+    })
+
+    return () => socket.off("UserJoined");
+  }, []);
 
   // Component wrapper that checks token on route change
   function TokenChecker({ children }) {
@@ -100,7 +151,7 @@ useEffect(() => {
 
     return children;
   }
-   const steps = [
+  const steps = [
     {
       text: "Click here to create your custom workout plan",
       target: ".WorkoutPlansCard",
@@ -117,55 +168,62 @@ useEffect(() => {
   return (
     <Router>
       <RouteWatcher></RouteWatcher>
-      
-      <MyContext.Provider value={{ HasNotification, setHasNotification}}>
-            {/* <TourGuide> */}
 
-      <div className="container">
-        <div className="MainLayoutContainer">
-          {/* <button onClick={() => setTourStep(1)}>Start App Tour</button>  */}
-          
+      <MyContext.Provider value={{ ShowNotification, setShowNotification, NotificatonType, setNotificatioinType, NotificationMessage, setNotificationMessage, selecteddays, setselecteddays }}>
+        {/* <TourGuide> */}
+        <BannerContext.Provider value={{ bannerText, setbannerText, useDiffBannerText, setuseDiffBannerText }}>
 
 
-          <TokenChecker>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={< Login ></Login>}></Route>
-              <Route path="/signup" element={<SignUp></SignUp>}></Route>
-              <Route path="/Community" element={<Community />} />
-              <Route path="/Nutrition" element={<Nutrition />} />
-              <Route path="/Profile" element={<Profile />} />
-              <Route path="/WorkoutHistory" element={< WorkoutHistory />} />
+          <div  className="container">
+            <div  className="MainLayoutContainer">
+            
+              {/* <button onClick={() => setTourStep(1)}>Start App Tour</button>  */}
+              {ShowNotification && <Notification type={NotificatonType} message={NotificationMessage} onClose={() => { setShowNotification(false) }} ></Notification>}
 
-              {/* /WorkoutHistory */}
-              <Route path="/CustomWorkoutPlan" element={<CustomWorkoutPlan setNotActive={setNotActive}></CustomWorkoutPlan>}>
 
-              </Route>
-              <Route path="/LogWorkoutScreen" element={<LogWorkoutScreen></LogWorkoutScreen>}></Route>
-              <Route path="/DetailWorkoutHistory" element={<DetailWorkoutHistory></DetailWorkoutHistory>}></Route>
-              <Route path="/UserDetail" element={< UserDetails></ UserDetails>}></Route>
-              <Route path="/AllNotification" element={<AllNotification></AllNotification>}></Route>
 
-              {/* /UserDetail */}
+              <TokenChecker>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/login" element={< Login ></Login>}></Route>
+                  <Route path="/signup" element={<SignUp></SignUp>}></Route>
+                  <Route path="/Community" element={<Community />} />
+                  <Route path="/Nutrition" element={<Nutrition />} />
+                  <Route path="/Profile" element={<Profile />} />
+                  <Route path="/WorkoutHistory" element={< WorkoutHistory />} />
 
-              {/* DetailWorkoutHistory */}
+                  {/* /WorkoutHistory */}
+                  <Route path="/CustomWorkoutPlan" element={<CustomWorkoutPlan setNotActive={setNotActive}></CustomWorkoutPlan>}>
 
-              <Route path="*" element={<NotFound />} />
+                  </Route>
+                  <Route path="/LogWorkoutScreen" element={<LogWorkoutScreen></LogWorkoutScreen>}></Route>
+                  <Route path="/DetailWorkoutHistory" element={<DetailWorkoutHistory></DetailWorkoutHistory>}></Route>
+                  <Route path="/UserDetail" element={< UserDetails></ UserDetails>}></Route>
+                  <Route path="/AllNotification" element={<AllNotification></AllNotification>}></Route>
 
-            </Routes>
-            <FuturisticRobotBanner  ></FuturisticRobotBanner>
-            {/* <button onClick={() => window.startAppTour()}>
-  Start Guide
-</button>
+                  {/* /UserDetail */}
 
-<TourGuide /> */}
+                  {/* DetailWorkoutHistory */}
 
-            <NavBar isLoginSignUp={isloginorsignup} Active={NotActive} NotActive={NotActive}></NavBar>
-          </TokenChecker>
-          {/* <Home></Home> */}
-        </div>
-      </div>
-      {/* </TourGuide> */}
+                  <Route path="*" element={<NotFound />} />
+
+                </Routes>
+                {/* {ShowBot && <FuturisticRobotBanner bannerText={bannerText}  ></FuturisticRobotBanner>}
+              
+              */}
+                {ShowBot && <FuturisticRobotBanner expanded={expanded} setExpanded={setExpanded} bannerText={bannerText} />}
+
+
+                
+
+                <NavBar isLoginSignUp={isloginorsignup} Active={NotActive} NotActive={NotActive}></NavBar>
+              </TokenChecker>
+              {/* <Home></Home> */}
+            </div>
+          </div>
+          {/* </TourGuide> */}
+        </BannerContext.Provider>
+
       </MyContext.Provider>
     </Router>
 

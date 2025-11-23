@@ -4,8 +4,9 @@
 import { useEffect, useState } from "react";
 import "../styles/workoutCard.css";
 import { useUpdateWorkoutRoutinMutation } from "../features/api/WorkoutApi";
-
-export default function WorkoutCard({ day, Title, ExerciseList, id, refetch }) {
+import { useContext } from "react";
+import MyContext from "../../public/utils/MyContext";
+export default function WorkoutCard({ day, Title, ExerciseList, id, refetch, PlanEditSuccessfully, setPlanEditSuccessfully }) {
     if (ExerciseList?.length == 0) return null
     if (!ExerciseList) return null
     const [isEditing, setIsEditing] = useState(false);
@@ -14,11 +15,30 @@ export default function WorkoutCard({ day, Title, ExerciseList, id, refetch }) {
 
     const [newExercise, setNewExercise] = useState("");
     const [UpdateRoutin, { data: UpdatedRoutin, error, isSuccess: RoutinUpdated }] = useUpdateWorkoutRoutinMutation();
-
+ const {
+  ShowNotification,
+  setShowNotification,
+  NotificatonType,
+  setNotificatioinType,
+  NotificationMessage,
+  setNotificationMessage
+} = useContext(MyContext);
 
     useEffect(() => {
-       refetch()
+        refetch()
     }, [error])
+    useEffect(() => {
+        console.log("RoutinUpdated",RoutinUpdated)
+        if (RoutinUpdated == true) {
+            refetch()
+            setShowNotification(true)
+            setNotificatioinType('success')
+            setNotificationMessage('Routine Update Successfully')
+
+            // setPlanEditSuccessfully(true)
+
+        }
+    },[RoutinUpdated])
 
     function handleAddExercise() {
         if (newExercise.trim() === "") return;

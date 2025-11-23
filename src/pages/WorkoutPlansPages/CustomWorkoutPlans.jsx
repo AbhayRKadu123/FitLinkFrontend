@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Outlet, useNavigate } from "react-router-dom";
 import "../../styles/CustomWorkoutPlans.css"
 import { flushSync } from "react-dom";
@@ -8,43 +8,105 @@ import Button from "../../components/Button";
 import Alert from "../../components/Alert";
 import WorkoutCard from "../../components/workoutCard";
 import { useGetUserDetailsQuery } from "../../features/api/UserApi";
+import Notification from "../../components/ToastNotification";
+import { useContext } from "react";
+import MyContext from "../../../public/utils/MyContext";
+import BannerContext from "../../../public/utils/BannerContext";
 
 import { useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation } from "../../features/api/WorkoutApi";
 export default function CustomWorkoutPlan({ setNotActive }) {
     const navigate = useNavigate();
     const [IsCustomWorkout, setIsCustomWorkout] = useState(false)
-    const [selectedday, setselectedday] = useState('mon')
-    const [selecteddays, setselecteddays] = useState([])
+    const [selectedday, setselectedday] = useState('')
+    // const [selecteddays, setselecteddays] = useState([])
     const [CreateWorkoutPlan, setCreateWorkoutPlan] = useState(false)
+    // const CreateWorkoutPlanuseref = useRef(false)
     const [exercise, setexercise] = useState("")
+    const [PlanCreatedSuccessfully, setPlanCreatedSuccessfully] = useState(false)
+    const [PlanEditSuccessfully, setPlanEditSuccessfully] = useState(false)
+
     const [addWorkoutRoutine, { data, error: errorAddingWorkout, isLoading, isSuccess }] = useAddWorkoutRoutinMutation();
     const [UpdateUserActivePlan, { data: ActivePlan, error: Updatingerror, isLoading: ActivePlanLoading, isSuccess: PlanChanged }] = useUpdateUserActiveWorkoutPlanMutation();
     const [DeleteRoutinMutation, { data: deleteroutin, error: errordeleting, isSuccess: DataDeleted }] = useDeleteRoutineMutation();
     // const [UpdateRoutin, { data: UpdatedRoutin, isSuccess: RoutinUpdated }] = useUpdateWorkoutRoutinMutation();
     const { data: GetExerciseData, refetch, error: errorgettingworkout, isError, isSuccess: dataFetched } = useGetUserWorkoutRoutinQuery();
     // let navigate=useNavigate();
-    const { data: GetUserDetail, error: ErrorLoadingUserDetails, isSuccess: LoadingUserDetailSuccessfull } = useGetUserDetailsQuery({ Id: null });
+    const { data: GetUserDetail, error: ErrorLoadingUserDetails, isSuccess: LoadingUserDetailSuccessfull,refetch:RefetchGetUserDetail } = useGetUserDetailsQuery({ Id: null });
     useEffect(() => {
         let token = localStorage.getItem('token')
         if (!token) {
             navigate("/login")
         }
     }, [])
+
     console.log('GetExerciseData', GetExerciseData)
     let daysarr = ['mon', 'tue', 'wed', 'thur', 'fri', 'sat', 'sun']
+    const {
+        ShowNotification,
+        setShowNotification,
+        NotificatonType,
+        setNotificatioinType,
+        NotificationMessage,
+        setNotificationMessage,
+        selecteddays,
+        setselecteddays,
+
+    } = useContext(MyContext);
+
+    const {
+        bannerText, setbannerText, useDiffBannerText, setuseDiffBannerText
+
+    } = useContext(BannerContext);
     useEffect(() => {
 
         console.log("selecteddays", selecteddays)
     }, [selecteddays])
-    useEffect(() => {
-        setIsCustomWorkout(false)
 
-        // refetch()
+    useEffect(() => {
+        if (PlanChanged == true) {
+            refetch()
+            setShowNotification(true)
+            setNotificatioinType('success')
+            setNotificationMessage('Custom Plan Activated')
+            RefetchGetUserDetail ()
+
+        }
+
+    }, [PlanChanged])
+    useEffect(() => {
+
+        if (DataDeleted == true) {
+            setIsCustomWorkout(false)
+
+            // refetch()
+            setShowNotification(true)
+            setNotificatioinType('success')
+            setNotificationMessage('Data Deleted Successfully')
+        }
+
 
     }, [DataDeleted])
     useEffect(() => {
         console.log('GetUserDetail', GetUserDetail?.Detail[0]?.planName)
     }, [GetUserDetail])
+    useEffect(() => {
+        if (isSuccess == true) {
+            refetch()
+            setShowNotification(true)
+            setNotificatioinType('success')
+            setNotificationMessage('Plan Created Successfully')
+        }
+
+
+    }, [isSuccess])
+    // useEffect(() => {
+    //     console.log('PlanChanged ', PlanChanged)
+    //     if (PlanChanged == true) {
+    //         refetch()
+
+    //         // setPlanEditSuccessfully(true)
+    //     }
+    // }, [PlanChanged])
 
     useEffect(() => {
         console.log('GetExerciseData?.result', GetExerciseData?.result)
@@ -62,6 +124,13 @@ export default function CustomWorkoutPlan({ setNotActive }) {
     useEffect(() => {
         refetch()
     }, [errordeleting])
+    useEffect(() => {
+        if (selecteddays && selecteddays.length > 0) {
+            console.log("selecteddays=", selecteddays[0])
+            setselectedday(selecteddays[0])
+        }
+
+    }, [selecteddays])
     const ToggleDay = (day) => {
         setselecteddays((prev) =>
             prev.includes(day)
@@ -73,12 +142,44 @@ export default function CustomWorkoutPlan({ setNotActive }) {
         await DeleteRoutinMutation({ id })
     }
     function handleSaveAndNext() {
-        if (selecteddays.length == 0) {
-            console.log('Select Atleast One day')
-            return
-        }
-        setCreateWorkoutPlan(true)
+        if (selecteddays.length == 0) return;
+
+        // Update context FIRST
+
+
+
+        setuseDiffBannerText(true);
+        setbannerText("Now Enter Title Of Exercise and Enter Exercise name Click on Add Exercise it will be added to exercise list and then click on Save Routin ")
+
+        // setTimeout(() => {
+            setCreateWorkoutPlan(true);
+
+        // }, [100])
+
+
+
+
+        // THEN switch UI state
     }
+
+
+          useEffect(()=>{
+    console.log(' bannerText', bannerText)
+    if(useDiffBannerText==true){
+    setCreateWorkoutPlan(true)
+
+    }
+        },[bannerText,useDiffBannerText])
+        
+        useEffect(()=>{
+
+if(isSuccess==true){
+    setuseDiffBannerText(true);
+        setbannerText("Your Custom Workout Plan is Created !")
+}
+        },[isSuccess])
+
+
     const [formData, setformData] = useState({
         mon: {
             Title: "",
@@ -137,6 +238,9 @@ export default function CustomWorkoutPlan({ setNotActive }) {
         <Outlet></Outlet>
         <div onClick={() => { navigate(-1) }} className="CustomWorkoutPlanBackBtn"><img className="backarrow" src="Images/left-arrow.png"></img></div>
         <div className="CustomWorkoutPlanAddWorkoutContainer">
+            {/* {PlanCreatedSuccessfully && <Notification type={'success'} message={'New Custom Plan Created Successfully'} onClose={() => { setPlanCreatedSuccessfully(false) }}></Notification>}
+            {PlanEditSuccessfully && <Notification type={'success'} message={'Plan Edit Successfull'} onClose={() => { setPlanEditSuccessfully(false) }}></Notification>} */}
+
             {IsCustomWorkout ? <div className="CheckCustomExercise" >
                 {/* {formData.map((ele) => {
                     <WorkoutCard day={ele.day} title={ele.} exerciseList={[
@@ -152,6 +256,8 @@ export default function CustomWorkoutPlan({ setNotActive }) {
                         ExerciseList={value.exercises}
                         Title={value.Title}
                         refetch={refetch}
+                        PlanEditSuccessfully={PlanEditSuccessfully}
+                        setPlanEditSuccessfully={setPlanEditSuccessfully}
                     />
                 ))}
 

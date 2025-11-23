@@ -6,12 +6,42 @@ import { NavLink } from "react-router-dom"
 import { useAddUserLoginMutation } from "../features/api/AuthApi"
 import { useNavigate } from "react-router-dom"
 import Notification from "../components/ToastNotification"
+import { useContext } from "react"
+import MyContext from "../../public/utils/MyContext"
 export default function Login() {
     // let [Label,setLabel]=useState('Login')
+    const [LoginUser, { data, isLoading,error, isSuccess, isError }] = useAddUserLoginMutation();
+
     let [Error,setError]=useState(false)
+    let [loginsuccess,setloginsuccess]=useState(false)
+const {
+        ShowNotification,
+        setShowNotification,
+        NotificatonType,
+        setNotificatioinType,
+        NotificationMessage,
+        setNotificationMessage,
+        
 
+    } = useContext(MyContext);
+// isSuccess
+useEffect(()=>{
+    if(isSuccess==true){
+setShowNotification(true)
+setNotificatioinType('success')
+setNotificationMessage('User logged in')
+    }
 
+},[isSuccess])
 
+useEffect(()=>{
+    if(isError==true){
+setShowNotification(true)
+setNotificatioinType('error')
+setNotificationMessage('Something went wrong')
+    }
+
+},[isError])
     const navigate = useNavigate();
 
     const [Login, setLogin] = useState({
@@ -20,7 +50,6 @@ export default function Login() {
 
     })
 
-    const [LoginUser, { data, isLoading,error, isSuccess, isError }] = useAddUserLoginMutation();
 useEffect(()=>{
     if(isError==true){
 setError(true)
@@ -37,10 +66,10 @@ setError(true)
             localStorage.setItem("token", data?.token);
             localStorage.setItem("username", data?.username);
             localStorage.setItem("UserId",data?.id)
-            setTimeout(()=>{
+            // setTimeout(()=>{
             navigate("/")
 
-            },500)
+            // },100)
 
 
 
@@ -54,8 +83,8 @@ setError(true)
     }, [isLoading])
     return <div className="LoginContainer">
         <div className="LoginInputForm">
-            {isSuccess&&<Notification type={'success'} message={'User Logged in'} onClose={()=>{}}></Notification>}
-            {Error&&<Notification type={'error'} message={error?.data?.message} onClose={()=>{setError(false)}}></Notification>}
+            {/* {loginsuccess&&<Notification type={'success'} message={'User Logged in'} onClose={()=>{}}></Notification>}
+            {Error&&<Notification type={'error'} message={error?.data?.message} onClose={()=>{setError(false)}}></Notification>} */}
 
             
             <h3 className="FitLinkLoginHeading">FitLink Login</h3>
