@@ -93,26 +93,43 @@ function App() {
 
     }
   }, [data])
+  // function isTokenExpired() {
+  //   const token = localStorage.getItem("token");
+  //   if (!token) return true;
+
+  //   try {
+  //     const parts = token.split(".");
+  //     if (parts.length !== 3) return true; // invalid structure
+
+  //     const payload = JSON.parse(atob(parts[1]));
+  //     const currentTime = Date.now() / 1000;
+
+  //     // If no exp field, consider it invalid too
+  //     if (!payload.exp) return true;
+
+  //     return payload.exp < currentTime;
+  //   } catch (err) {
+  //     console.error("Invalid or tampered token:", err);
+  //     return true;
+  //   }
+  // }
   function isTokenExpired() {
-    const token = localStorage.getItem("token");
-    if (!token) return true;
+  const token = localStorage.getItem("token");
+  if (!token) return true;
 
-    try {
-      const parts = token.split(".");
-      if (parts.length !== 3) return true; // invalid structure
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
 
-      const payload = JSON.parse(atob(parts[1]));
-      const currentTime = Date.now() / 1000;
+    // If JWT has no expiration, consider it VALID
+    if (!payload.exp) return false;
 
-      // If no exp field, consider it invalid too
-      if (!payload.exp) return true;
-
-      return payload.exp < currentTime;
-    } catch (err) {
-      console.error("Invalid or tampered token:", err);
-      return true;
-    }
+    const currentTime = Date.now() / 1000;
+    return payload.exp < currentTime;
+  } catch {
+    return true;
   }
+}
+
 
   // useEffect
   // console.log("location.pathname=",location.pathname)
