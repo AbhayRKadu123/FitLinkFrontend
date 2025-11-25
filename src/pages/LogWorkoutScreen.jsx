@@ -38,7 +38,7 @@ export default function LogWorkoutScreen() {
         Date: new Date().toISOString().split("T")[0],
         Title: workoutData?.result?.Title?.trim(),
     });
-
+const [isDisabled,setisDisabled]=useState(false)
     // --- Mutation for adding workout session ---
     const [addWorkout, { isLoading: isSaving, isSuccess: saveSuccess, error: saveError }] =
         useAddWorkoutSessionMutation();
@@ -48,7 +48,17 @@ export default function LogWorkoutScreen() {
 
     // --- Local state for session object ---
     const [sessionObject, setSessionObject] = useState(null);
+        // setisDisabled(true)
 
+        useEffect(()=>{
+            if(saveSuccess==true){
+                setisDisabled(true)
+            }
+              if(updateSuccess==true){
+                setisDisabled(true)
+            }
+
+        },[saveSuccess,updateSuccess])
     // --- Initialize session data ---
     useEffect(() => {
         if (isWorkoutLoading || isDailySessionLoading) return;
@@ -171,6 +181,8 @@ export default function LogWorkoutScreen() {
             }
 
             console.log("Updating workout with data:", sessionObject);
+        setisDisabled(true)
+
 
             // ✅ Call the update API
            const result = await updateWorkout(sessionObject)
@@ -204,6 +216,7 @@ export default function LogWorkoutScreen() {
             alert("Please add at least one set before saving.");
             return;
         }
+        setisDisabled(true)
 
         try {
             const res = await addWorkout(sessionObject).unwrap();
@@ -308,10 +321,11 @@ export default function LogWorkoutScreen() {
                     }}
                 >
                     <Button
+                        
                         onClick={dailySession?.getworkoutsession ? updateworkout : handleSave}
-                        disabled={isSaving || isupdating || isDailySessionLoading || isWorkoutLoading}
+                        disabled={isDisabled||isSaving || isupdating || isDailySessionLoading || isWorkoutLoading}
                         label={
-                            (isSaving || isupdating || isDailySessionLoading || isWorkoutLoading)
+                            (isDisabled||isSaving || isupdating || isDailySessionLoading || isWorkoutLoading)
                                 ? "Processing..."
                                 : dailySession?.getworkoutsession
                                     ? "Update Workout"

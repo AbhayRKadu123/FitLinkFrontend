@@ -64,7 +64,7 @@ function LogWeightFunc({Input,SetInput,AddWeight}){
 </div>
 
 }
-export default function TopRightFloatingRobot({ expanded,setShowTourGuide, setExpanded,ShowTourGuide,WeightUpdated, bannerText = "" }) {
+export default function TopRightFloatingRobot({ refetchUserWt,expanded,setShowTourGuide, setExpanded,ShowTourGuide,WeightUpdated, bannerText = "" }) {
 const {data,isLoading,isError:ErrorGettingWeight,error}=useGetUserWeightChartQuery({TodaysDate:getFormattedToday()})
 const [AddUserBodyWeight,{data:AddedWeight,isSuccess,isError}]=useAddUserWeightMutation()
 const [Input,SetInput]=useState(0)
@@ -97,30 +97,31 @@ if(isSuccess==true){
         setNotificatioinType('success')
         // NotificationMessage('Weight Logged Successfully')
         setNotificationMessage('Weight Logged Successfully')
+        refetchUserWt()
 
 }
 },[isSuccess])
 console.log('useGetUserWeightChartQuery',data)
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: "20px",
-        right: "40%",
-        transform: "translate(-50%, -50%)", // move back by half of its own width & height
-
-        zIndex: 9999,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        animation: "float 3s ease-in-out infinite",
-        maxWidth: "220px"
-      }}
-    >
+   <div
+  style={{
+    position: "fixed",
+    top: expanded ? "20px" : "10px",
+    left: expanded ? "auto" : "50%",
+    right: expanded ? "40%" : "auto",
+    transform: expanded ? "translate(-50%, -50%)" : "translateX(-50%)",
+    zIndex: 9999,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    animation: "float 3s ease-in-out infinite",
+    maxWidth: "220px",
+  }}
+>
       {/* Robot */}
       <svg
-        width="80"
-        height="120"
+        width={expanded?'80':"20"}
+        height={expanded?'120':"30"}
         viewBox="0 0 80 120"
         xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)"
         style={{ cursor: "pointer" }}
@@ -134,7 +135,7 @@ console.log('useGetUserWeightChartQuery',data)
         style={{
           marginTop: "5px",
           padding: "2px 6px",
-          fontSize: "0.7rem",
+          fontSize: "0.6rem",
           borderRadius: "4px",
           border: "none",
           background: "#8e44ad",

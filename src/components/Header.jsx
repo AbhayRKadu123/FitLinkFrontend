@@ -23,6 +23,7 @@ export default function HeaderTop({ visibleBox, setVisibleBox, isHomeTab, Dates,
   // console.log("data?.Detail[0]?.username.split[0]",data?.Detail[0]?.username[0].toUpperCase())
   return <div className="Header">
     <div className="HeaderUserDetails"><h4 className="HeaderUserDetailUsername">Hi,<span>{localStorage.getItem('username')}</span></h4><span className="HeaderUserDetailProfile">{data?.Detail[0]?.username[0].toUpperCase() || 'U'}</span></div>
+  
     {isHomeTab && <div className="HeaderWorkoutTracker">
       {IsPlanAvailable && <div className="HeaderWorkoutTrackerPrevNextWeekbtn"><span className="PreviousWeekBtn">Previous week</span><span className="NextWeekBtn">Next Week</span></div>}
       {IsPlanAvailable && <div className="Headerdate">

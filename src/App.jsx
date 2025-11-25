@@ -62,7 +62,7 @@ function App() {
 
   const [useDiffBannerText, setuseDiffBannerText] = useState(false);
   let { data, refetch, isLoading, error } = useGetUserDetailsQuery({ Id: null })
-const {data:UserWeight,isLoading:LoadingUserWeight,isError:ErrorGettingWeight}=useGetUserWeightChartQuery({TodaysDate:getFormattedToday()})
+const {data:UserWeight,isLoading:LoadingUserWeight,refetch:refetchUserWt,isError:ErrorGettingWeight}=useGetUserWeightChartQuery({TodaysDate:getFormattedToday()})
 
   function RouteWatcher() {
     const location = useLocation();
@@ -259,7 +259,7 @@ setShowBot(false)
                 {/* {ShowBot && <FuturisticRobotBanner bannerText={bannerText}  ></FuturisticRobotBanner>}
               
               */}
-                {ShowBot && <FuturisticRobotBanner setShowTourGuide={setShowTourGuide} ShowTourGuide={ShowTourGuide} WeightUpdated={WeightUpdated} expanded={expanded}  setExpanded={setExpanded}  bannerText={bannerText} />}
+                {ShowBot && <FuturisticRobotBanner refetchUserWt={refetchUserWt} setShowTourGuide={setShowTourGuide} ShowTourGuide={ShowTourGuide} WeightUpdated={WeightUpdated} expanded={expanded}  setExpanded={setExpanded}  bannerText={bannerText} />}
 
 
                 
