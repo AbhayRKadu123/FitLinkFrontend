@@ -41,7 +41,7 @@ export default function Profile() {
 
                 <img onClick={() => { navigate(-1) }} style={{ width: '1.5rem', height: '1.5rem', marginLeft: '0.5rem', marginTop: '0.2rem' }} src="Images/left-arrow.png"></img>
                 <button
-                    onClick={() => { localStorage.removeItem('token'); localStorage.removeItem('username'); navigate("/login") }}
+                    onClick={() => { localStorage.removeItem('token'); localStorage.removeItem('username');localStorage.removeItem('UserId'); navigate("/login") }}
                     style={{
                         height: '1.9rem',
                         fontSize: '0.7rem',

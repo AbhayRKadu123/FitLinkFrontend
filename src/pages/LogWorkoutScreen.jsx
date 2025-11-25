@@ -60,6 +60,9 @@ const [isDisabled,setisDisabled]=useState(false)
 
         },[saveSuccess,updateSuccess])
     // --- Initialize session data ---
+    useEffect(()=>{
+refetch()
+    },[])
     useEffect(() => {
         if (isWorkoutLoading || isDailySessionLoading) return;
 
