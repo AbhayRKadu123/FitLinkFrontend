@@ -11,6 +11,7 @@ import UserDetails from "./pages/UserDetails";
 import HeaderTop from "./components/Header";
 import React, { useState } from "react";
 import CustomWorkoutPlan from "./pages/WorkoutPlansPages/CustomWorkoutPlans";
+import {useGetUserWeightChartQuery} from "../src/features/api/WeightTrackingApi.js"
 import LogWorkoutScreen from "./pages/LogWorkoutScreen";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useGetUserDetailsQuery } from "../src/features/api/UserApi"
@@ -29,8 +30,18 @@ import AllNotification from "./pages/AllNotification";
 import TourGuide from "./components/TourGuide";
 import FuturisticRobotBanner from "./components/CustomTourGuide";
 import Notification from "./components/ToastNotification";
+import WeightHistoryChart from "./pages/WeightHistoryChart";
 import BannerContext from "../public/utils/BannerContext";
 function App() {
+   function getFormattedToday() {
+        const today = new Date();
+
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, "0"); // 0-based month
+        const day = String(today.getDate()).padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
+    }
   const [isloginorsignup, setisloginorsignup] = useState(false)
   const [tourStep, setTourStep] = useState(0);
   const [ShowNotification, setShowNotification] = useState(false);
@@ -45,10 +56,13 @@ function App() {
   const [NotActive, setNotActive] = useState(false)
   const [ShowBot, setShowBot] = useState(false)
   const [bannerText, setbannerText] = useState("")
+  const [WeightUpdated,setWeightUpdated]=useState(false)
+  const [ShowTourGuide,setShowTourGuide]=useState(false)
   // const bannerTextRef = useRef("");
 
   const [useDiffBannerText, setuseDiffBannerText] = useState(false);
   let { data, refetch, isLoading, error } = useGetUserDetailsQuery({ Id: null })
+const {data:UserWeight,isLoading:LoadingUserWeight,isError:ErrorGettingWeight}=useGetUserWeightChartQuery({TodaysDate:getFormattedToday()})
 
   function RouteWatcher() {
     const location = useLocation();
@@ -81,6 +95,9 @@ function App() {
 
 
       }
+      if(location.pathname=='/signup'||location.pathname=="/login"){
+        setShowBot(false)
+      }
     }, [location.pathname]);
 
     return null; // doesn’t render anything
@@ -88,11 +105,23 @@ function App() {
   useEffect(() => {
     console.log('data from APP.jsx', data?.Detail[0]?.LoginCount)
     if (data?.Detail && data?.Detail[0]?.LoginCount < 2 && data?.Detail[0]?.CustomWorkoutPlanActivated!=true ) {
+      setShowTourGuide(true)
       setShowBot(true)
 
 
+    }else if(WeightUpdated==false){
+      setShowTourGuide(false)
+      setShowBot(true)
+
     }
   }, [data])
+  
+  useEffect(()=>{
+    if(UserWeight && UserWeight?.Data){
+setShowBot(false)
+
+    }
+  },[UserWeight])
   // function isTokenExpired() {
   //   const token = localStorage.getItem("token");
   //   if (!token) return true;
@@ -208,6 +237,8 @@ function App() {
                   <Route path="/Nutrition" element={<Nutrition />} />
                   <Route path="/Profile" element={<Profile />} />
                   <Route path="/WorkoutHistory" element={< WorkoutHistory />} />
+                  <Route path="/WeightHistory" element={< WeightHistoryChart />} />
+
 
                   {/* /WorkoutHistory */}
                   <Route path="/CustomWorkoutPlan" element={<CustomWorkoutPlan setNotActive={setNotActive}></CustomWorkoutPlan>}>
@@ -228,7 +259,7 @@ function App() {
                 {/* {ShowBot && <FuturisticRobotBanner bannerText={bannerText}  ></FuturisticRobotBanner>}
               
               */}
-                {ShowBot && <FuturisticRobotBanner expanded={expanded} setExpanded={setExpanded} bannerText={bannerText} />}
+                {ShowBot && <FuturisticRobotBanner setShowTourGuide={setShowTourGuide} ShowTourGuide={ShowTourGuide} WeightUpdated={WeightUpdated} expanded={expanded}  setExpanded={setExpanded}  bannerText={bannerText} />}
 
 
                 

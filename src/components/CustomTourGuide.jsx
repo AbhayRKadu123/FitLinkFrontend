@@ -1,8 +1,106 @@
 import React, { useEffect, useState } from "react";
 import "../styles/CustomTourGuide.css"
+import MyContext from "../../public/utils/MyContext";
+import { useContext } from "react";
+import { useGetUserWeightChartQuery,useAddUserWeightMutation } from "../features/api/WeightTrackingApi";
+ function getFormattedToday() {
+        const today = new Date();
 
-export default function TopRightFloatingRobot({ expanded, setExpanded, bannerText = "" }) {
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, "0"); // 0-based month
+        const day = String(today.getDate()).padStart(2, "0");
 
+        return `${year}-${month}-${day}`;
+    }
+function LogWeightFunc({Input,SetInput,AddWeight}){
+  return <div style={{
+  display: "flex",
+  gap: "8px",
+  marginTop: "8px",
+  width: "100%",
+  justifyContent: "center",
+  alignItems: "center",
+  flexDirection:'column'
+}}>
+  <input
+    placeholder="Enter Your Weight"
+    style={{
+      padding: "8px 12px",
+      borderRadius: "8px",
+      border: "2px solid #8e44ad",
+      background: "rgba(255,255,255,0.85)",
+      width: "60%",
+      fontSize: "0.9rem",
+      outline: "none",
+      boxShadow: "0 0 8px rgba(142, 68, 173, 0.5)",
+      transition: "0.2s",
+      color:'black'
+    }}
+    value={Input}
+    onChange={(event)=>{SetInput(event.target.value)}}
+    onFocus={(e) => e.target.style.boxShadow = "0 0 10px rgba(0,255,255,0.9)"}
+    onBlur={(e) => e.target.style.boxShadow = "0 0 8px rgba(142, 68, 173, 0.5)"}
+  />
+
+  <button
+    style={{
+      padding: "8px 12px",
+      borderRadius: "8px",
+      fontSize: "0.9rem",
+      border: "none",
+      background: "linear-gradient(45deg, #8e44ad, #00ffff)",
+      color: "#000",
+      fontWeight: "bold",
+      cursor: "pointer",
+      boxShadow: "0 0 10px rgba(255,255,255,0.7)",
+      transition: "0.2s"
+    }}
+    onMouseOver={(e) => e.target.style.transform = "scale(1.05)"}
+    onMouseOut={(e) => e.target.style.transform = "scale(1)"}
+    onClick={async ()=>{await AddWeight(Input)}}
+  >
+    Log Weight
+  </button>
+</div>
+
+}
+export default function TopRightFloatingRobot({ expanded,setShowTourGuide, setExpanded,ShowTourGuide,WeightUpdated, bannerText = "" }) {
+const {data,isLoading,isError:ErrorGettingWeight,error}=useGetUserWeightChartQuery({TodaysDate:getFormattedToday()})
+const [AddUserBodyWeight,{data:AddedWeight,isSuccess,isError}]=useAddUserWeightMutation()
+const [Input,SetInput]=useState(0)
+const {
+        ShowNotification,
+        setShowNotification,
+        NotificatonType,
+        setNotificatioinType,
+        NotificationMessage,
+        setNotificationMessage,
+        
+
+    } = useContext(MyContext);
+async function  AddWeight(num=0) {
+  if(!num || num==0)return
+  console.log('num=',num)
+  await AddUserBodyWeight({weight:num,TodaysDate:getFormattedToday()})
+  
+}
+useEffect(()=>{
+if(data && data?.Data){
+  console.log('data?.Data',data?.Data)
+  setShowTourGuide(false)
+}
+},[data])
+useEffect(()=>{
+if(isSuccess==true){
+   setShowNotification(true)
+        // NotificatonType('success')
+        setNotificatioinType('success')
+        // NotificationMessage('Weight Logged Successfully')
+        setNotificationMessage('Weight Logged Successfully')
+
+}
+},[isSuccess])
+console.log('useGetUserWeightChartQuery',data)
   return (
     <div
       style={{
@@ -64,7 +162,14 @@ export default function TopRightFloatingRobot({ expanded, setExpanded, bannerTex
         }}
         className="RobotBanner"
       >
-        {expanded && bannerText}
+   {expanded && (
+  ShowTourGuide ? (
+    bannerText
+  ) : !WeightUpdated ? (
+    <LogWeightFunc Input={Input} SetInput={SetInput} AddWeight={AddWeight}  />
+  ) : null
+)}
+
 
 
       </div>

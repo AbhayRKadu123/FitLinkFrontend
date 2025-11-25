@@ -35,7 +35,7 @@ export const UserApi = createApi({
             query:()=>'/User/GetUserFeed'
         }),
          GetAllFriendRequest:builder.query({
-            query:()=>'/Users//GetAllFriendRequest'
+            query:()=>'/Users/GetAllFriendRequest'
     }),
          UpdateAddFriendUser: builder.mutation({
       query: ({Id}) => ({
