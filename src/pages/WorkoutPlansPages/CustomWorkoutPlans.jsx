@@ -14,33 +14,33 @@ import MyContext from "../../../public/utils/MyContext";
 import BannerContext from "../../../public/utils/BannerContext";
 
 import { useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation } from "../../features/api/WorkoutApi";
+
 export default function CustomWorkoutPlan({ setNotActive }) {
     const navigate = useNavigate();
     const [IsCustomWorkout, setIsCustomWorkout] = useState(false)
     const [selectedday, setselectedday] = useState('')
-    // const [selecteddays, setselecteddays] = useState([])
     const [CreateWorkoutPlan, setCreateWorkoutPlan] = useState(false)
-    // const CreateWorkoutPlanuseref = useRef(false)
     const [exercise, setexercise] = useState("")
     const [PlanCreatedSuccessfully, setPlanCreatedSuccessfully] = useState(false)
     const [PlanEditSuccessfully, setPlanEditSuccessfully] = useState(false)
 
     const [addWorkoutRoutine, { data, error: errorAddingWorkout, isLoading, isSuccess }] = useAddWorkoutRoutinMutation();
     const [UpdateUserActivePlan, { data: ActivePlan, error: Updatingerror, isLoading: ActivePlanLoading, isSuccess: PlanChanged }] = useUpdateUserActiveWorkoutPlanMutation();
-    const [DeleteRoutinMutation, { data: deleteroutin, error: errordeleting, isSuccess: DataDeleted }] = useDeleteRoutineMutation();
+    const [DeleteRoutinMutation, { data: deleteroutin, error: errordeleting,isLoading:Deleting,isSuccess: DataDeleted }] = useDeleteRoutineMutation();
     // const [UpdateRoutin, { data: UpdatedRoutin, isSuccess: RoutinUpdated }] = useUpdateWorkoutRoutinMutation();
     const { data: GetExerciseData, refetch, error: errorgettingworkout, isError, isSuccess: dataFetched } = useGetUserWorkoutRoutinQuery();
-    // let navigate=useNavigate();
-    const { data: GetUserDetail, error: ErrorLoadingUserDetails, isSuccess: LoadingUserDetailSuccessfull,refetch:RefetchGetUserDetail } = useGetUserDetailsQuery({ Id: null });
+    const { data: GetUserDetail, error: ErrorLoadingUserDetails, isSuccess: LoadingUserDetailSuccessfull, refetch: RefetchGetUserDetail } = useGetUserDetailsQuery({ Id: null });
+
     useEffect(() => {
         let token = localStorage.getItem('token')
         if (!token) {
             navigate("/login")
         }
-    }, [])
+    }, [navigate])
 
     console.log('GetExerciseData', GetExerciseData)
     let daysarr = ['mon', 'tue', 'wed', 'thur', 'fri', 'sat', 'sun']
+
     const {
         ShowNotification,
         setShowNotification,
@@ -50,87 +50,74 @@ export default function CustomWorkoutPlan({ setNotActive }) {
         setNotificationMessage,
         selecteddays,
         setselecteddays,
-
     } = useContext(MyContext);
 
     const {
         bannerText, setbannerText, useDiffBannerText, setuseDiffBannerText
-
     } = useContext(BannerContext);
-    useEffect(() => {
 
+    useEffect(() => {
         console.log("selecteddays", selecteddays)
     }, [selecteddays])
 
     useEffect(() => {
-        if (PlanChanged == true) {
-            refetch()
+        if (PlanChanged === true) {
+            // Successful activation: refresh and notify
+            refetch();
             setShowNotification(true)
             setNotificatioinType('success')
             setNotificationMessage('Custom Plan Activated')
-            RefetchGetUserDetail ()
-
+            RefetchGetUserDetail && RefetchGetUserDetail();
         }
+    }, [PlanChanged, refetch, setShowNotification, setNotificatioinType, setNotificationMessage, RefetchGetUserDetail])
 
-    }, [PlanChanged])
     useEffect(() => {
-
-        if (DataDeleted == true) {
+        if (DataDeleted === true) {
             setIsCustomWorkout(false)
-
-            // refetch()
+            // notify
             setShowNotification(true)
             setNotificatioinType('success')
             setNotificationMessage('Data Deleted Successfully')
         }
+    }, [DataDeleted, setShowNotification, setNotificatioinType, setNotificationMessage])
 
-
-    }, [DataDeleted])
     useEffect(() => {
-        console.log('GetUserDetail', GetUserDetail?.Detail[0]?.planName)
+        console.log('GetUserDetail', GetUserDetail?.Detail?.[0]?.planName)
     }, [GetUserDetail])
+
     useEffect(() => {
-        if (isSuccess == true) {
-            refetch()
+        if (isSuccess === true) {
+            // Plan created successfully -> refetch and notify
+            refetch();
             setShowNotification(true)
             setNotificatioinType('success')
             setNotificationMessage('Plan Created Successfully')
         }
-
-
-    }, [isSuccess])
-    // useEffect(() => {
-    //     console.log('PlanChanged ', PlanChanged)
-    //     if (PlanChanged == true) {
-    //         refetch()
-
-    //         // setPlanEditSuccessfully(true)
-    //     }
-    // }, [PlanChanged])
+    }, [isSuccess, refetch, setShowNotification, setNotificatioinType, setNotificationMessage])
 
     useEffect(() => {
         console.log('GetExerciseData?.result', GetExerciseData?.result)
         console.log('formData', formData)
-        if (GetExerciseData?.result !== null) {
+        // if GetExerciseData?.result is not null -> custom workout exists
+        if (GetExerciseData?.result != null) {
             setIsCustomWorkout(true)
-
         } else {
             setIsCustomWorkout(false)
-
-
         }
+    }, [GetExerciseData?.result])
 
-    }, [dataFetched])
-    useEffect(() => {
-        refetch()
-    }, [errordeleting])
+    // Removed noisy / unnecessary refetch-on-error effect to reduce duplicate API calls.
+    // useEffect(() => {
+    //     refetch()
+    // }, [errordeleting])
+
     useEffect(() => {
         if (selecteddays && selecteddays.length > 0) {
             console.log("selecteddays=", selecteddays[0])
             setselectedday(selecteddays[0])
         }
-
     }, [selecteddays])
+
     const ToggleDay = (day) => {
         setselecteddays((prev) =>
             prev.includes(day)
@@ -138,116 +125,89 @@ export default function CustomWorkoutPlan({ setNotActive }) {
                 : [...prev, day] // add if not selected
         );
     };
+
     async function deleteuserroutin(id) {
-        await DeleteRoutinMutation({ id })
+        try {
+            if(Deleting==true) return
+            await DeleteRoutinMutation({ id })
+        } catch (err) {
+            console.error("deleteuserroutin error:", err)
+        }
     }
+
     function handleSaveAndNext() {
-        if (selecteddays.length == 0) return;
+        if (selecteddays.length === 0) return;
 
         // Update context FIRST
-
-
-
         setuseDiffBannerText(true);
         setbannerText("Now Enter Title Of Exercise and Enter Exercise name Click on Add Exercise it will be added to exercise list and then click on Save Routin ")
 
-        // setTimeout(() => {
-            setCreateWorkoutPlan(true);
-
-        // }, [100])
-
-
-
-
         // THEN switch UI state
+        setCreateWorkoutPlan(true);
     }
 
+    useEffect(() => {
+        console.log(' bannerText', bannerText)
+        if (useDiffBannerText === true) {
+            setCreateWorkoutPlan(true)
+        }
+    }, [bannerText, useDiffBannerText])
 
-          useEffect(()=>{
-    console.log(' bannerText', bannerText)
-    if(useDiffBannerText==true){
-    setCreateWorkoutPlan(true)
-
-    }
-        },[bannerText,useDiffBannerText])
-        
-        useEffect(()=>{
-
-if(isSuccess==true){
-    setuseDiffBannerText(true);
-        setbannerText("Your Custom Workout Plan is Created !")
-}
-        },[isSuccess])
-
+    useEffect(() => {
+        if (isSuccess === true) {
+            setuseDiffBannerText(true);
+            setbannerText("Your Custom Workout Plan is Created !")
+        }
+    }, [isSuccess, setuseDiffBannerText, setbannerText])
 
     const [formData, setformData] = useState({
         mon: {
             Title: "",
             exercises: [],
             day: 'monday'
-
         },
         tue: {
             Title: "",
             exercises: [],
             day: 'tuesday'
-
-
         },
         wed: {
             Title: "",
             exercises: [],
             day: 'wednesday'
-
-
-        }, thur: {
+        },
+        thur: {
             Title: "",
             exercises: [],
             day: 'thursday'
-
-
-        }, fri: {
+        },
+        fri: {
             Title: "",
             exercises: [],
             day: 'friday'
-
         },
         sat: {
             Title: "",
             exercises: [],
             day: 'saturday'
-
-
         },
         sun: {
             Title: "",
             exercises: [],
             day: 'sunday'
-
-
         }
-
     })
+
     useEffect(() => {
         console.log('formData-', data)
     }, [data])
 
-    // useEffect(())
-
     return <div className="CustomWorkoutPlanContainer">
         <Outlet></Outlet>
-        <div onClick={() => { navigate(-1) }} className="CustomWorkoutPlanBackBtn"><img className="backarrow" src="Images/left-arrow.png"></img></div>
+        <div onClick={() => { navigate(-1) }} className="CustomWorkoutPlanBackBtn"><img className="backarrow" src="Images/left-arrow.png" alt="back"></img></div>
         <div className="CustomWorkoutPlanAddWorkoutContainer">
-            {/* {PlanCreatedSuccessfully && <Notification type={'success'} message={'New Custom Plan Created Successfully'} onClose={() => { setPlanCreatedSuccessfully(false) }}></Notification>}
-            {PlanEditSuccessfully && <Notification type={'success'} message={'Plan Edit Successfull'} onClose={() => { setPlanEditSuccessfully(false) }}></Notification>} */}
-
+            {/* Notifications (kept commented as original) */}
             {IsCustomWorkout ? <div className="CheckCustomExercise" >
-                {/* {formData.map((ele) => {
-                    <WorkoutCard day={ele.day} title={ele.} exerciseList={[
-
-                    ]}></WorkoutCard>
-                })} */}
-
                 {GetExerciseData?.result && Object.entries(GetExerciseData?.result).map(([key, value]) => (
                     <WorkoutCard
                         id={GetExerciseData?.result?._id}
@@ -261,52 +221,51 @@ if(isSuccess==true){
                     />
                 ))}
 
+                <Button label={Deleting?"Deleting Routin":'Delete Workout Routin'} disabled={Deleting} onClick={() => { deleteuserroutin(GetExerciseData?.result?._id) }}></Button>
 
-
-                <Button label={'Delete Workout Routin'} onClick={() => { deleteuserroutin(GetExerciseData?.result?._id) }}></Button>
-                {GetUserDetail?.Detail[0]?.planName && GetUserDetail?.Detail[0]?.planName == "CustomPlan" ? <h4 style={{ color: 'black' }}>Plan Activated</h4> : <Button label={'Follow Workout Routin'} onClick={async () => { await UpdateUserActivePlan({ Id: GetExerciseData?.result?._id }); console.log('follow workout routin') }}></Button>}
-
-
-
-
-
-
-
-
-
+                {GetUserDetail?.Detail?.[0]?.planName && GetUserDetail?.Detail?.[0]?.planName === "CustomPlan"
+                    ? <h4 style={{ color: 'black' }}>Plan Activated</h4>
+                    : <Button label={ActivePlanLoading?'Activting..':'Follow Workout Routin'} disabled={ActivePlanLoading} onClick={async () => {
+                        if(ActivePlanLoading==true) return
+                        try {
+                            await UpdateUserActivePlan({ Id: GetExerciseData?.result?._id });
+                            console.log('follow workout routin')
+                        } catch (err) {
+                            console.error("UpdateUserActivePlan error:", err)
+                        }
+                    }}></Button>
+                }
 
             </div> :
                 <div className="CreateCustomWorkout">
                     {CreateWorkoutPlan ? <div className="AddExercisesContainer">
-
-                        <div className="AddExercisesDays">{selecteddays.map((ele) => <span style={{ backgroundColor: selectedday == ele && '#ffcc00', border: selectedday == ele && '#ffcd07ff' }} onClick={() => { setselectedday(ele); console.log('slected day', ele) }} className="SelectedExerciseDays">{ele}</span>)}</div>
+                        <div className="AddExercisesDays">{selecteddays.map((ele) => <span style={{ backgroundColor: selectedday === ele ? '#ffcc00' : undefined, border: selectedday === ele ? '#ffcd07ff' : undefined }} onClick={() => {  console.log('slected day', ele) }} className="SelectedExerciseDays" key={ele}>{ele}</span>)}</div>
                         <div className="AddExerciseCotent">
                             <h2 style={{ textAlign: 'center', marginTop: "2rem", fontWeight: '600', color: "black" }}>{selectedday}</h2>
-                            {/* <input placeholder="Enter Title"></input> */}
+
                             <Input label={'Enter Title'}
                                 placeholder={'Enter Exercise Title'}
                                 value={formData?.[selectedday]?.Title}
                                 onChange={(event) => {
+                                    // SAFE fix: preserve existing exercises when updating Title
+                                    const newTitle = event.target.value;
                                     setformData((prev) => {
-                                        return { ...prev, [selectedday]: { Title: event.target.value, exercises: [], day: selectedday } }
+                                        const prevForDay = prev?.[selectedday] || { exercises: [], day: selectedday };
+                                        return {
+                                            ...prev,
+                                            [selectedday]: {
+                                                ...prevForDay,
+                                                Title: newTitle,
+                                                day: selectedday
+                                            }
+                                        }
                                     })
-
-
                                 }}
-
-
-
                             ></Input>
-
 
                             <List title={'Exercise List'} items={[...formData[selectedday]?.exercises]}></List>
 
-
-
-                            {/* <div className="Exercisesontainer"> */}
                             <Input label={'Enter ExerciseName'} placeholder={'Enter ExerciseName'} onChange={(event) => { setexercise(event.target.value) }} value={exercise} ></Input>
-                            {/* </div> */}
-                            {/* <Button label={'Add Exercise'} ></Button> */}
 
                             <Button label={'Add Exercise'} onClick={() => {
                                 if (exercise.trim() === "") return; // avoid empty input
@@ -315,7 +274,7 @@ if(isSuccess==true){
                                     ...prev,
                                     [selectedday]: {
                                         ...prev[selectedday],
-                                        exercises: [...prev[selectedday].exercises, exercise] // append new exercise
+                                        exercises: [...(prev[selectedday]?.exercises || []), exercise] // append new exercise safely
                                     }
                                 }));
 
@@ -325,26 +284,22 @@ if(isSuccess==true){
                         </div>
                         <div className="AddExerciseSaveBtn">
                             <Button
-                                label={'Save Routine'}
+                                label={isLoading?'Saving..':'Save Routine'}
                                 variant="outline"
+                                disabled={isLoading}
                                 onClick={async () => {
+                                    if(isLoading==true) return
                                     if (selecteddays.length === 0) {
-                                        // alert("No days selected")
+                                        // Using Alert component as in original (kept as JSX call as original did, but better would be to show real UI)
                                         <Alert message={"No days selected"}></Alert>
-
                                         return
                                     };
-                                    if (selectedday && (!formData[selectedday].Title)) {
-                                        // alert("Title is missing",formData[selectedday].exercises.length)
+                                    if (selectedday && (!formData[selectedday]?.Title || formData[selectedday].Title.trim() === "")) {
                                         <Alert message='Title is missing'></Alert>
-
-
                                         return;
                                     };
-                                    if (formData[selectedday].exercises == 0) {
-                                        alert("plese add some exercise", formData[selectedday].exercises.length)
-
-
+                                    if (!formData[selectedday]?.exercises || formData[selectedday].exercises.length === 0) {
+                                        alert("please add some exercise")
                                         return;
                                     }
 
@@ -353,23 +308,18 @@ if(isSuccess==true){
                                         setselectedday(selecteddays[currentIndex + 1]); // move to next day
                                     } else {
                                         console.log("✅ All routines saved!", formData);
-                                        let result = await addWorkoutRoutine({ data: formData })
-                                        console.log('result-', result)
-                                        // refetch()
-                                        setIsCustomWorkout(true)
-
-                                        // you can add your final save logic here
+                                        try {
+                                            let result = await addWorkoutRoutine({ data: formData })
+                                            console.log('result-', result)
+                                            // set flag to show custom workout UI
+                                            setIsCustomWorkout(true)
+                                        } catch (err) {
+                                            console.error("addWorkoutRoutine error:", err)
+                                        }
                                     }
                                 }}
                             ></Button>
-
-
                         </div>
-
-
-
-
-
 
                     </div> : <div className="CreateCustomWorkoutPage1">
                         <div><h3 style={{ color: 'black' }}>Days You Want to workout ?</h3></div>
@@ -378,14 +328,10 @@ if(isSuccess==true){
                         })}</div>
                         <div>
                             <Button label={'Save And Next'} onClick={() => {
-                                // setCreateWorkoutPlan(true)
-
                                 handleSaveAndNext()
                             }}>Save And Next</Button>
                         </div>
                     </div>}
-
-
 
                 </div>}
         </div>

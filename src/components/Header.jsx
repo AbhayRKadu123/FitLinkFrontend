@@ -22,6 +22,7 @@ export default function HeaderTop({ visibleBox, setVisibleBox, isHomeTab, Dates,
   let { data, refetch, isLoading, error } = useGetUserDetailsQuery({ Id: null })
   // console.log("data?.Detail[0]?.username.split[0]",data?.Detail[0]?.username[0].toUpperCase())
   return <div className="Header">
+    
     <div className="HeaderUserDetails"><h4 className="HeaderUserDetailUsername">Hi,<span>{localStorage.getItem('username')}</span></h4><span className="HeaderUserDetailProfile">{data?.Detail[0]?.username[0].toUpperCase() || 'U'}</span></div>
   
     {isHomeTab && <div className="HeaderWorkoutTracker">

@@ -11,10 +11,17 @@ import Button from "../components/Button";
 import { useEffect, useState } from "react";
 import Input from "../components/Input";
 import HeadingContainer from "../components/HeadingContainer";
+import { skipToken } from "@reduxjs/toolkit/query";
+function getISTDate() {
+    const ist = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+    const d = new Date(ist);
+    return d.toISOString().split("T")[0];
+}
 
 export default function LogWorkoutScreen() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
+    const [isActionRunning, setIsActionRunning] = useState(false);
 
     const ID = searchParams.get("Id");
     const NestedId = searchParams.get("NestedId");
@@ -28,17 +35,20 @@ export default function LogWorkoutScreen() {
     } = useGetWorkoutSessoinQuery({ ID, NestedId, ReqDay });
 
     // --- Fetch existing session for today ---
+    const dailyQueryArgs = workoutData?.result
+        ? {
+            planType: "custom",
+            Date: getISTDate(),
+            Title: workoutData.result.Title.trim(),
+        }
+        : skipToken;
     const {
         data: dailySession,
         isLoading: isDailySessionLoading,
         error: dailySessionError,
         refetch
-    } = useGetDailySessionQuery({
-        planType: "custom",
-        Date: new Date().toISOString().split("T")[0],
-        Title: workoutData?.result?.Title?.trim(),
-    });
-const [isDisabled,setisDisabled]=useState(false)
+    } = useGetDailySessionQuery(dailyQueryArgs);
+    // const [isDisabled,setisDisabled]=useState(false)
     // --- Mutation for adding workout session ---
     const [addWorkout, { isLoading: isSaving, isSuccess: saveSuccess, error: saveError }] =
         useAddWorkoutSessionMutation();
@@ -48,21 +58,11 @@ const [isDisabled,setisDisabled]=useState(false)
 
     // --- Local state for session object ---
     const [sessionObject, setSessionObject] = useState(null);
-        // setisDisabled(true)
 
-        useEffect(()=>{
-            if(saveSuccess==true){
-                setisDisabled(true)
-            }
-              if(updateSuccess==true){
-                setisDisabled(true)
-            }
+    const clean = (str) => str.replace(/\s+/g, " ").trim().toLowerCase();
 
-        },[saveSuccess,updateSuccess])
-    // --- Initialize session data ---
-    useEffect(()=>{
-refetch()
-    },[])
+    // if (clean(ele) === clean(arr[i]?.name)) {
+
     useEffect(() => {
         if (isWorkoutLoading || isDailySessionLoading) return;
 
@@ -77,7 +77,7 @@ refetch()
                 let SetObj = { name: ele, sets: [] }
                 for (let i = 0; i < arr.length; i++) {
 
-                    if (ele.trim().toLowerCase() === arr[i]?.name.trim().toLowerCase()) {
+                    if (clean(ele) === clean(arr[i]?.name)) {
 
                         SetObj = { name: arr[i]?.name, sets: arr[i]?.sets }
                         break
@@ -106,7 +106,9 @@ refetch()
                 date: dailySession?.getworkoutsession?.date,
                 exercises: UpdatedExercise
             }
-            setSessionObject({ ...Obj });
+            // setSessionObject({ ...Obj });
+            setSessionObject(JSON.parse(JSON.stringify(Obj)));
+
             return;
         }
 
@@ -117,14 +119,16 @@ refetch()
                 planType: "custom",
                 Title: workoutData.result.Title.trim(),
                 day: ReqDay,
-                date: new Date().toISOString().split("T")[0],
+                date: getISTDate(),
                 exercises:
                     workoutData.result.exercises?.map((ex) => ({
                         name: ex,
                         sets: [],
                     })) || [],
             };
-            setSessionObject(baseSession);
+            // setSessionObject(baseSession);
+            setSessionObject(JSON.parse(JSON.stringify(baseSession)));
+
         }
     }, [workoutData, dailySession]);
 
@@ -172,65 +176,103 @@ refetch()
         });
     };
 
+    // async function updateworkout() {
+    //     console.log("Update workout button clicked");
+
+    //     try {
+    //         // ✅ Check if there’s valid data
+    //         if(isupdating) return alert('Workout is being updating')
+    //         if (!sessionObject || !sessionObject._id) {
+    //             console.error("❌ Missing session ID or data. Cannot update workout.");
+    //             alert("No session selected to update!");
+    //             return;
+    //         }
+
+    //         console.log("Updating workout with data:", sessionObject);
+    //     // setisDisabled(true)
+
+    //         // ✅ Call the update API
+    //        const result = await updateWorkout(sessionObject)
+    //        refetch()
+
+    //         // ✅ Handle API response
+    //         if (result?.data) {
+    //             console.log("✅ Workout updated successfully:", result.data);
+    //             alert("Workout updated successfully!");
+    //         } else if (result?.error) {
+    //             console.error("❌ Error updating workout:", result.error);
+    //             alert("Failed to update workout. Please try again.");
+    //         } else {
+    //             console.warn("⚠️ Unexpected response format:", result);
+    //             alert("Unexpected error occurred.");
+    //         }
+
+    //     } catch (error) {
+    //         console.error("❌ Exception while updating workout:", error);
+    //         alert("Something went wrong. Please try again.");
+    //     }
+    // }
+
+    // // --- Handle save ---
+    // const handleSave = async () => {
+    //     if (!sessionObject) return alert("Nothing to save!");
+    //     if(isSaving) return alert('Workout is being saved')
+
+    //     // Validation: at least one set added
+    //     const hasSets = sessionObject.exercises.some((ex) => ex.sets.length > 0);
+    //     if (!hasSets) {
+    //         alert("Please add at least one set before saving.");
+    //         return;
+    //     }
+    //     // setisDisabled(true)
+
+    //     try {
+    //         const res = await addWorkout(sessionObject).unwrap();
+    //         refetch()
+    //         alert("Workout saved successfully!");
+    //         console.log("Workout saved result:", res);
+    //     } catch (err) {
+    //         console.error("Error saving workout:", err);
+    //         alert("Failed to save workout. Please try again.");
+    //     }
+    // };.
     async function updateworkout() {
-        console.log("Update workout button clicked");
+        if (isupdating || isWorkoutLoading || isDailySessionLoading) return;
+        // setIsActionRunning(true);
 
         try {
-            // ✅ Check if there’s valid data
-            if (!sessionObject || !sessionObject._id) {
-                console.error("❌ Missing session ID or data. Cannot update workout.");
-                alert("No session selected to update!");
-                return;
-            }
-
-            console.log("Updating workout with data:", sessionObject);
-        setisDisabled(true)
-
-
-            // ✅ Call the update API
-           const result = await updateWorkout(sessionObject)
-           refetch()
-
-            // ✅ Handle API response
-            if (result?.data) {
-                console.log("✅ Workout updated successfully:", result.data);
-                alert("Workout updated successfully!");
-            } else if (result?.error) {
-                console.error("❌ Error updating workout:", result.error);
-                alert("Failed to update workout. Please try again.");
-            } else {
-                console.warn("⚠️ Unexpected response format:", result);
-                alert("Unexpected error occurred.");
-            }
-
-        } catch (error) {
-            console.error("❌ Exception while updating workout:", error);
-            alert("Something went wrong. Please try again.");
+            const result = await updateWorkout(sessionObject).unwrap();
+            await refetch();
+            alert("Workout updated successfully!");
+        } catch (err) {
+            alert("Update failed!");
         }
+
+        // setIsActionRunning(false);
     }
-
-    // --- Handle save ---
     const handleSave = async () => {
-        if (!sessionObject) return alert("Nothing to save!");
+        if (isSaving || isWorkoutLoading || isDailySessionLoading) return;
+        // setIsActionRunning(true);
+        const invalid = sessionObject.exercises.some(ex =>
+            ex.sets.some(s => !s.reps || !s.weight)
+        );
 
-        // Validation: at least one set added
-        const hasSets = sessionObject.exercises.some((ex) => ex.sets.length > 0);
-        if (!hasSets) {
-            alert("Please add at least one set before saving.");
+        if (invalid) {
+            alert("Reps and Weight cannot be empty.");
             return;
         }
-        setisDisabled(true)
 
         try {
             const res = await addWorkout(sessionObject).unwrap();
-            refetch()
+            await refetch();
             alert("Workout saved successfully!");
-            console.log("Workout saved result:", res);
         } catch (err) {
-            console.error("Error saving workout:", err);
-            alert("Failed to save workout. Please try again.");
+            alert("Save failed!");
         }
+
+        // setIsActionRunning(false);
     };
+
 
     // --- Debug logging ---
     useEffect(() => {
@@ -286,7 +328,7 @@ refetch()
                                         placeholder="Reps"
                                         value={set.reps}
                                         onChange={(e) =>
-                                            handleInputChange(exIndex, setIndex, "reps", e.target.value)
+                                            handleInputChange(exIndex, setIndex, "reps", Math.max(0, Number(e.target.value)))
                                         }
                                         isLogWorkout={true}
 
@@ -296,7 +338,7 @@ refetch()
                                         placeholder="Weight"
                                         value={set.weight}
                                         onChange={(e) =>
-                                            handleInputChange(exIndex, setIndex, "weight", e.target.value)
+                                            handleInputChange(exIndex, setIndex, "weight", Math.max(0, Number(e.target.value)))
                                         }
                                         isLogWorkout={true}
 
@@ -324,17 +366,24 @@ refetch()
                     }}
                 >
                     <Button
-                        
                         onClick={dailySession?.getworkoutsession ? updateworkout : handleSave}
-                        disabled={isDisabled||isSaving || isupdating || isDailySessionLoading || isWorkoutLoading}
+                        disabled={
+                            isSaving ||
+                            isupdating ||
+
+                            isDailySessionLoading ||
+                            isWorkoutLoading
+                        }
                         label={
-                            (isDisabled||isSaving || isupdating || isDailySessionLoading || isWorkoutLoading)
+                            (isSaving || isupdating)
                                 ? "Processing..."
                                 : dailySession?.getworkoutsession
                                     ? "Update Workout"
                                     : "Save Workout"
                         }
                     />
+
+
 
 
                 </div>
