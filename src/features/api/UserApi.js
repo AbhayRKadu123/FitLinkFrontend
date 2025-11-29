@@ -28,27 +28,31 @@ export const UserApi = createApi({
     endpoints: (builder) => ({
 
         GetUserDetails: builder.query({
-            query: ({Id}) => `/User/getUserDetail?Id=${Id}`
+            query: ({ Id }) => `/User/getUserDetail?Id=${Id}`
 
         }),
-        GetUserFeed:builder.query({
-            query:()=>'/User/GetUserFeed'
+        GetUserFeed: builder.query({
+            query: () => '/User/GetUserFeed'
         }),
-         GetAllFriendRequest:builder.query({
-            query:()=>'/Users/GetAllFriendRequest'
-    }),
-         UpdateAddFriendUser: builder.mutation({
-      query: ({Id}) => ({
-        url: `/User/AddFriendUser`,      // your backend API endpoint
-        method: 'PUT',        // sending data
-        body: {userId:Id},      // data to send in request body
-      }),
+        GetAllFriendRequest: builder.query({
+            query: () => '/Users/GetAllFriendRequest'
+        }),
+        // UserNotification
+        GetUserNotification: builder.query({
+            query: ({}) => '/User/UserNotifications'
+        }),
+        UpdateAddFriendUser: builder.mutation({
+            query: ({ Id }) => ({
+                url: `/User/AddFriendUser`,      // your backend API endpoint
+                method: 'PUT',        // sending data
+                body: { userId: Id },      // data to send in request body
+            }),
 
-    }),
-   
+        }),
+
 
 
 
     })
 })
-    export const {useGetAllFriendRequestQuery,useUpdateAddFriendUserMutation, useGetUserDetailsQuery,useGetUserFeedQuery } = UserApi;
+export const { useGetUserNotificationQuery, useGetAllFriendRequestQuery, useUpdateAddFriendUserMutation, useGetUserDetailsQuery, useGetUserFeedQuery } = UserApi;

@@ -1,0 +1,37 @@
+.PlanCardWorkoutHistory {
+    width: 75%;
+    max-width: 400px;
+    height: 150px;
+    background-color: #f5f5f5; /* soft light gray */
+    border: 1px solid #bbb; /* slightly darker border for separation */
+    border-radius: 1rem;
+    padding: 1rem 1.5rem;
+    color: #222; /* dark text for readability */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* soft shadow */
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    flex-shrink: 0;
+    
+}
+
+.PlanCardWorkoutHistory:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    background-color: #e8e8e8; /* slight highlight on hover */
+}
+
+.card-heading {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.card-subtext {
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+    opacity: 0.8;
+}

@@ -31,6 +31,8 @@ refetch()
     },[HasNotification])
     async function AddFriendFunction(id) {
 
+        if(AddingFriend)return
+
         await AddFriend({ Id: id })
         socket.emit('Notification', { Id: id, CurrId: localStorage.getItem('UserId') })
         setHasNotification(true)
@@ -57,7 +59,7 @@ refetch()
                     </div>
                 </div>
                 <div className="UserProfileLowerSection">
-                    <button onClick={() => { data?.Detail[0]?.FriendRequest == true ? RemoveFriendRequest() : (data?.Detail[0]?.exists == true ? UnfollowFriend() : AddFriendFunction(userid)) }} className="AddFriendBtn">{data?.Detail[0]?.FriendRequest ? "Request Sent" : (data?.Detail[0]?.exists ? 'Friends' : 'Add Friend')}</button>
+                    <button style={{backgroundColor:AddingFriend&&"gray"}} disabled={AddingFriend} onClick={() => { data?.Detail[0]?.FriendRequest == true ? RemoveFriendRequest() : (data?.Detail[0]?.exists == true ? UnfollowFriend() : AddFriendFunction(userid)) }} className="AddFriendBtn">{data?.Detail[0]?.FriendRequest ? "Request Sent" : (data?.Detail[0]?.exists ? 'Friends' : 'Add Friend')}</button>
 
                 </div>
 

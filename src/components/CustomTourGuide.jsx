@@ -3,15 +3,24 @@ import "../styles/CustomTourGuide.css"
 import MyContext from "../../public/utils/MyContext";
 import { useContext } from "react";
 import { useGetUserWeightChartQuery,useAddUserWeightMutation } from "../features/api/WeightTrackingApi";
+//  function getFormattedToday() {
+//         const today = new Date();
+
+//         const year = today.getFullYear();
+//         const month = String(today.getMonth() + 1).padStart(2, "0"); // 0-based month
+//         const day = String(today.getDate()).padStart(2, "0");
+
+//         return `${year}-${month}-${day}`;
+//     }
  function getFormattedToday() {
-        const today = new Date();
+  // const utcNow = new Date().toISOString();
+  const utcDate = new Date();
+  console.log('utcDate',utcDate)
+const istDate = new Date(utcDate.getTime() + (5.5 * 60 * 60 * 1000));
+console.log('isodate',istDate.toISOString()?.split('T')[0]);
 
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, "0"); // 0-based month
-        const day = String(today.getDate()).padStart(2, "0");
-
-        return `${year}-${month}-${day}`;
-    }
+  return istDate.toISOString()?.split('T')[0]
+}
 function LogWeightFunc({Input,SetInput,AddWeight}){
   return <div style={{
   display: "flex",

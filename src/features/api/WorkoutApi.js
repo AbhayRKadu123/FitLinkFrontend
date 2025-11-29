@@ -105,7 +105,7 @@ export const WorkoutApi = createApi({
   }),
   // GetUserProgress
    GetUserProgress:builder.query({
-      query:({Date})=>`/workout/GetUserProgress?Date=${Date}`
+      query:(Date)=>`/workout/GetUserProgress?Date=${Date}`
 
   }),
     UpdateWorkoutSession: builder.mutation({

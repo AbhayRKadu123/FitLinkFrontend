@@ -12,12 +12,21 @@ import { useEffect, useState } from "react";
 import Input from "../components/Input";
 import HeadingContainer from "../components/HeadingContainer";
 import { skipToken } from "@reduxjs/toolkit/query";
-function getISTDate() {
-    const ist = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
-    const d = new Date(ist);
-    return d.toISOString().split("T")[0];
-}
+// function getISTDate() {
+//     const ist = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+//     const d = new Date(ist);
+//     return d.toISOString().split("T")[0];
+// }
 
+function getISTDate() {
+  // const utcNow = new Date().toISOString();
+  const utcDate = new Date();
+  console.log('utcDate',utcDate)
+const istDate = new Date(utcDate.getTime() + (5.5 * 60 * 60 * 1000));
+console.log('isodate',istDate.toISOString()?.split('T')[0]);
+
+  return istDate.toISOString()?.split('T')[0]
+}
 export default function LogWorkoutScreen() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -302,7 +311,7 @@ export default function LogWorkoutScreen() {
                     <div key={exIndex} className="ExerciseContainer">
                         <h4
                             style={{
-                                color: "white",
+                                color: "black",
                                 textAlign: "center",
                                 marginTop: "0.3rem",
                                 fontSize: "1.2rem",

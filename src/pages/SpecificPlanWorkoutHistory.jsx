@@ -1,18 +1,13 @@
 import HeadingContainer from "../components/HeadingContainer"
+import WorkoutHistory from "./WorkoutHistory";
 import "../styles/WorkoutHistory.css"
-import { useGetWorkoutHistoryQuery } from "../features/api/WorkoutApi"
-import { useNavigate } from "react-router-dom"
-import { useEffect } from "react"
-import WorkoutPlanType_History from "../components/WorkoutPlanType_History"
-export default function WorkoutHistory() {
-    let { data, refetch } = useGetWorkoutHistoryQuery({})
-    let navigate = useNavigate()
-    useEffect(() => {
-        refetch()
-    }, [])
+import { useSearchParams } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useGetWorkoutHistoryQuery } from "../features/api/WorkoutApi";
 
-    console.log('data', data)
-    function WorkoutHistory({ Heading, Date, PlanType, day, Title, OnClick }) {
+export default function SpecificPlanWorkoutHistory(){
+       function WorkoutHistory({ Heading, Date, PlanType, day, Title, OnClick }) {
         return <div className="WorkoutHistoryCard" onClick={() => { OnClick() }}>
             <div className="WorkoutHistoryCardHeading"><h5>{Heading}</h5></div>
             <div className="WorkoutHistoryCardDate">
@@ -37,24 +32,27 @@ export default function WorkoutHistory() {
 
         </div>
     }
+     let { data, refetch } = useGetWorkoutHistoryQuery({})
+        let navigate = useNavigate()
+        useEffect(() => {
+            refetch()
+        }, [])
+    const [searchParams] = useSearchParams();
+  const type = searchParams.get("Type");
+console.log('Type=',type)
     return <div className="WorkoutHistoryContainer">
-        <HeadingContainer Title={'Workout History'}></HeadingContainer>
+        <HeadingContainer Title={`${type} Workout History`}></HeadingContainer>
         <div className="WorkoutHistoryCardContainer">
-            <WorkoutPlanType_History To={'/SpecificPlanWorkoutHistory?Type=Custom'}></WorkoutPlanType_History>
+            {/* <WorkoutPlanType_History></WorkoutPlanType_History> */}
 
-
-            {/* {data && data.map((ele) => {
+{data && data.map((ele) => {
                 return <WorkoutHistory OnClick={() => { navigate(`/DetailWorkoutHistory?id=${ele?._id}`); console.log("on click btn ", ele?._id) }} Heading={`${ele?.planType} Workout Card`} Date={ele?.date} day={ele?.day} PlanType={ele?.planType} Title={ele?.Title}></WorkoutHistory>
 
 
-            })} */}
+            })}
+        
 
         </div>
-        {/* <div className="WorkoutHistoryTopMenu">
-            <span className="WorkoutRoutineBadge">Custom</span><span className="WorkoutRoutineBadge">Fst7</span><span className="WorkoutRoutineBadge">{`GVT (German Volume Training)`}</span>
-
-
-        </div> */}
+      
     </div>
-
 }

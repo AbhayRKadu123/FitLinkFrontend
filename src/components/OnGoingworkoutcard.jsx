@@ -13,24 +13,33 @@ export default function OnGoingworkoutcard({ value, ele }) {
 
 
     let navigate = useNavigate();
+    // function getFormattedToday() {
+    //     const today = new Date();
+
+    //     // Convert to IST using toLocaleString
+    //     const istString = today.toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+
+    //     const istDate = new Date(istString);
+
+    //     const year = istDate.getFullYear();
+    //     const month = String(istDate.getMonth() + 1).padStart(2, "0");
+    //     const day = String(istDate.getDate()).padStart(2, "0");
+
+    //     return `${year}-${month}-${day}`;
+    // }
     function getFormattedToday() {
-        const today = new Date();
+        // const utcNow = new Date().toISOString();
+        const utcDate = new Date();
+        console.log('utcDate', utcDate)
+        const istDate = new Date(utcDate.getTime() + (5.5 * 60 * 60 * 1000));
+        console.log('isodate', istDate.toISOString()?.split('T')[0]);
 
-        // Convert to IST using toLocaleString
-        const istString = today.toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
-
-        const istDate = new Date(istString);
-
-        const year = istDate.getFullYear();
-        const month = String(istDate.getMonth() + 1).padStart(2, "0");
-        const day = String(istDate.getDate()).padStart(2, "0");
-
-        return `${year}-${month}-${day}`;
+        return istDate.toISOString()?.split('T')[0]
     }
 
 
     let TodayDate = getFormattedToday();
-    const { data: GetProgressBarData } = useGetUserProgressQuery({ Date: TodayDate });
+    const { data: GetProgressBarData } = useGetUserProgressQuery(TodayDate);
 
 
     console.log('GetProgressBarData', GetProgressBarData?.ProgressPercentage)
@@ -65,16 +74,16 @@ export default function OnGoingworkoutcard({ value, ele }) {
     let isActive = TodayDate == ele?.date
     const hasCreatedSession = useRef(false);
 
-    useEffect(() => {
-        if (!isActive) return;
+    // useEffect(() => {
+    //     if (!isActive) return;
 
-        if (hasCreatedSession.current) return; // prevent multiple calls
+    //     if (hasCreatedSession.current) return; // prevent multiple calls
 
-        hasCreatedSession.current = true;
+    //     hasCreatedSession.current = true;
 
-        DailyUpdate({ TodayDate, ReqDay });
+    //     // DailyUpdate({ TodayDate, ReqDay });
 
-    }, [isActive]);
+    // }, [isActive]);
 
 
     return (
@@ -85,6 +94,7 @@ export default function OnGoingworkoutcard({ value, ele }) {
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
+                
             }}
             className={`WorkoutCard ${isActive ? "active" : "inactive"}`}
             // className={`WorkoutCard`}

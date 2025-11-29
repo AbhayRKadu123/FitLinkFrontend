@@ -32,16 +32,26 @@ import FuturisticRobotBanner from "./components/CustomTourGuide";
 import Notification from "./components/ToastNotification";
 import WeightHistoryChart from "./pages/WeightHistoryChart";
 import BannerContext from "../public/utils/BannerContext";
+import SpecificPlanWorkoutHistory from "./pages/SpecificPlanWorkoutHistory.jsx";
 function App() {
-   function getFormattedToday() {
-        const today = new Date();
+  //  function getFormattedToday() {
+  //       const today = new Date();
 
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, "0"); // 0-based month
-        const day = String(today.getDate()).padStart(2, "0");
+  //       const year = today.getFullYear();
+  //       const month = String(today.getMonth() + 1).padStart(2, "0"); // 0-based month
+  //       const day = String(today.getDate()).padStart(2, "0");
 
-        return `${year}-${month}-${day}`;
-    }
+  //       return `${year}-${month}-${day}`;
+  //   }
+  function getFormattedToday() {
+  // const utcNow = new Date().toISOString();
+  const utcDate = new Date();
+  console.log('utcDate',utcDate)
+const istDate = new Date(utcDate.getTime() + (5.5 * 60 * 60 * 1000));
+console.log('isodate',istDate.toISOString()?.split('T')[0]);
+
+  return istDate.toISOString()?.split('T')[0]
+}
   const [isloginorsignup, setisloginorsignup] = useState(false)
   const [tourStep, setTourStep] = useState(0);
   const [ShowNotification, setShowNotification] = useState(false);
@@ -49,9 +59,7 @@ function App() {
   const [NotificationMessage, setNotificationMessage] = useState("")
   const [selecteddays, setselecteddays] = useState([])
   const [expanded, setExpanded] = useState(true);
-
-
-
+  const[HasNotification, setHasNotification]=useState(false)
 
   const [NotActive, setNotActive] = useState(false)
   const [ShowBot, setShowBot] = useState(false)
@@ -215,7 +223,7 @@ setShowBot(false)
     <Router>
       <RouteWatcher></RouteWatcher>
 
-      <MyContext.Provider value={{ ShowNotification, setShowNotification, NotificatonType, setNotificatioinType, NotificationMessage, setNotificationMessage, selecteddays, setselecteddays }}>
+      <MyContext.Provider value={{HasNotification, setHasNotification, ShowNotification, setShowNotification, NotificatonType, setNotificatioinType, NotificationMessage, setNotificationMessage, selecteddays, setselecteddays }}>
         {/* <TourGuide> */}
         <BannerContext.Provider value={{ bannerText, setbannerText, useDiffBannerText, setuseDiffBannerText }}>
 
@@ -238,6 +246,9 @@ setShowBot(false)
                   <Route path="/Profile" element={<Profile />} />
                   <Route path="/WorkoutHistory" element={< WorkoutHistory />} />
                   <Route path="/WeightHistory" element={< WeightHistoryChart />} />
+                  <Route path="/SpecificPlanWorkoutHistory" element={< SpecificPlanWorkoutHistory />} />
+
+                  {/* SpecificPlanWorkoutHistory */}
 
 
                   {/* /WorkoutHistory */}
