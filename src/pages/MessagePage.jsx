@@ -3,7 +3,8 @@ import CommonHeader from "../components/CommonHeader"
 import { useEffect, useState, useRef } from "react"
 import socket from "../../public/utils/SocketConnect"
 import { useSearchParams } from "react-router-dom"
-import { useGetAllUserConversationQuery } from "../features/api/UserApi"
+import { useGetAllUserConversationQuery ,useHandleDeleteMessageMutation} from "../features/api/UserApi"
+import DeleteConfirmModal from "../components/DeleteConfirmModel"
 export default function MessagePage() {
     const [Message, setMessage] = useState("")
     const [IsMessageEmpty, setIsMessageEmpty] = useState(false)
@@ -11,19 +12,31 @@ export default function MessagePage() {
     const [Messages, setMessages] = useState([])
     const [MessageOptions, setMessageOptions] = useState({ ele: 0, IsExpanded: false })
     const bottomRef = useRef(null);
-
-
+    const TimeRef = useRef(null)
+    const [isDeleteModalOpen,setisDeleteModalOpen]=useState(false)
+    const [Delete_Msg_Id,setDelete_Msg_Id]=useState(null)
     const OtherUserId = searchParams.get("OtherUserId");
     const UserId = localStorage.getItem("UserId")
     console.log('MessagePage UserId', UserId)
     console.log('Other UserId', OtherUserId)
     let { data, isLoading, isError, isSuccess } = useGetAllUserConversationQuery({ UserId: UserId, OtherUserId: OtherUserId })
+    let [HandleMessageDelet,{data:DeletedMessage,isLoading:LoadingMessages,isError:ErrorDeleting}]=useHandleDeleteMessageMutation()
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [Messages]);
+    function HandleCancleDelete(){
+        console.log('HandleCancleDelete')
+        setisDeleteModalOpen(false)
+    }
+    function HandleConfirmDelete (){
+        console.log('HandleConfirmDelete ',Delete_Msg_Id)
+        setisDeleteModalOpen(false)
+        
+    }
 
     function ReformateMessage(Msg) {
         let FormateedMsg = {
+            _id:Msg?._id,
             msg: Msg?.message,
             type: Msg?.senderId == UserId ? 'sent' : 'incoming',
             sender: Msg?.SenderUsername || 'Anonymus',
@@ -128,15 +141,16 @@ export default function MessagePage() {
     return <div className="MessagePageContainer">
         <CommonHeader Title={'Messaging'} ShowBadge={false}></CommonHeader>
         <div className="MessageContainer">
+            <DeleteConfirmModal Title={'Are you sure you want to delete this message?'} isOpen={isDeleteModalOpen} onClose={HandleCancleDelete} onConfirm={HandleConfirmDelete} ></DeleteConfirmModal>
 
             {Messages?.map((ele, index) => {
 
                 return <div className={`message ${ele?.type}`}>
                     <div className="sender">{ele?.sender}</div>
 
-                    <div style={{ color: ele?.type == 'incoming' ? 'black' : 'white' }} className="bubble">
+                    <div  style={{ color: ele?.type == 'incoming' ? 'black' : 'white' }} className="bubble">
                         {/* ele: 0, IsExpanded */}
-                        <p className="BubbleMessage">{ele?.msg}</p><span
+                        <p onClick={()=>{console.log('reply')}} className="BubbleMessage">{ele?.msg}</p><span
                             onClick={() => {
                                 setMessageOptions((prev) => {
                                     return {
@@ -147,17 +161,13 @@ export default function MessagePage() {
                             }}
                             className="DelBtn"
                         >
-                            {MessageOptions?.ele === index && MessageOptions?.IsExpanded ? (
+                            
                                 <img
+                                    onClick={()=>{setDelete_Msg_Id(ele?._id),setisDeleteModalOpen(true)}}
                                     style={{ width: "1rem", height: "0.8rem" }}
-                                    src="/Images/DownArrow.png"
+                                    src="/Images/delete.png"
                                 />
-                            ) : (
-                                <img
-                                    style={{ width: "1rem", height: "0.8rem" }}
-                                    src="/Images/up-arrow.png"
-                                />
-                            )}
+                          
                         </span>
 
                     </div>
@@ -174,8 +184,5 @@ export default function MessagePage() {
             <input style={{ border: IsMessageEmpty ? "1px solid red" : "" }} onChange={(event) => { setIsMessageEmpty(false); setMessage(event.target.value) }} value={Message} className="MessageInput" placeholder="Enter Message"></input>
             <img onClick={sendMessage} className="SendMessageBtn" src="/Images/send-message.png"></img>
         </div>
-
-
-
     </div>
 }

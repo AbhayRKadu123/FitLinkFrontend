@@ -51,12 +51,22 @@ export const UserApi = createApi({
                 method: 'PUT',        // sending data
                 body: { userId: Id },      // data to send in request body
             }),
+            
+       
+            // /HandleDeleteMessage
 
         }),
+
+         HandleDeleteMessage: builder.mutation({
+            query: ({ Id }) => ({
+                url: `/User/HandleDeleteMessage`,      // your backend API endpoint
+                method: 'DELETE',        // sending data
+                body: { userId: Id },      // data to send in request body
+            }),})
 
 
 
 
     })
 })
-export const {useGetAllUserConversationQuery, useGetUserNotificationQuery, useGetAllFriendRequestQuery, useUpdateAddFriendUserMutation, useGetUserDetailsQuery, useGetUserFeedQuery } = UserApi;
+export const {useHandleDeleteMessageMutation,useGetAllUserConversationQuery, useGetUserNotificationQuery, useGetAllFriendRequestQuery, useUpdateAddFriendUserMutation, useGetUserDetailsQuery, useGetUserFeedQuery } = UserApi;
