@@ -1,0 +1,138 @@
+.MessagePageContainer{
+    width: 100%;
+    height: 90%;
+   
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.MessageContainer {
+    width: 90%;
+    height: 80%;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-sizing: border-box;
+}
+.MessageContainer::-webkit-scrollbar{
+    display: none;
+}
+/* Base message styling */
+.message {
+    max-width: 70%;
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+}
+
+/* Incoming (left side) */
+.message.incoming {
+    align-self: flex-start;
+}
+
+.message.incoming .bubble {
+    /* background-color: #f1f1f1; */
+    color: #333;
+    border-radius: 10px 10px 10px 0;
+}
+
+/* Sent (right side) */
+.message.sent {
+    align-self: flex-end;
+    text-align: right;
+}
+
+.message.sent .bubble {
+    background-color: #4a90e2;
+    color: white;
+    border-radius: 10px 10px 0 10px;
+}
+
+.sender {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 3px;
+    color: #555;
+}
+
+.bubble {
+    padding: 10px 14px;
+    font-size: 15px;
+    line-height: 1.3;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: flex;
+     align-items: center;
+}
+.BubbleMessage{
+
+    width: 80%;
+  /* background: #f1f1f1; */
+  padding: 8px 12px;
+  border-radius: 10px;
+  word-wrap: break-word;     /* Forces long text to wrap */
+  overflow-wrap: break-word; /* Forces breaking inside long strings */
+}
+
+.DelBtn {
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.time {
+    font-size: 11px;
+    color: gray;
+    margin-top: 4px;
+}
+
+.InputBox{
+    width: 97%;
+    height: 10%;
+      /* border: 1px solid black; */
+
+}
+
+.InputBox{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.MessageInput {
+    width: 70%;
+    height: 80%;
+
+    /* Layout & spacing */
+    padding: 12px 16px;
+    box-sizing: border-box;
+
+    /* Typography */
+    font-size: 16px;
+    line-height: 1.4;
+    color: #333;
+
+    /* Appearance */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fafafa;
+
+    /* Subtle shadow */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+
+    /* Interaction */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.MessageInput:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.25);
+    outline: none;
+}
+
+.SendMessageBtn{
+    width: 2rem;
+    height: 2rem;
+
+}

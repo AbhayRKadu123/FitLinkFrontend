@@ -32,6 +32,7 @@ import FuturisticRobotBanner from "./components/CustomTourGuide";
 import Notification from "./components/ToastNotification";
 import WeightHistoryChart from "./pages/WeightHistoryChart";
 import BannerContext from "../public/utils/BannerContext";
+import MessagePage from "./pages/MessagePage.jsx";
 import SpecificPlanWorkoutHistory from "./pages/SpecificPlanWorkoutHistory.jsx";
 function App() {
   //  function getFormattedToday() {
@@ -247,6 +248,8 @@ setShowBot(false)
                   <Route path="/WorkoutHistory" element={< WorkoutHistory />} />
                   <Route path="/WeightHistory" element={< WeightHistoryChart />} />
                   <Route path="/SpecificPlanWorkoutHistory" element={< SpecificPlanWorkoutHistory />} />
+                  {/* MessagePage */}
+                  <Route path="/MessagePage" element={<MessagePage />} />
 
                   {/* SpecificPlanWorkoutHistory */}
 
@@ -270,7 +273,7 @@ setShowBot(false)
                 {/* {ShowBot && <FuturisticRobotBanner bannerText={bannerText}  ></FuturisticRobotBanner>}
               
               */}
-                {ShowBot && <FuturisticRobotBanner refetchUserWt={refetchUserWt} setShowTourGuide={setShowTourGuide} ShowTourGuide={ShowTourGuide} WeightUpdated={WeightUpdated} expanded={expanded}  setExpanded={setExpanded}  bannerText={bannerText} />}
+                {/* {ShowBot && <FuturisticRobotBanner refetchUserWt={refetchUserWt} setShowTourGuide={setShowTourGuide} ShowTourGuide={ShowTourGuide} WeightUpdated={WeightUpdated} expanded={expanded}  setExpanded={setExpanded}  bannerText={bannerText} />} */}
 
 
                 

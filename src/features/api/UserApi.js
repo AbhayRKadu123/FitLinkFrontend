@@ -41,6 +41,10 @@ export const UserApi = createApi({
         GetUserNotification: builder.query({
             query: ({}) => '/User/UserNotifications'
         }),
+        GetAllUserConversation:builder.query({
+            query:({UserId,OtherUserId})=>`/User/GetAllUserConversation?UserId=${UserId}&&OtherUserId=${OtherUserId}`
+        }),
+
         UpdateAddFriendUser: builder.mutation({
             query: ({ Id }) => ({
                 url: `/User/AddFriendUser`,      // your backend API endpoint
@@ -55,4 +59,4 @@ export const UserApi = createApi({
 
     })
 })
-export const { useGetUserNotificationQuery, useGetAllFriendRequestQuery, useUpdateAddFriendUserMutation, useGetUserDetailsQuery, useGetUserFeedQuery } = UserApi;
+export const {useGetAllUserConversationQuery, useGetUserNotificationQuery, useGetAllFriendRequestQuery, useUpdateAddFriendUserMutation, useGetUserDetailsQuery, useGetUserFeedQuery } = UserApi;

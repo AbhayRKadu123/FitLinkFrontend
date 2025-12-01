@@ -5,17 +5,18 @@ import { useGetUserDetailsQuery, useUpdateAddFriendUserMutation } from "../featu
 import socket from "../../public/utils/SocketConnect";
 import { useEffect, useState } from "react";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import MyContext from "../../public/utils/MyContext";
 export default function UserDetails() {
     const [searchParams] = useSearchParams();
 
     const userid = searchParams.get("ID");
     const CurrUserId = searchParams.get("CurrUserId")
-    let { data,refetch, isLoading, error } = useGetUserDetailsQuery({ Id: userid })
-    let [AddFriend, { data: AddUserFriend, isError,isSuccess, isLoading: AddingFriend }] = useUpdateAddFriendUserMutation()
+    let { data, refetch, isLoading, error } = useGetUserDetailsQuery({ Id: userid })
+    let [AddFriend, { data: AddUserFriend, isError, isSuccess, isLoading: AddingFriend }] = useUpdateAddFriendUserMutation()
     const { HasNotification, setHasNotification } = useContext(MyContext);
-
-    console.log('data?.Detail[0]', data?.Detail)
+    let navigate=useNavigate()
+    console.log('data?.Detail[0]', data?.Detail[0]?._id)
     // useEffect(()=>{
     //     socket.on("IncommingNotification",(msg)=>{
     //         console.log("IncommingNotification",msg)
@@ -25,13 +26,18 @@ export default function UserDetails() {
     function UnfollowFriend() {
         console.log("UnfollowFriend")
     }
-    useEffect(()=>{
-refetch()
-// socket.emit('Notification', { Id: userid, CurrId: localStorage.getItem('UserId') })
-    },[HasNotification])
+    useEffect(() => {
+        refetch()
+        // socket.emit('Notification', { Id: userid, CurrId: localStorage.getItem('UserId') })
+    }, [HasNotification])
+
+    async function  GoToMessagepage(id) {
+        console.log(' GoToMessagepage')
+        
+    }
     async function AddFriendFunction(id) {
 
-        if(AddingFriend)return
+        if (AddingFriend) return
 
         await AddFriend({ Id: id })
         socket.emit('Notification', { Id: id, CurrId: localStorage.getItem('UserId') })
@@ -45,7 +51,7 @@ refetch()
     }
 
     return <div className="UserDetailContainer">
-        <CommonHeader ></CommonHeader>
+        <CommonHeader Title={'User Detail'} ></CommonHeader>
         <div className="UserDetailProfile">
             <div className="UserProfile">
                 <div className="UserProfileUpperSection">
@@ -57,10 +63,12 @@ refetch()
                         <h3>{data?.Detail[0]?.username}</h3>
                         <p>{data?.Detail[0]?.friendsCount} Friends</p>
                     </div>
+                    {/* <div><h1 style={ {color:'white'}}>3</h1></div> */}
                 </div>
                 <div className="UserProfileLowerSection">
-                    <button style={{backgroundColor:AddingFriend&&"gray"}} disabled={AddingFriend} onClick={() => { data?.Detail[0]?.FriendRequest == true ? RemoveFriendRequest() : (data?.Detail[0]?.exists == true ? UnfollowFriend() : AddFriendFunction(userid)) }} className="AddFriendBtn">{data?.Detail[0]?.FriendRequest ? "Request Sent" : (data?.Detail[0]?.exists ? 'Friends' : 'Add Friend')}</button>
-
+                    <button style={{ backgroundColor: AddingFriend && "gray" }} disabled={AddingFriend} onClick={() => { data?.Detail[0]?.FriendRequest == true ? RemoveFriendRequest() : (data?.Detail[0]?.exists == true ? UnfollowFriend() : AddFriendFunction(userid)) }} className="AddFriendBtn">{data?.Detail[0]?.FriendRequest ? "Request Sent" : (data?.Detail[0]?.exists ? 'Friends' : 'Add Friend')}</button>
+                    {/* <button style={{ backgroundColor: AddingFriend && "gray" }} disabled={AddingFriend} onClick={() => { data?.Detail[0]?.FriendRequest == true ? RemoveFriendRequest() : (data?.Detail[0]?.exists == true ? ()=>{console.log("message unavailable")} : GoToMessagepage(userid)) }} className="MessageBtn">{data?.Detail[0]?.FriendRequest ? "Request Sent" : (data?.Detail[0]?.exists ? 'Message' : 'Not Available')}</button> */}
+                    <button style={{ backgroundColor: isLoading && "gray" }} onClick={()=>{if (!isLoading){navigate(`/MessagePage?OtherUserId=${data?.Detail[0]?._id}`)};}} disabled={isLoading}  className="MessageBtn">Message</button>
                 </div>
 
 

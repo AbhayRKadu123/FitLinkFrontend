@@ -90,7 +90,7 @@ export default function Community() {
     {/* <div className="CommunityContainerHeader">
             <div className="BackBtn"><img onClick={()=>{navigate(-1)}} style={{ width: "2rem", height: '2rem' }} src="Images/backwhite.png"></img></div><div style={{ fontWeight: '600', fontSize: "2rem" }} className="Heading">Community</div><div className="LastSpace"></div>
         </div> */}
-    <CommonHeader></CommonHeader>
+    <CommonHeader Title={'Community'} ShowBadge={true}></CommonHeader>
     <div className="CommunityContainerData">
       {
         UserFeedDetail?.Result?.map((ele) => {
