@@ -56,7 +56,19 @@ export const UserApi = createApi({
             // /HandleDeleteMessage
 
         }),
+        GetReplyMessage:builder.query({
+        query:({MsgId})=>`/User/GetReplyMessage?MsgId=${MsgId}`
 
+        }),
+        UploadImage:builder.mutation({
+            query:({formData})=>({
+                url:'/User/UploadImage',
+                method:'POST',
+                body:formData
+
+            })
+
+        }),
          HandleDeleteMessage: builder.mutation({
             query: ({ Id }) => ({
                 url: `/User/HandleDeleteMessage`,      // your backend API endpoint
@@ -65,8 +77,8 @@ export const UserApi = createApi({
             }),})
 
 
-
+// /GetReplyMessage
 
     })
 })
-export const {useHandleDeleteMessageMutation,useGetAllUserConversationQuery, useGetUserNotificationQuery, useGetAllFriendRequestQuery, useUpdateAddFriendUserMutation, useGetUserDetailsQuery, useGetUserFeedQuery } = UserApi;
+export const {useUploadImageMutation,useHandleDeleteMessageMutation,useGetAllUserConversationQuery, useGetUserNotificationQuery, useGetAllFriendRequestQuery, useUpdateAddFriendUserMutation, useGetUserDetailsQuery, useGetUserFeedQuery,useGetReplyMessageQuery } = UserApi;

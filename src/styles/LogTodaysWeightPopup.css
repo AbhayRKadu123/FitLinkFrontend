@@ -1,0 +1,80 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: #fff;
+  padding: 1.75rem;
+  border-radius: 1rem;
+  width: 90%;
+  height: 40%;
+  max-width: 320px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.modalTitle {
+  color: #111;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+}
+
+/* Input section */
+.weightInputWrapper {
+  display: flex;
+  align-items: center;
+  border: 2px solid #ddd;
+  border-radius: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.weightInputWrapper:focus-within {
+  border-color: #007bff;
+}
+
+.weightInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background-color: white;
+  color:black;
+}
+
+.unit {
+  margin-left: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Buttons */
+.modalActions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.cancelBtn {
+  flex: 1;
+  padding: 0.6rem;
+  border: none;
+  background-color: #e0e0e0;
+  border-radius: 0.6rem;
+  cursor: pointer;
+}
+
+.confirmBtn {
+  flex: 1;
+  padding: 0.6rem;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 0.6rem;
+  cursor: pointer;
+}

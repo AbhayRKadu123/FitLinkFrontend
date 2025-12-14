@@ -15,6 +15,7 @@
     flex-direction: column;
     gap: 12px;
     box-sizing: border-box;
+    position: relative;
 }
 .MessageContainer::-webkit-scrollbar{
     display: none;
@@ -26,6 +27,64 @@
     flex-direction: column;
     font-family: Arial, sans-serif;
 }
+.ReplyBox {
+  width: 100%;
+  padding: 8px 12px;
+  background-color: #f0f7ff;
+  border-left: 4px solid #2f80ed;
+  border-radius: 6px;
+  margin-bottom: 8px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 90%;
+  box-sizing: border-box;
+}
+
+.reply-text {
+  color: #333;
+  font-weight: 500;
+}
+
+.close-reply {
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  color: #666;
+  margin-left: 10px;
+}
+
+.close-reply:hover {
+  color: red;
+}
+.reply-container {
+  margin-top: 6px;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.05); /* soft contrast */
+  border-left: 3px solid #4f46e5;  /* accent to show reply */
+  border-radius: 6px;
+  max-width: 90%;
+  background-color: white;
+
+}
+
+.reply-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #4f46e5;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.reply-text {
+  margin: 0;
+  font-size: 13px;
+  color: #333;
+  line-height: 1.4;
+}
+
 
 /* Incoming (left side) */
 .message.incoming {
@@ -64,11 +123,37 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     display: flex;
      align-items: center;
+     
+     
 }
+.bubble p {
+  margin: 0;
+  white-space: pre-wrap;      /* respects line breaks */
+  word-break: break-word;     /* breaks long words */
+  overflow-wrap: anywhere;   /* forces wrap if needed */
+}
+
+.InnerBubbleContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-right: 0.2rem;
+}
+.HighLight {
+  border: 2px solid #6366f1;          /* main border color */
+  border-radius: 8px;
+  box-shadow:
+    0 0 6px rgba(99, 102, 241, 0.6),
+    0 0 12px rgba(99, 102, 241, 0.4),
+    0 0 20px rgba(99, 102, 241, 0.25);
+}
+
 .BubbleMessage{
 
     width: 80%;
   /* background: #f1f1f1; */
+ 
   padding: 8px 12px;
   border-radius: 10px;
   word-wrap: break-word;     /* Forces long text to wrap */
@@ -117,6 +202,7 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #fafafa;
+    
 
     /* Subtle shadow */
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
@@ -135,4 +221,12 @@
     width: 2rem;
     height: 2rem;
 
+}
+.AddFileBtn{
+
+     width: 2rem;
+    height: 2rem;
+    position: absolute;
+    right: 22%;
+    padding-right: 0.2rem;
 }

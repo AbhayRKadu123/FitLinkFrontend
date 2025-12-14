@@ -1,7 +1,8 @@
 import "../styles/ProfileContainer.css"
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import Button from "../components/Button.jsx"
+import LogTodaysWeightPopup from "../components/LogTodaysWeightPopup.jsx";
 
 function ProfileOption({Title,OnClick}) {
     return <div onClick={()=>{OnClick()}} className="ProfileSettingOptions">
@@ -29,6 +30,7 @@ function getGreeting() {
 
 export default function Profile() {
     let navigate = useNavigate();
+    const [IsLogWeightPopupopen,setIsLogWeightPopupopen]=useState(false)
     useEffect(() => {
         let token = localStorage.getItem('token')
         if (!token) {
@@ -36,10 +38,33 @@ export default function Profile() {
         }
     }, [])
     return <div className="ProfileContainer">
+        {IsLogWeightPopupopen&&<LogTodaysWeightPopup setIsLogWeightPopupopen={setIsLogWeightPopupopen}></LogTodaysWeightPopup>}
         <div className="ProfileHeader">
             <div className="SignOutBtnContainer">
 
                 <img onClick={() => { navigate(-1) }} style={{ width: '1.5rem', height: '1.5rem', marginLeft: '0.5rem', marginTop: '0.2rem' }} src="Images/left-arrow.png"></img>
+               
+                <div style={{display:'flex'}}>
+                     
+                 <button
+                    onClick={() => {setIsLogWeightPopupopen(true)}}
+                    style={{
+                        height: '1.9rem',
+                        fontSize: '0.7rem',
+                        border: '0.1rem solid black',
+                        color: 'black',
+                        backgroundColor: 'white',
+                        borderRadius: '0.5rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        // borderRadius:'30%'
+                    }}
+                    className="SignOutBtn"
+                >
+                    Log Weight
+                </button>
                 <button
                     onClick={() => { localStorage.removeItem('token'); localStorage.removeItem('username');localStorage.removeItem('UserId'); navigate("/login") }}
                     style={{
@@ -59,6 +84,10 @@ export default function Profile() {
                 >
                     Sign Out
                 </button>
+
+
+
+                </div>
 
             </div>
             <div className="UserProfileName">

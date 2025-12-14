@@ -34,6 +34,8 @@ import WeightHistoryChart from "./pages/WeightHistoryChart";
 import BannerContext from "../public/utils/BannerContext";
 import MessagePage from "./pages/MessagePage.jsx";
 import SpecificPlanWorkoutHistory from "./pages/SpecificPlanWorkoutHistory.jsx";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function App() {
   //  function getFormattedToday() {
   //       const today = new Date();
@@ -231,6 +233,8 @@ setShowBot(false)
 
           <div  className="container">
             <div  className="MainLayoutContainer">
+             <ToastContainer  toastStyle={{ width: "80%",top:'1rem' }} position="top-center" />
+
             
               {/* <button onClick={() => setTourStep(1)}>Start App Tour</button>  */}
               {ShowNotification && <Notification type={NotificatonType} message={NotificationMessage} onClose={() => { setShowNotification(false) }} ></Notification>}

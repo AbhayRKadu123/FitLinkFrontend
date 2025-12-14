@@ -63,7 +63,7 @@ export default function Community() {
   // let {data:GetAllNotification,refetch:RefetchNotification,isLoading}
 
   // useGetUserFeedQuery
-  const [isPremium, setisPremium] = useState(true)
+  const [isPremium, setisPremium] = useState(false)
   const [error, seterror] = useState(false)
   const { HasNotification, setHasNotification } = useContext(MyContext);
 
