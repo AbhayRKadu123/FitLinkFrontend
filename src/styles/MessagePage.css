@@ -17,6 +17,43 @@
     box-sizing: border-box;
     position: relative;
 }
+.SelectedImage {
+  position: fixed;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  padding: 0.2rem;
+  left: 2%;
+  bottom: 16%;
+  border: 1px solid black;
+
+  
+}
+.MessageImage{
+  width: 90%;        /* or 100% */
+  height: 90%;       /* fixed height for preview */
+  border-radius: 12px;
+  overflow: hidden;    /* VERY IMPORTANT */
+  background: #000;    /* optional */
+}
+.InputPreviewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.4rem;
+}
+
+.ClosePreview {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+  background: white;
+  border-radius: 50%;
+}
+
 .MessageContainer::-webkit-scrollbar{
     display: none;
 }

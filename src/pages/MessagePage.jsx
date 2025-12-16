@@ -7,8 +7,12 @@ import { useUploadImageMutation, useGetReplyMessageQuery, useGetAllUserConversat
 import DeleteConfirmModal from "../components/DeleteConfirmModel"
 import Addimage from "../components/Addimage"
 import { toast } from 'react-toastify';
+import { v4 as uuidv4 } from "uuid";
+
+
 
 export default function MessagePage() {
+
     const [Message, setMessage] = useState("")
     const [IsMessageEmpty, setIsMessageEmpty] = useState(false)
     const [searchParams] = useSearchParams();
@@ -17,7 +21,7 @@ export default function MessagePage() {
     const bottomRef = useRef(null);
     const ReplyRef = useRef(null);
     const messageRefs = useRef({});
-
+    const UniqueUserId = uuidv4()
     const TimeRef = useRef(null)
     const [isDeleteModalOpen, setisDeleteModalOpen] = useState(false)
     const [IsAddImageOpen, setIsAddImageOpen] = useState(false)
@@ -25,15 +29,20 @@ export default function MessagePage() {
     const [ReplyMessage, setReplyMessage] = useState(null)
     const [Delete_Msg_Id, setDelete_Msg_Id] = useState(null)
     const [ReplyId, setReplyId] = useState(null)
-    const [ReplyMsgId, setReplyMsgId] = useState(null)
+    const [uniqueReplyMsgId, setuniqueReplyMsgId] = useState(null)
     const [HighLightMessage, setHighLightMessage] = useState(null)
+    const [liveReply, setLiveReply] = useState(null)
+    const [repliedToImage, setRepliedToImage] = useState(null)
+
+    
+
     const [preview, setPreview] = useState(null);
-    const [ImageUrl,setImageUrl]=useState(null)
+    const [ImageUrl, setImageUrl] = useState(null)
     const OtherUserId = searchParams.get("OtherUserId");
     const UserId = localStorage.getItem("UserId")
     console.log('MessagePage UserId', UserId)
     console.log('Other UserId', OtherUserId)
-    let { data: RepliedMessage, isLoading: isReplyLoading, } = useGetReplyMessageQuery({ MsgId: ReplyMsgId })
+    // let { data: RepliedMessage, isLoading: isReplyLoading, } = useGetReplyMessageQuery({ MsgId: ReplyMsgId })
     let [UploadImage, { data: UploadedImage, isLoading: UploadingImage, error: errorUploading, success: UploadSuccessfull }] = useUploadImageMutation();
     let { data, isLoading, refetch, isError, isSuccess } = useGetAllUserConversationQuery({ UserId: UserId, OtherUserId: OtherUserId })
     let [HandleMessageDelet, { data: DeletedMessage, isLoading: LoadingMessages, isSuccess: DeletingSuccessfull, isError: ErrorDeleting }] = useHandleDeleteMessageMutation()
@@ -50,6 +59,9 @@ export default function MessagePage() {
 
         return () => clearTimeout(timer);
     }, [HighLightMessage]);
+    useEffect(()=>{
+        console.log('RepliedToImage',repliedToImage)
+    },[repliedToImage])
     useEffect(() => {
         console.log('SelectedFile', SelectedFile)
     }, [SelectedFile])
@@ -60,16 +72,16 @@ export default function MessagePage() {
         console.log('HandleCancleDelete')
         setisDeleteModalOpen(false)
     }
-    // useEffect(()=>{
-    //     refetch()
-    // },[isSuccess])
+    useEffect(() => {
+        console.log('uniqueReplyMsgIduniqueReplyMsgId', uniqueReplyMsgId)
+    }, [uniqueReplyMsgId])
     async function UploadNewImage() {
         try {
             const formData = new FormData();
             formData.append("file", SelectedFile);
-            console.log('upload image ')
-            let result = await UploadImage({formData})
-            console.log('setIsAddImageOpen(false)', result?.data?.UploadImage)
+
+            let result = await UploadImage({ formData })
+
             setImageUrl(result?.data?.UploadImage)
             setIsAddImageOpen(false)
             setSelectedFile(null)
@@ -82,7 +94,7 @@ export default function MessagePage() {
     }
     async function HandleConfirmDelete() {
         try {
-            console.log('HandleConfirmDelete ', Delete_Msg_Id);
+
 
             const res = await HandleMessageDelet({ Id: Delete_Msg_Id }).unwrap();
 
@@ -98,7 +110,7 @@ export default function MessagePage() {
 
 
     function ReformateMessage(Msg) {
-        // console.log('Reformateddata', Msg)
+        console.log('Reformateddata', Msg)
 
 
 
@@ -112,7 +124,12 @@ export default function MessagePage() {
             , Time: Msg.time,
             isDeleted: Msg.isDeleted,
             replyTo: Msg?.replyTo || null,
-            replyMessage: Msg?.replyMessage?.message || null
+            replyMessage: Msg?.replyMessage?.message || null,
+            replyImage: Msg?.replyMessage?.ImageUrl || null,
+            ImageUrl: Msg?.ImageUrl,
+            UniqueMessageId: Msg?.UniqueMessageId,
+            RepliedToUniqueMessageId: Msg?.replyMessage?.RepliedToUniqueMessageId || Msg?.RepliedToUniqueMessageId,
+            RepliedToImage:Msg?.RepliedToImage
 
         }
 
@@ -140,9 +157,9 @@ export default function MessagePage() {
     function getFormattedToday() {
         // const utcNow = new Date().toISOString();
         const utcDate = new Date();
-        console.log('utcDate', utcDate)
+
         const istDate = new Date(utcDate.getTime() + (5.5 * 60 * 60 * 1000));
-        console.log('isodate', istDate.toISOString()?.split('T')[0]);
+
 
         return istDate.toISOString()?.split('T')
     }
@@ -165,12 +182,19 @@ export default function MessagePage() {
     useEffect(() => {
 
         function handleIncoming(Msg) {
+
             let IncommingMsg = {
                 msg: Msg.msg.trim(),
                 type: 'incoming',
                 sender: Msg.SenderUsername,
                 Date: Msg.Date,
-                Time: Msg.Time
+                Time: Msg.Time,
+                ImageUrl: Msg.ImageUrl,
+                RepliedToUniqueMessageId: Msg.RepliedToUniqueMessageId,
+                UniqueMessageId: Msg.UniqueMessageId,
+                replyMessage: Msg?.replyMessage,
+                RepliedToImage:Msg?.RepliedToImage
+
             };
 
             setMessages(prev => [...prev, IncommingMsg]);
@@ -186,13 +210,15 @@ export default function MessagePage() {
 
     function sendMessage() {
         let Res = getFormattedToday()
+        const clientMessageId = uuidv4();
 
-        if (Message.trim() == "") {
+        if (Message.trim() == "" && ImageUrl == null) {
             setIsMessageEmpty(true)
+            toast.error("Please enter Some Text or add Image")
 
             return
         }
-        console.log('Message', Message)
+
         let SentMsg = {
             msg: Message.trim(),
             type: 'sent',
@@ -202,17 +228,26 @@ export default function MessagePage() {
             , Time: convertTo12Hour(Res[1]),
             ReplyId,
             //             replyTo: ReplyId,
-            replyMessage: ReplyMessage || null,
-            ImageUrl
+            // replyMessage: ReplyMessage || null,
+            ImageUrl,
+            UniqueMessageId: clientMessageId,
+            RepliedToUniqueMessageId: uniqueReplyMsgId,
+            replyMessage: uniqueReplyMsgId && liveReply,
+            RepliedToImage:repliedToImage
         }
         setMessages((prev) => {
             return [...prev, SentMsg]
         })
-        socket.emit("SendMessage", { msg: Message, SenderId: UserId, ReciverId: OtherUserId, Date: Res[0], Time: convertTo12Hour(Res[1]), ReplyId: ReplyId,ImageUrl:ImageUrl })
+
+        socket.emit("SendMessage", { msg: Message, SenderId: UserId, ReciverId: OtherUserId, Date: Res[0], Time: convertTo12Hour(Res[1]), ReplyId: ReplyId, ImageUrl: ImageUrl, UniqueMessageId: clientMessageId, RepliedToUniqueMessageId: uniqueReplyMsgId, replyMessage: liveReply,RepliedToImage:repliedToImage })
+        setPreview(null); setSelectedFile(null); setImageUrl(null)
         setMessage("")
         setReplyMessage("")
         setReplyId(null)
         setHighLightMessage(null)
+        setuniqueReplyMsgId(null)
+        setLiveReply(null)
+        setRepliedToImage(null)
 
 
 
@@ -220,23 +255,38 @@ export default function MessagePage() {
     return <div className="MessagePageContainer">
         <CommonHeader Title={'Messaging'} ShowBadge={false}></CommonHeader>
         <div className="MessageContainer">
-            {IsAddImageOpen && <Addimage preview={preview} setPreview={setPreview} setSelectedFile={setSelectedFile} setIsAddImageOpen={setIsAddImageOpen} UploadNewImage={UploadNewImage}></Addimage>}
+            {IsAddImageOpen && <Addimage UploadingImage={UploadingImage} preview={preview} setPreview={setPreview} setSelectedFile={setSelectedFile} setIsAddImageOpen={setIsAddImageOpen} UploadNewImage={UploadNewImage}></Addimage>}
             <DeleteConfirmModal Title={'Are you sure you want to delete this message?'} isOpen={isDeleteModalOpen} onClose={HandleCancleDelete} onConfirm={HandleConfirmDelete} ></DeleteConfirmModal>
 
             {Messages?.map((ele, index) => {
-                // console.log('Messages=', ele)
 
-                return <div ref={(el) => (messageRefs.current[ele._id] = el)} className={`message ${ele?.type} ${HighLightMessage == ele?._id && 'HighLight'}`}>
+
+                return <div ref={(el) => (messageRefs.current[ele.UniqueMessageId] = el)} className={`message ${ele?.type} ${HighLightMessage == ele?.UniqueMessageId && 'HighLight'}`}>
                     <div className="sender">{ele?.sender}</div>
 
                     <div style={{ color: ele?.type == 'incoming' ? 'black' : 'white' }} className="bubble">
                         {/* ele: 0, IsExpanded */}
                         <div className="InnerBubbleContainer">
-                            {ele?.replyMessage && !ele?.isDeleted && <div onClick={() => { messageRefs.current[ele?.replyTo]?.scrollIntoView({ behavior: 'smooth', block: 'center' }); { ReplyId && setHighLightMessage(ele?.replyTo); } }} className="reply-container">
-                                {ele?.replyMessage && <span className="reply-label">Replied to</span>}
+                            {(ele?.replyMessage||ele?.RepliedToImage ) && !ele?.isDeleted && <div onClick={() => { messageRefs.current[ele?.RepliedToUniqueMessageId]?.scrollIntoView({ behavior: 'smooth', block: 'center' }); { ele?.RepliedToUniqueMessageId && setHighLightMessage(ele?.RepliedToUniqueMessageId); } }} className="reply-container">
+
+                                {(ele?.RepliedToImage||ele?.replyMessage ) && <span className="reply-label">Replied to</span>}
+                                <div style={{ backgroundColor: 'white' }} className="imageContainer">
+                                    {ele?.RepliedToImage && <img
+                                        src={ele?.RepliedToImage}
+                                        className="MessageImage"
+                                    />}
+                                </div>
                                 <p className="reply-text">{ele?.replyMessage}</p>
                             </div>}
-                            <p onClick={() => { if (ele?.isDeleted) { return } setReplyId(ele?._id); setReplyMessage(ele?.msg); console.log('reply') }} className="BubbleMessage">{ele?.isDeleted ? 'This Message Have Been Deleted' : ele?.msg}</p>
+
+                            {ele?.ImageUrl && <img
+                                src={ele?.ImageUrl}
+                                className="MessageImage"
+                            />}
+
+                            { <p onClick={() => { if (ele?.isDeleted) { return } setReplyId(ele?._id); setReplyMessage(ele?.msg);setuniqueReplyMsgId(ele?.UniqueMessageId); setLiveReply(ele?.msg);ele?.ImageUrl&&setRepliedToImage(ele?.ImageUrl) }} className="BubbleMessage">{ele?.isDeleted ? 'This Message Have Been Deleted' : ele?.msg}
+
+                            </p>}
 
                         </div>
                         <span
@@ -263,17 +313,22 @@ export default function MessagePage() {
 
 
                     </div>
-                    {ReplyId && ReplyId == ele?._id && <div className="ReplyBox">
-                        <span className="reply-text">Replying to: {ele?.msg}</span>
+                    {console.log('ele?.UniqueMessageId', ele?.UniqueMessageId)}
+                    {console.log('ele?.UniqueMessageId', ele)}
 
-                        <span
-                            className="close-reply"
-                            onClick={() => setReplyId(null)}
-                        >
-                            ✖
-                        </span>
-                    </div>
-                    }
+                    {uniqueReplyMsgId === ele?.UniqueMessageId && (
+                        <div className="ReplyBox">
+                            <span className="reply-text">Replying to: {ele?.msg?ele?.msg:'Image'}</span>
+                            <span
+                                className="close-reply"
+                                onClick={() => { setuniqueReplyMsgId(null);setRepliedToImage(null) }}
+                            >
+                                ✖
+                            </span>
+                        </div>
+                    )}
+
+
 
                     <div className="time">{`${ele?.Date}/${ele?.Time}`}</div>
                 </div>
@@ -285,9 +340,14 @@ export default function MessagePage() {
         </div>
 
         <div style={{ position: 'relative' }} className="InputBox">
+            {ImageUrl && <div className="SelectedImage">
+                <img onClick={() => { setPreview(null); setSelectedFile(null); setImageUrl(null) }} src='Images/ClosePreview.png' className="ClosePreview"></img>
+                <img className='InputPreviewImage' src={ImageUrl}></img>
+            </div>}
+
             <input onClick={() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }} style={{ border: IsMessageEmpty ? "1px solid red" : "" }} onChange={(event) => { setIsMessageEmpty(false); setMessage(event.target.value) }} value={Message} className="MessageInput" placeholder="Enter Message"></input>
             <img onClick={sendMessage} className="SendMessageBtn" src="/Images/send-message.png"></img>
-            <img onClick={() => { setIsAddImageOpen(true) }} className="AddFileBtn" src="/Images/clip.png"></img>
+            {!uniqueReplyMsgId && <img onClick={() => { setIsAddImageOpen(true) }} className="AddFileBtn" src="/Images/clip.png"></img>}
 
         </div>
     </div>

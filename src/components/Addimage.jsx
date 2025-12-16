@@ -1,8 +1,8 @@
 import { useState } from "react";
 import "../styles/Addimage.css";
 
-export default function Addimage({ setIsAddImageOpen,setSelectedFile,preview, setPreview,UploadNewImage }) {
-  
+export default function Addimage({ UploadingImage, setIsAddImageOpen, setSelectedFile, preview, setPreview, UploadNewImage }) {
+
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -33,8 +33,8 @@ export default function Addimage({ setIsAddImageOpen,setSelectedFile,preview, se
 
                 {/* Action buttons */}
                 <div className="modalActions">
-                    <button onClick={()=>{setIsAddImageOpen(false),setSelectedFile(null),setPreview(null);}} className="cancelBtn">Cancel</button>
-                    <button onClick={async()=>{await UploadNewImage()}} className="confirmBtn">Save</button>
+                    <button onClick={() => { setIsAddImageOpen(false), setSelectedFile(null), setPreview(null); }} className="cancelBtn">Cancel</button>
+                    <button disabled={UploadingImage} onClick={async () => { if (UploadingImage) { return }; await UploadNewImage() }} className="confirmBtn">{UploadingImage ? 'Uploading..' : 'Save'}</button>
                 </div>
             </div>
         </div>
