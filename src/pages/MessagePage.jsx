@@ -1,4 +1,5 @@
 import "../styles/MessagePage.css"
+// SocketStatus
 import CommonHeader from "../components/CommonHeader"
 import { useEffect, useState, useRef } from "react"
 import socket from "../../public/utils/SocketConnect"
@@ -21,7 +22,7 @@ export default function MessagePage() {
     const bottomRef = useRef(null);
     const ReplyRef = useRef(null);
     const messageRefs = useRef({});
-    const UniqueUserId = uuidv4()
+
     const TimeRef = useRef(null)
     const [isDeleteModalOpen, setisDeleteModalOpen] = useState(false)
     const [IsAddImageOpen, setIsAddImageOpen] = useState(false)
@@ -33,8 +34,8 @@ export default function MessagePage() {
     const [HighLightMessage, setHighLightMessage] = useState(null)
     const [liveReply, setLiveReply] = useState(null)
     const [repliedToImage, setRepliedToImage] = useState(null)
-
-    
+    const [SocketStatus,setSocketStatus]=useState('🟢')
+    const [istyping,setistypingmsg]=useState(null)
 
     const [preview, setPreview] = useState(null);
     const [ImageUrl, setImageUrl] = useState(null)
@@ -59,9 +60,9 @@ export default function MessagePage() {
 
         return () => clearTimeout(timer);
     }, [HighLightMessage]);
-    useEffect(()=>{
-        console.log('RepliedToImage',repliedToImage)
-    },[repliedToImage])
+    useEffect(() => {
+        console.log('RepliedToImage', repliedToImage)
+    }, [repliedToImage])
     useEffect(() => {
         console.log('SelectedFile', SelectedFile)
     }, [SelectedFile])
@@ -72,11 +73,61 @@ export default function MessagePage() {
         console.log('HandleCancleDelete')
         setisDeleteModalOpen(false)
     }
+    setTimeout(()=>{
+setistypingmsg(null)
+    },[1200])
+   
     useEffect(() => {
-        console.log('uniqueReplyMsgIduniqueReplyMsgId', uniqueReplyMsgId)
-    }, [uniqueReplyMsgId])
+       socket.on("IsTyping",(Data)=>{
+        console.log('IsTyping',Data)
+        setistypingmsg(Data?.msg)
+       })
+        
+    }, [])
+
+   useEffect(() => {
+  if (!socket || !UserId) return;
+
+  const onConnect = () => {
+    console.log("🟢 Connected:", socket.id);
+    setSocketStatus("🟢");
+    socket.emit("UserJoined", { Id: UserId });
+  };
+
+  const onDisconnect = (reason) => {
+    console.log("🔴 Disconnected:", reason);
+    setSocketStatus("🔴");
+  };
+
+  const onReconnectAttempt = (attempt) => {
+    console.log("🔄 Reconnect attempt:", attempt);
+    setSocketStatus("🔄");
+  };
+
+  const onReconnect = () => {
+    console.log("✅ Reconnected");
+    setSocketStatus("🟢");
+    socket.emit("UserJoined", { Id: UserId });
+  };
+
+  socket.on("connect", onConnect);
+  socket.on("disconnect", onDisconnect);
+  socket.io.on("reconnect_attempt", onReconnectAttempt);
+  socket.io.on("reconnect", onReconnect);
+
+  return () => {
+    socket.off("connect", onConnect);
+    socket.off("disconnect", onDisconnect);
+    socket.io.off("reconnect_attempt", onReconnectAttempt);
+    socket.io.off("reconnect", onReconnect);
+  };
+}, [UserId]);
+
+
     async function UploadNewImage() {
         try {
+            if (UploadingImage) return;
+
             const formData = new FormData();
             formData.append("file", SelectedFile);
 
@@ -118,7 +169,7 @@ export default function MessagePage() {
             _id: Msg?._id,
             msg: Msg?.message,
             type: Msg?.senderId == UserId ? 'sent' : 'incoming',
-            sender: Msg?.SenderUsername || 'Anonymus',
+            sender: Msg?.SenderUsername.trim()==localStorage.getItem("username")?"You":Msg?.SenderUsername,
             // MsgDate:`${Res[0]},${convertTo12Hour(Res[1])}`,
             Date: Msg.date
             , Time: Msg.time,
@@ -129,7 +180,7 @@ export default function MessagePage() {
             ImageUrl: Msg?.ImageUrl,
             UniqueMessageId: Msg?.UniqueMessageId,
             RepliedToUniqueMessageId: Msg?.replyMessage?.RepliedToUniqueMessageId || Msg?.RepliedToUniqueMessageId,
-            RepliedToImage:Msg?.RepliedToImage
+            RepliedToImage: Msg?.RepliedToImage
 
         }
 
@@ -193,7 +244,7 @@ export default function MessagePage() {
                 RepliedToUniqueMessageId: Msg.RepliedToUniqueMessageId,
                 UniqueMessageId: Msg.UniqueMessageId,
                 replyMessage: Msg?.replyMessage,
-                RepliedToImage:Msg?.RepliedToImage
+                RepliedToImage: Msg?.RepliedToImage
 
             };
 
@@ -233,13 +284,13 @@ export default function MessagePage() {
             UniqueMessageId: clientMessageId,
             RepliedToUniqueMessageId: uniqueReplyMsgId,
             replyMessage: uniqueReplyMsgId && liveReply,
-            RepliedToImage:repliedToImage
+            RepliedToImage: repliedToImage
         }
         setMessages((prev) => {
             return [...prev, SentMsg]
         })
 
-        socket.emit("SendMessage", { msg: Message, SenderId: UserId, ReciverId: OtherUserId, Date: Res[0], Time: convertTo12Hour(Res[1]), ReplyId: ReplyId, ImageUrl: ImageUrl, UniqueMessageId: clientMessageId, RepliedToUniqueMessageId: uniqueReplyMsgId, replyMessage: liveReply,RepliedToImage:repliedToImage })
+        socket.emit("SendMessage", { msg: Message, SenderId: UserId, ReciverId: OtherUserId, Date: Res[0], Time: convertTo12Hour(Res[1]), ReplyId: ReplyId, ImageUrl: ImageUrl, UniqueMessageId: clientMessageId, RepliedToUniqueMessageId: uniqueReplyMsgId, replyMessage: liveReply, RepliedToImage: repliedToImage })
         setPreview(null); setSelectedFile(null); setImageUrl(null)
         setMessage("")
         setReplyMessage("")
@@ -253,8 +304,12 @@ export default function MessagePage() {
 
     }
     return <div className="MessagePageContainer">
-        <CommonHeader Title={'Messaging'} ShowBadge={false}></CommonHeader>
+        <CommonHeader Title={'Messaging'} ShowBadge={false} SocketStatus={SocketStatus}></CommonHeader>
+         {istyping&&<div style={{color:'black',display:'flex',justifySelf:'flex-start',padding:"0.5rem"}}><p style={{display:'flex',justifyContent:'flex-start',fontSize:'1rem'}}>{istyping}</p></div>}
+
         <div className="MessageContainer">
+
+
             {IsAddImageOpen && <Addimage UploadingImage={UploadingImage} preview={preview} setPreview={setPreview} setSelectedFile={setSelectedFile} setIsAddImageOpen={setIsAddImageOpen} UploadNewImage={UploadNewImage}></Addimage>}
             <DeleteConfirmModal Title={'Are you sure you want to delete this message?'} isOpen={isDeleteModalOpen} onClose={HandleCancleDelete} onConfirm={HandleConfirmDelete} ></DeleteConfirmModal>
 
@@ -267,9 +322,9 @@ export default function MessagePage() {
                     <div style={{ color: ele?.type == 'incoming' ? 'black' : 'white' }} className="bubble">
                         {/* ele: 0, IsExpanded */}
                         <div className="InnerBubbleContainer">
-                            {(ele?.replyMessage||ele?.RepliedToImage ) && !ele?.isDeleted && <div onClick={() => { messageRefs.current[ele?.RepliedToUniqueMessageId]?.scrollIntoView({ behavior: 'smooth', block: 'center' }); { ele?.RepliedToUniqueMessageId && setHighLightMessage(ele?.RepliedToUniqueMessageId); } }} className="reply-container">
+                            {(ele?.replyMessage || ele?.RepliedToImage) && !ele?.isDeleted && <div onClick={() => { messageRefs.current[ele?.RepliedToUniqueMessageId]?.scrollIntoView({ behavior: 'smooth', block: 'center' }); { ele?.RepliedToUniqueMessageId && setHighLightMessage(ele?.RepliedToUniqueMessageId); } }} className="reply-container">
 
-                                {(ele?.RepliedToImage||ele?.replyMessage ) && <span className="reply-label">Replied to</span>}
+                                {(ele?.RepliedToImage || ele?.replyMessage) && <span className="reply-label">Replied to</span>}
                                 <div style={{ backgroundColor: 'white' }} className="imageContainer">
                                     {ele?.RepliedToImage && <img
                                         src={ele?.RepliedToImage}
@@ -284,7 +339,7 @@ export default function MessagePage() {
                                 className="MessageImage"
                             />}
 
-                            { <p onClick={() => { if (ele?.isDeleted) { return } setReplyId(ele?._id); setReplyMessage(ele?.msg);setuniqueReplyMsgId(ele?.UniqueMessageId); setLiveReply(ele?.msg);ele?.ImageUrl&&setRepliedToImage(ele?.ImageUrl) }} className="BubbleMessage">{ele?.isDeleted ? 'This Message Have Been Deleted' : ele?.msg}
+                            {<p onClick={() => { if (ele?.isDeleted) { return } setReplyId(ele?._id); setReplyMessage(ele?.msg); setuniqueReplyMsgId(ele?.UniqueMessageId); setLiveReply(ele?.msg); ele?.ImageUrl && setRepliedToImage(ele?.ImageUrl) }} className="BubbleMessage">{ele?.isDeleted ? 'This Message Have Been Deleted' : ele?.msg}
 
                             </p>}
 
@@ -318,10 +373,10 @@ export default function MessagePage() {
 
                     {uniqueReplyMsgId === ele?.UniqueMessageId && (
                         <div className="ReplyBox">
-                            <span className="reply-text">Replying to: {ele?.msg?ele?.msg:'Image'}</span>
+                            <span className="reply-text">Replying to: {ele?.msg ? ele?.msg : 'Image'}</span>
                             <span
                                 className="close-reply"
-                                onClick={() => { setuniqueReplyMsgId(null);setRepliedToImage(null) }}
+                                onClick={() => { setuniqueReplyMsgId(null); setRepliedToImage(null) }}
                             >
                                 ✖
                             </span>
@@ -344,8 +399,8 @@ export default function MessagePage() {
                 <img onClick={() => { setPreview(null); setSelectedFile(null); setImageUrl(null) }} src='Images/ClosePreview.png' className="ClosePreview"></img>
                 <img className='InputPreviewImage' src={ImageUrl}></img>
             </div>}
-
-            <input onClick={() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }} style={{ border: IsMessageEmpty ? "1px solid red" : "" }} onChange={(event) => { setIsMessageEmpty(false); setMessage(event.target.value) }} value={Message} className="MessageInput" placeholder="Enter Message"></input>
+           
+            <input onClick={() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }} style={{ border: IsMessageEmpty ? "1px solid red" : "" }} onChange={(event) => {socket.emit('istyping',{username:localStorage.getItem('username'),Id:OtherUserId}); setIsMessageEmpty(false); setMessage(event.target.value) }} value={Message} className="MessageInput" placeholder="Enter Message"></input>
             <img onClick={sendMessage} className="SendMessageBtn" src="/Images/send-message.png"></img>
             {!uniqueReplyMsgId && <img onClick={() => { setIsAddImageOpen(true) }} className="AddFileBtn" src="/Images/clip.png"></img>}
 

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import HeartBadge from "./HeartBadge"
 import { useContext } from "react"
 import MyContext from "../../public/utils/MyContext"
-export default function CommonHeader({ Title, ShowBadge }) {
+export default function CommonHeader({ Title, ShowBadge,SocketStatus }) {
     let navigate = useNavigate()
     const { HasNotification, setHasNotification } = useContext(MyContext);
 
@@ -13,6 +13,7 @@ export default function CommonHeader({ Title, ShowBadge }) {
             
            {ShowBadge? <HeartBadge HasNotification={HasNotification} heartImage="Images/heart.png"
             count={7} onClick={() => { navigate("/AllNotification") }}></HeartBadge>:<div className="heart-container"></div>}
+            {SocketStatus&&<span>{SocketStatus}</span>}
             
             </div>
     </div>
