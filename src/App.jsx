@@ -35,7 +35,9 @@ import BannerContext from "../public/utils/BannerContext";
 import MessagePage from "./pages/MessagePage.jsx";
 import SpecificPlanWorkoutHistory from "./pages/SpecificPlanWorkoutHistory.jsx";
 import { ToastContainer } from 'react-toastify';
+import PremiumPlanContainer from "./pages/PremiumPlanExercisePlan.jsx";
 import 'react-toastify/dist/ReactToastify.css';
+import AddProgressPhoto from "./pages/AddProgressPhoto.jsx";
 function App() {
   //  function getFormattedToday() {
   //       const today = new Date();
@@ -250,12 +252,15 @@ setShowBot(false)
                   <Route path="/Nutrition" element={<Nutrition />} />
                   <Route path="/Profile" element={<Profile />} />
                   <Route path="/WorkoutHistory" element={< WorkoutHistory />} />
+                  <Route path="/AddProgressPhoto" element={< AddProgressPhoto />} />
+
                   <Route path="/WeightHistory" element={< WeightHistoryChart />} />
                   <Route path="/SpecificPlanWorkoutHistory" element={< SpecificPlanWorkoutHistory />} />
                   {/* MessagePage */}
                   <Route path="/MessagePage" element={<MessagePage />} />
+                  <Route path="/Premium/PushPullLegPlan" element={<PremiumPlanContainer/>} />
 
-                  {/* SpecificPlanWorkoutHistory */}
+                 
 
 
                   {/* /WorkoutHistory */}

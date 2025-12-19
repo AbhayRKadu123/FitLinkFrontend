@@ -1,5 +1,6 @@
 import "../styles/DetailWorkoutHistory.css"
 import React, { useEffect } from "react";
+// import Butt
 import { useState } from "react";
 // import {useGetWorkoutHistoryDetailQuery} from "../features/api/WorkoutApi"
 import { useGetWorkoutHistoryDetailQuery, useGetWorkoutBarChartDetailQuery } from "../features/api/WorkoutApi";
@@ -8,6 +9,37 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import HeadingContainer from "../components/HeadingContainer"
 // import SimpleBarChart from "../components/SimpleBarCharts";
 import ExerciseSetComparisonChart from "../components/SimpleBarCharts";
+import { toast } from "react-toastify";
+function InputComponent({ Val, isDisabled }) {
+  return <input
+    value={Val}
+    style={{
+      width: "75%",
+      height: "36px",
+      backgroundColor: "#fff",
+      color: "#111",
+      border: "1px solid #d1d5db",
+      borderRadius: "8px",
+      padding: "0 10px",
+      fontSize: "14px",
+      textAlign: "center",
+      outline: "none",
+      transition: "all 0.2s ease",
+      boxShadow: "inset 0 1px 2px rgba(0,0,0,0.08)"
+    }}
+    onFocus={(e) => {
+      e.target.style.border = "1px solid #2563eb";
+      e.target.style.boxShadow =
+        "0 0 0 3px rgba(37, 99, 235, 0.15)";
+    }}
+    onBlur={(e) => {
+      e.target.style.border = "1px solid #d1d5db";
+      e.target.style.boxShadow =
+        "inset 0 1px 2px rgba(0,0,0,0.08)";
+    }}
+    disabled={isDisabled}
+  />
+}
 function ExerciseHistoryTable({ exercises }) {
   const [openIndex, setOpenIndex] = useState(null);
   console.log('datadata', exercises)
@@ -29,8 +61,11 @@ function ExerciseHistoryTable({ exercises }) {
         <tbody>
           {exercises && exercises.length > 0 ? (
             exercises.map((ex, index) => (
+
               <React.Fragment key={index}>
                 <tr>
+
+
                   <td>{ex.name}</td>
                   <td>{ex.sets.length}</td>
                   <td>
@@ -41,6 +76,7 @@ function ExerciseHistoryTable({ exercises }) {
                       {openIndex === index ? "▲" : "▼"}
                     </button>
                   </td>
+
                 </tr>
 
                 {openIndex === index && (
@@ -49,7 +85,14 @@ function ExerciseHistoryTable({ exercises }) {
                       <table className="inner-table">
                         <thead>
                           <tr>
-                            <th>Set</th>
+                            <th>
+                              <div className="set-heading">
+  <span>Set</span>
+  <button onClick={()=>{return toast.warning("Please enable edit mode !")}} className="add-set-btn">+</button>
+</div>
+
+                              
+                               </th>
                             <th>Reps</th>
                             <th>Weight (kg)</th>
                           </tr>
@@ -58,8 +101,8 @@ function ExerciseHistoryTable({ exercises }) {
                           {ex.sets.map((set, i) => (
                             <tr key={i}>
                               <td>Set {i + 1}</td>
-                              <td>{set.reps}</td>
-                              <td>{set.weight}</td>
+                              <td><InputComponent Val={set.reps} isDisabled={false}></InputComponent></td>
+                              <td><InputComponent Val={set.weight} isDisabled={false}></InputComponent></td>
                             </tr>
                           ))}
                         </tbody>
@@ -68,6 +111,7 @@ function ExerciseHistoryTable({ exercises }) {
                   </tr>
                 )}
               </React.Fragment>
+
             ))
           ) : (
             <tr>
@@ -102,30 +146,30 @@ export default function DetailWorkoutHistory() {
   // console.log('BarChartData', BarChartData?.result)
   useEffect(() => {
     console.log('GetGraphDataBarChartData', BarChartData?.result)
-    if(BarChartData?.result){
-      for(let i=0;i<BarChartData?.result.length;i++){
-        console.log('BarChartData?.result[i].name==GetGraphData',BarChartData?.result[i].name==GetGraphData)
+    if (BarChartData?.result) {
+      for (let i = 0; i < BarChartData?.result.length; i++) {
+        console.log('BarChartData?.result[i].name==GetGraphData', BarChartData?.result[i].name == GetGraphData)
 
-if(BarChartData?.result[i].name==GetGraphData){
+        if (BarChartData?.result[i].name == GetGraphData) {
 
-  setSetData([...BarChartData?.result[i].Data])
-  // break
-}
+          setSetData([...BarChartData?.result[i].Data])
+          // break
+        }
       }
     }
   }, [GetGraphData])
   let [Arr, setArr] = useState([])
   useEffect(() => {
-    console.log('SetData=',SetData)
+    console.log('SetData=', SetData)
   }, [SetData])
 
   useEffect(() => {
     let arr = []
-    if(BarChartData&&BarChartData?.result){
-    setGetGraphData((BarChartData?.result[0].name))
+    if (BarChartData && BarChartData?.result) {
+      setGetGraphData((BarChartData?.result[0].name))
 
     }
-    
+
     for (let i = 0; i < BarChartData?.result?.length; i++) {
 
       arr.push(BarChartData?.result[i]?.name)
@@ -142,7 +186,14 @@ if(BarChartData?.result[i].name==GetGraphData){
     <div className="ExerciseHistory">
       {/* <div className="ExerciseHistoryTable"></div> */}
       <ExerciseHistoryTable exercises={data?.Result[0]?.exercises}></ExerciseHistoryTable>
-      <div style={{ width: '100%', height: '50%', display: 'flex', justifyContent: 'center' }}>
+      <div style={{ width: '100%', height: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: "0.3rem" }}>
+
+        <button className="edit-btn">
+          Save Changes
+        </button>
+
+      </div>
+      <div style={{ width: '100%', height: '40%', display: 'flex', justifyContent: 'center' }}>
 
 
         <ExerciseSetComparisonChart GetGraphData={GetGraphData} setGetGraphData={setGetGraphData} sets={SetData} options={Arr} />

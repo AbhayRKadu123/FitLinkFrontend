@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react"
 import Button from "../components/Button.jsx"
 import LogTodaysWeightPopup from "../components/LogTodaysWeightPopup.jsx";
+import { toast } from "react-toastify";
 
 function ProfileOption({Title,OnClick}) {
     return <div onClick={()=>{OnClick()}} className="ProfileSettingOptions">
@@ -66,7 +67,7 @@ export default function Profile() {
                     Log Weight
                 </button>
                 <button
-                    onClick={() => { localStorage.removeItem('token'); localStorage.removeItem('username');localStorage.removeItem('UserId'); navigate("/login") }}
+                    onClick={() => { localStorage.removeItem('token'); localStorage.removeItem('username');localStorage.removeItem('UserId');toast.success("User Logged Out"); navigate("/login") }}
                     style={{
                         height: '1.9rem',
                         fontSize: '0.7rem',
@@ -118,7 +119,7 @@ export default function Profile() {
                 <ProfileOption OnClick={()=>navigate("/WorkoutHistory")} Title={'Workout History'}></ProfileOption>
                 <ProfileOption OnClick={()=>navigate("/WeightHistory")} Title={'Weight History'}></ProfileOption>
 
-                <ProfileOption Title={'Progress Photo'}></ProfileOption>
+                <ProfileOption OnClick={()=>{navigate("/AddProgressPhoto")}} Title={'Progress Photo'}></ProfileOption>
                 <ProfileOption Title={'Profile Setting'}></ProfileOption>
                 <ProfileOption Title={'Account Settings'}></ProfileOption>
                 <ProfileOption Title={'Manage My Subscription'}></ProfileOption>

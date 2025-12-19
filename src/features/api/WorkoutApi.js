@@ -73,6 +73,11 @@ export const WorkoutApi = createApi({
       query: ({ ID, NestedId, ReqDay }) => `/Workout/getworkoutsession?ID=${ID}&NestedId=${NestedId}&ReqDay=${ReqDay}`
     })
     ,
+    GetLastSessionHistory:builder.query({
+
+ query: ({SessionTitle,Currexercise,Day}) => `/Workout/GetLastSessionHistory?SessionTitle=${SessionTitle}&Currexercise=${Currexercise}&Day=${Day}`
+
+    }),
 
     AddWorkoutSession: builder.mutation({
       query: (sessionobject) => ({
@@ -132,4 +137,4 @@ export const WorkoutApi = createApi({
 
 });
 
-export const {useUpdateDailyWorkoutSessionMutation,useGetUserProgressQuery,  useGetWorkoutBarChartDetailQuery,useGetWorkoutHistoryDetailQuery,useGetWorkoutHistoryQuery, useUpdateWorkoutSessionMutation, useGetDailySessionQuery, useGetWorkoutSessoinQuery, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation, useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutSessionMutation } = WorkoutApi;
+export const {useGetLastSessionHistoryQuery,useUpdateDailyWorkoutSessionMutation,useGetUserProgressQuery,  useGetWorkoutBarChartDetailQuery,useGetWorkoutHistoryDetailQuery,useGetWorkoutHistoryQuery, useUpdateWorkoutSessionMutation, useGetDailySessionQuery, useGetWorkoutSessoinQuery, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation, useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutSessionMutation } = WorkoutApi;

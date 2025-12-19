@@ -6,6 +6,7 @@ import { useEffect, useEffectEvent, useState } from "react"
 import { useAddUserSignUpMutation } from "../features/api/AuthApi"
 import Notification from "../components/ToastNotification"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 export default function SignUp() {
     const [signup, setsignup] = useState({ username: "", email: "", password: "", confirmpassword: "" })
     const [SignUpUser, { data, isLoading, isSuccess, error }] = useAddUserSignUpMutation();
@@ -22,7 +23,10 @@ export default function SignUp() {
         console.log('err', error)
     }, [error])
     // Notification({type:'success',message:'SignUp Successfull'})
-    useEffect(() => { if(isSuccess){setTimeout(()=>{navigate("/login")},1000 )} }, [isSuccess])
+    useEffect(() => { if(isSuccess){
+        toast.success("Signup successfull")
+        
+        navigate("/login")} }, [isSuccess])
 
 
 
@@ -32,10 +36,10 @@ export default function SignUp() {
                 <Notification type={'error'} message={error?.data?.message || 'Something Went Wrong'}></Notification>
 
             }
-            {isSuccess &&
+            {/* {isSuccess &&
                 <Notification type={'success'} message={'SignUp Successfull'}></Notification>
 
-            }
+            } */}
             <h3 className="SignUpFormHeading">FitLink Signup</h3>
             <Input label={'Enter Username'}
                 placeholder={'Enter Username'} labelcolor={'white'} value={signup.username} type="text" onChange={(event) => { setsignup((prev) => { return { ...prev, username: event.target.value } }) }}></Input>

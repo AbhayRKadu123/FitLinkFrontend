@@ -3,6 +3,7 @@ import "../styles/WorkoutPlanCard.css"
 import { useNavigate } from "react-router-dom"
 import { useContext } from "react";
 import MyContext from "../../public/utils/MyContext";
+import { toast } from "react-toastify";
 export default function WorkoutPlanCard({ Url, Title, Description,comingSoon,NavGateTo }) {
     const navigate=useNavigate();
     const {
@@ -24,7 +25,8 @@ export default function WorkoutPlanCard({ Url, Title, Description,comingSoon,Nav
             }}
             className={`WorkoutPlansCard ${comingSoon ? 'coming-soon-card' : ''}`}
             onClick={()=>{
-                navigate("/CustomWorkoutPlan")
+                if (comingSoon){toast.warning("This feature is in development phase"); return};
+                navigate(NavGateTo)
             }}
         >
             {comingSoon && (

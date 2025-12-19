@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
-// let url='http://localhost:8080'
-let url='https://fitlink-vbdq.onrender.com'
+let url='http://localhost:8080'
+// let url='https://fitlink-vbdq.onrender.com'
 
 const socket = io(url,{
  transports: ["websocket"],

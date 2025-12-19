@@ -14,6 +14,7 @@ import MyContext from "../../../public/utils/MyContext";
 import BannerContext from "../../../public/utils/BannerContext";
 
 import { useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation } from "../../features/api/WorkoutApi";
+import { toast } from "react-toastify";
 
 export default function CustomWorkoutPlan({ setNotActive }) {
     const navigate = useNavigate();
@@ -291,15 +292,18 @@ export default function CustomWorkoutPlan({ setNotActive }) {
                                     if(isLoading==true) return
                                     if (selecteddays.length === 0) {
                                         // Using Alert component as in original (kept as JSX call as original did, but better would be to show real UI)
-                                        <Alert message={"No days selected"}></Alert>
+                                       toast.error("No days selected")
                                         return
                                     };
                                     if (selectedday && (!formData[selectedday]?.Title || formData[selectedday].Title.trim() === "")) {
-                                        <Alert message='Title is missing'></Alert>
+                                        // <Alert message='Title is missing'></Alert>
+                                       toast.error("Title is missing")
+
                                         return;
                                     };
                                     if (!formData[selectedday]?.exercises || formData[selectedday].exercises.length === 0) {
-                                        alert("please add some exercise")
+                                        // alert("please add some exercise")
+                                         toast.error("please add some exercise")
                                         return;
                                     }
 

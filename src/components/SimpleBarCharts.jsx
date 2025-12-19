@@ -36,7 +36,7 @@ export default function ExerciseSetComparisonChart({ sets,GetGraphData,setGetGra
           marginBottom: "0.5rem",
         }}
       >
-        Set-Wise Performance Comparison for pullups
+        Set-Wise Performance Comparison
       </h3>
 
       <ResponsiveContainer width="100%" height="85%">

@@ -1,0 +1,138 @@
+.UserWorkoutHistory{
+    width: 100%;
+    height: 94%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 0.3rem;
+    overflow-y: auto;
+
+
+}
+.UserWorkoutHistory::-webkit-scrollbar{
+    display: none;
+}
+.UserWorkoutHistoryBasicInfo{
+    width: 85%;
+    height: 25%;
+    border: 1px solid  rgba(0, 0, 0, 0.3);
+    margin: 0.5rem;
+    border-radius: 0.4rem;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
+    flex-shrink: 0;
+
+}
+.UserWorkoutHistoryTrainingExperience{
+ width: 85%;
+    height: 25%;
+    border: 1px solid  rgba(0, 0, 0, 0.3);
+    margin: 0.5rem;
+    border-radius: 0.4rem;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+
+
+}
+
+.TrainingExperienceInnerContainer{
+    width: 100%;
+    height: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   
+}
+.SelectExperience>p{
+    color: rgb(0,0,0,0.6);
+    font-size: 0.7rem;
+    text-align: center;
+    font-weight: 600;
+
+}
+.ActiveLevel{
+    background-color: green;
+}
+.ActiveLevel>p{
+    color: white;
+
+}
+.SelectExperience{
+    width: 28%;
+    height: 70%;
+    border:1px solid rgb(0,0,0,0.3);
+    /* border-radius: 0.5rem; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+}
+
+.No_Of_Days_To_Workout{
+    width: 85%;
+    height: 20%;
+     border: 1px solid  rgba(0, 0, 0, 0.3);
+    margin: 0.5rem;
+    border-radius: 0.4rem;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+
+
+}
+
+.No_Of_Days_To_Workout>p,h1{
+     color: rgb(0,0,0,0.6);
+    font-size: 0.7rem;
+   
+    font-weight: 600;
+}
+.NoOfDaysDaysContainer{
+   width:100%;
+   height:60%;
+   display: flex;
+   justify-content: space-evenly;
+   align-items: center;
+   
+    
+
+}
+.NoOfDaysDaysContainer>.Days{
+    width: 19%;
+    height: 50%;
+ border: 1px solid  rgba(0, 0, 0, 0.3);
+ border-radius: 0.3rem;
+}
+.Days{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.Days>p{
+    color: rgba(0, 0, 0, 0.6);
+    text-align: center;
+
+}
+
+.Active{
+    background-color: green;
+}
+.Active>p{
+    color: white;
+}
+.EquipMentAvailableBox{
+    width: 85%;
+    height: 10%;
+     border: 1px solid  rgba(0, 0, 0, 0.3);
+    margin: 0.5rem;
+    border-radius: 0.4rem;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-shrink: 0;
+
+
+}

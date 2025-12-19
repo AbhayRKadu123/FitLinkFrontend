@@ -4,14 +4,16 @@ import {
     useGetWorkoutSessoinQuery,
     useAddWorkoutSessionMutation,
     useGetDailySessionQuery,
-    useUpdateWorkoutSessionMutation
+    useUpdateWorkoutSessionMutation,
+    useGetLastSessionHistoryQuery
 } from "../features/api/WorkoutApi";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Button from "../components/Button";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Input from "../components/Input";
 import HeadingContainer from "../components/HeadingContainer";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { toast } from "react-toastify";
 // function getISTDate() {
 //     const ist = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
 //     const d = new Date(ist);
@@ -19,22 +21,28 @@ import { skipToken } from "@reduxjs/toolkit/query";
 // }
 
 function getISTDate() {
-  // const utcNow = new Date().toISOString();
-  const utcDate = new Date();
-  console.log('utcDate',utcDate)
-const istDate = new Date(utcDate.getTime() + (5.5 * 60 * 60 * 1000));
-console.log('isodate',istDate.toISOString()?.split('T')[0]);
+    // const utcNow = new Date().toISOString();
+    const utcDate = new Date();
+    console.log('utcDate', utcDate)
+    const istDate = new Date(utcDate.getTime() + (5.5 * 60 * 60 * 1000));
+    console.log('isodate', istDate.toISOString()?.split('T')[0]);
 
-  return istDate.toISOString()?.split('T')[0]
+    return istDate.toISOString()?.split('T')[0]
 }
 export default function LogWorkoutScreen() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const [isActionRunning, setIsActionRunning] = useState(false);
-
+    // const setHolderRef = useRef(null);
+    // const scrollToBottomRef = useRef(null);
     const ID = searchParams.get("Id");
     const NestedId = searchParams.get("NestedId");
     const ReqDay = searchParams.get("ReqDay");
+    const [ShowLastSessionHistory, setShowLastSessionHistory] = useState(false)
+    const [SessionTitle, setSessionTitle] = useState(null)
+    const [Currexercise, setCurrexercise] = useState(null)
+    const [CurrExerciseSetHistory, setCurrExerciseSetHistory] = useState(null)
+
 
     // --- Fetch base workout template ---
     const {
@@ -42,6 +50,8 @@ export default function LogWorkoutScreen() {
         isLoading: isWorkoutLoading,
         error: workoutError,
     } = useGetWorkoutSessoinQuery({ ID, NestedId, ReqDay });
+
+    const { data: GetLastSessionHistory, isLoading: isSessionHistoryLoading, isError } = useGetLastSessionHistoryQuery({ SessionTitle: SessionTitle, Currexercise: Currexercise, Day: ReqDay })
 
     // --- Fetch existing session for today ---
     const dailyQueryArgs = workoutData?.result
@@ -71,7 +81,27 @@ export default function LogWorkoutScreen() {
     const clean = (str) => str.replace(/\s+/g, " ").trim().toLowerCase();
 
     // if (clean(ele) === clean(arr[i]?.name)) {
+    useEffect(() => {
+        if (workoutData?.result?.Title) {
+            setSessionTitle(workoutData?.result?.Title.trim())
 
+        }
+    }, [workoutData])
+    useEffect(() => {
+        if (isError == true) {
+            toast.error("some thing went wrong")
+            return
+        }
+    }, [isError])
+
+    useEffect(() => {
+        if (GetLastSessionHistory?.result[0]?.exercises[0]?.sets) {
+            setCurrExerciseSetHistory(GetLastSessionHistory?.result[0]?.exercises[0]?.sets)
+        } else {
+            setCurrExerciseSetHistory(null)
+        }
+
+    }, [GetLastSessionHistory])
     useEffect(() => {
         if (isWorkoutLoading || isDailySessionLoading) return;
 
@@ -105,6 +135,7 @@ export default function LogWorkoutScreen() {
 
 
             })
+
             console.log('UpdatedExercise', UpdatedExercise)
             let Obj = {
                 _id: dailySession?.getworkoutsession?._id,
@@ -141,6 +172,10 @@ export default function LogWorkoutScreen() {
         }
     }, [workoutData, dailySession]);
 
+    useEffect(() => {
+        console.log('sessionObject', sessionObject)
+    }, [sessionObject])
+
     // --- Add a new set to exercise ---
     const addSet = (exIndex) => {
         setSessionObject((prev) => {
@@ -152,6 +187,13 @@ export default function LogWorkoutScreen() {
             );
             return { ...prev, exercises: updatedExercises };
         });
+        setTimeout(() => {
+            const holders = document.querySelectorAll(".SetHolder");
+            const holder = holders[exIndex];
+            if (holder) {
+                holder.scrollTop = holder.scrollHeight;
+            }
+        }, 0);
     };
 
     // --- Remove a set ---
@@ -176,7 +218,7 @@ export default function LogWorkoutScreen() {
                     ? {
                         ...ex,
                         sets: ex.sets.map((set, sIndex) =>
-                            sIndex === setIndex ? { ...set, [field]: value } : set
+                            sIndex === setIndex ? { ...set, [field]: value.trim() } : set
                         ),
                     }
                     : ex
@@ -185,76 +227,28 @@ export default function LogWorkoutScreen() {
         });
     };
 
-    // async function updateworkout() {
-    //     console.log("Update workout button clicked");
 
-    //     try {
-    //         // ✅ Check if there’s valid data
-    //         if(isupdating) return alert('Workout is being updating')
-    //         if (!sessionObject || !sessionObject._id) {
-    //             console.error("❌ Missing session ID or data. Cannot update workout.");
-    //             alert("No session selected to update!");
-    //             return;
-    //         }
-
-    //         console.log("Updating workout with data:", sessionObject);
-    //     // setisDisabled(true)
-
-    //         // ✅ Call the update API
-    //        const result = await updateWorkout(sessionObject)
-    //        refetch()
-
-    //         // ✅ Handle API response
-    //         if (result?.data) {
-    //             console.log("✅ Workout updated successfully:", result.data);
-    //             alert("Workout updated successfully!");
-    //         } else if (result?.error) {
-    //             console.error("❌ Error updating workout:", result.error);
-    //             alert("Failed to update workout. Please try again.");
-    //         } else {
-    //             console.warn("⚠️ Unexpected response format:", result);
-    //             alert("Unexpected error occurred.");
-    //         }
-
-    //     } catch (error) {
-    //         console.error("❌ Exception while updating workout:", error);
-    //         alert("Something went wrong. Please try again.");
-    //     }
-    // }
-
-    // // --- Handle save ---
-    // const handleSave = async () => {
-    //     if (!sessionObject) return alert("Nothing to save!");
-    //     if(isSaving) return alert('Workout is being saved')
-
-    //     // Validation: at least one set added
-    //     const hasSets = sessionObject.exercises.some((ex) => ex.sets.length > 0);
-    //     if (!hasSets) {
-    //         alert("Please add at least one set before saving.");
-    //         return;
-    //     }
-    //     // setisDisabled(true)
-
-    //     try {
-    //         const res = await addWorkout(sessionObject).unwrap();
-    //         refetch()
-    //         alert("Workout saved successfully!");
-    //         console.log("Workout saved result:", res);
-    //     } catch (err) {
-    //         console.error("Error saving workout:", err);
-    //         alert("Failed to save workout. Please try again.");
-    //     }
-    // };.
     async function updateworkout() {
         if (isupdating || isWorkoutLoading || isDailySessionLoading) return;
-        // setIsActionRunning(true);
+        const Setsexists = sessionObject.exercises.some(ex => ex.sets.length !== 0);
+        const invalid = sessionObject.exercises.some(ex =>
+            ex.sets.some(s => !s.reps || !s.weight)
+        );
+        if (!Setsexists) {
+            toast.error("Please add some sets to exercise !");
+            return;
+        }
+        if (invalid) {
+            toast.error("Reps and Weight cannot be empty.");
+            return;
+        }
 
         try {
             const result = await updateWorkout(sessionObject).unwrap();
             await refetch();
-            alert("Workout updated successfully!");
+            toast.success("Workout updated successfully!");
         } catch (err) {
-            alert("Update failed!");
+            toast.success("Update failed!");
         }
 
         // setIsActionRunning(false);
@@ -267,16 +261,16 @@ export default function LogWorkoutScreen() {
         );
 
         if (invalid) {
-            alert("Reps and Weight cannot be empty.");
+            toast.error("Reps and Weight cannot be empty.");
             return;
         }
 
         try {
             const res = await addWorkout(sessionObject).unwrap();
             await refetch();
-            alert("Workout saved successfully!");
+            toast.success("Workout saved successfully!");
         } catch (err) {
-            alert("Save failed!");
+            toast.error("Save failed!");
         }
 
         // setIsActionRunning(false);
@@ -287,21 +281,46 @@ export default function LogWorkoutScreen() {
     useEffect(() => {
         console.log("SessionObject:", sessionObject);
     }, [sessionObject]);
-
+    useEffect(() => {
+        console.log('Currexercise',)
+    }, [Currexercise])
 
     return (
         <div className="LogWorkoutScreenContainer">
-            {/* <div className="LogWorkoutScreenHeading">
-                <img
-                    onClick={() => navigate(-1)}
-                    style={{ width: "1.5rem", height: "1.5rem", cursor: "pointer" }}
-                    src="Images/left-arrow.png"
-                    alt="back"
-                />
-                <h4 style={{ color: "black", marginLeft: "0.5rem", fontSize: "1.5rem" }}>
-                    {workoutData?.result?.Title}
-                </h4>
-            </div> */}
+            {ShowLastSessionHistory && <div className="modalOverlay">
+                <div className="ViewLastSessionHistory">
+                    <span style={{ position: 'absolute', top: '1rem', left: '1.5rem', zIndex: '1000' }}><img onClick={() => { setCurrexercise(null); setShowLastSessionHistory(false) }} style={{ width: '1.5rem', height: '1.5rem' }} src="../Images/closered.png"></img></span>
+                    <h4 className="HistoryTitle">
+                        Last Session History
+                        <span>{Currexercise}</span>
+                    </h4>
+                    {CurrExerciseSetHistory == null ? <div className="Set_and_Reps_Holder">
+
+                        <h4 style={{ textAlign: 'center', color: 'black' }}>No History To show</h4>
+
+                    </div> : <>
+                        {console.log('CurrExerciseSetHistory', CurrExerciseSetHistory)}
+                        {isSessionHistoryLoading?<LoadingSpinner></LoadingSpinner>:<div className="Set_and_Reps_Holder">
+                            {CurrExerciseSetHistory.map((ele, index) => {
+                                return <div className="SetRow">
+                                    <span>Set {index + 1}</span>
+                                    <span>{ele?.reps} reps</span>
+                                    <span>{ele?.weight} kg</span>
+                                </div>
+
+                            })}
+
+
+
+                        </div>}
+
+                    </>}
+
+                </div>
+            </div>}
+
+
+
             <HeadingContainer Title={workoutData?.result?.Title}></HeadingContainer>
 
             <div className="LogWorkoutExerciseSession">
@@ -337,7 +356,7 @@ export default function LogWorkoutScreen() {
                                         placeholder="Reps"
                                         value={set.reps}
                                         onChange={(e) =>
-                                            handleInputChange(exIndex, setIndex, "reps", Math.max(0, Number(e.target.value)))
+                                            handleInputChange(exIndex, setIndex, "reps", e.target.value)
                                         }
                                         isLogWorkout={true}
 
@@ -347,7 +366,7 @@ export default function LogWorkoutScreen() {
                                         placeholder="Weight"
                                         value={set.weight}
                                         onChange={(e) =>
-                                            handleInputChange(exIndex, setIndex, "weight", Math.max(0, Number(e.target.value)))
+                                            handleInputChange(exIndex, setIndex, "weight", e.target.value)
                                         }
                                         isLogWorkout={true}
 
@@ -356,9 +375,18 @@ export default function LogWorkoutScreen() {
                                     <img onClick={() => removeSet(exIndex, setIndex)} style={{ width: '1.5rem', height: '1.5rem' }} src="Images/closered.png"></img>
                                 </div>
                             ))}
+                            <div ></div>
+
                         </div>
 
                         <Button onClick={() => addSet(exIndex)} label={"Add Set"} />
+                        <Button
+                            onClick={() => { setCurrexercise(exercise.name); console.log('exercise.name', exercise.name); setShowLastSessionHistory(true) }}
+
+                            label={
+                                'History'
+                            }
+                        />
                     </div>
                 ))}
 
@@ -372,8 +400,13 @@ export default function LogWorkoutScreen() {
                         justifyContent: "center",
                         marginTop: "1.5rem",
                         marginBottom: "1.5rem",
+                        flexDirection: "column",
+                        alignItems: 'center'
                     }}
                 >
+
+
+
                     <Button
                         onClick={dailySession?.getworkoutsession ? updateworkout : handleSave}
                         disabled={
@@ -395,13 +428,14 @@ export default function LogWorkoutScreen() {
 
 
 
+
                 </div>
             )}
 
-            <div className="PrevNextContainer">
+            {/* <div className="PrevNextContainer">
                 <span>Prev</span>
                 <span>Next</span>
-            </div>
+            </div> */}
         </div>
     );
 }

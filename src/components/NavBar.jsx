@@ -99,29 +99,29 @@ export default function NavBar() {
       <NavIcon
         to="/"
         label="Home"
-        activeIcon="Images/homeRed.png"
-        inactiveIcon="Images/homewhite.png"
+        activeIcon="/Images/homeRed.png"
+        inactiveIcon="/Images/homewhite.png"
       />
 
       <NavIcon
         to="/Community"
         label="Social"
-        activeIcon="Images/peoplegroupred.png"
-        inactiveIcon="Images/peoplegroup.png"
+        activeIcon="/Images/peoplegroupred.png"
+        inactiveIcon="/Images/peoplegroup.png"
       />
 
       <NavIcon
         to="/Nutrition"
         label="Nutrition"
-        activeIcon="Images/applered.png"
-        inactiveIcon="Images/applewhite.png"
+        activeIcon="/Images/applered.png"
+        inactiveIcon="/Images/applewhite.png"
       />
 
       <NavIcon
         to="/Profile"
         label="Profile"
-        activeIcon="Images/avatarred.png"
-        inactiveIcon="Images/avatarwhite.png"
+        activeIcon="/Images/avatarred.png"
+        inactiveIcon="/Images/avatarwhite.png"
       />
     </div>
   );

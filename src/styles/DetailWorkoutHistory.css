@@ -46,7 +46,85 @@
   padding: 14px 18px;
   text-align: center;
 }
+/* Edit Button */
+.set-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 14px;
+}
 
+/* Add Set Button */
+.add-set-btn {
+  width: 22px;
+  height: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.12);
+
+  border: 1px solid rgba(37, 99, 235, 0.35);
+  border-radius: 50%;
+
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+
+  transition: all 0.2s ease;
+}
+
+/* Hover & Active */
+.add-set-btn:hover {
+  background: #2563eb;
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+.add-set-btn:active {
+  transform: scale(0.95);
+}
+
+.edit-btn {
+  /* position: absolute;
+  top: 12px;
+  right: 12px; */
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.08);
+
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  border-radius: 20px;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Hover */
+.edit-btn:hover {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* Active */
+.edit-btn:active {
+  transform: scale(0.96);
+}
 .ExerciseHistoryTable th {
   background: #000;
   color: white;

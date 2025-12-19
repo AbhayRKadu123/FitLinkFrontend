@@ -15,6 +15,7 @@ export default function Button({
             onClick={onClick}
             type={type}
             disabled={disabled}
+            style={{marginTop:'0.2rem',marginBottom:'0.1rem'}}
             
         >
             {label}

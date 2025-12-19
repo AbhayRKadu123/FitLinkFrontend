@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom"
 import Notification from "../components/ToastNotification"
 import { useContext } from "react"
 import MyContext from "../../public/utils/MyContext"
+import { toast } from "react-toastify"
 export default function Login() {
     // let [Label,setLabel]=useState('Login')
     const [LoginUser, { data, isLoading,error, isSuccess, isError }] = useAddUserLoginMutation();
@@ -27,18 +28,17 @@ const {
 // isSuccess
 useEffect(()=>{
     if(isSuccess==true){
-setShowNotification(true)
-setNotificatioinType('success')
-setNotificationMessage('User logged in')
+// setShowNotification(true)
+// setNotificatioinType('success')
+// setNotificationMessage('User logged in')
+toast.success('User Logged in')
     }
 
 },[isSuccess])
 
 useEffect(()=>{
     if(isError==true){
-setShowNotification(true)
-setNotificatioinType('error')
-setNotificationMessage('Something went wrong')
+toast.error("Something went wrong")
     }
 
 },[isError])
