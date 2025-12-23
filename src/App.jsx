@@ -38,6 +38,7 @@ import { ToastContainer } from 'react-toastify';
 import PremiumPlanContainer from "./pages/PremiumPlanExercisePlan.jsx";
 import 'react-toastify/dist/ReactToastify.css';
 import AddProgressPhoto from "./pages/AddProgressPhoto.jsx";
+import { enablePush } from "../public/utils/push.js";
 function App() {
   //  function getFormattedToday() {
   //       const today = new Date();
@@ -235,6 +236,8 @@ setShowBot(false)
 
           <div  className="container">
             <div  className="MainLayoutContainer">
+            {/* <button onClick={()=>{enablePush()}}>Enable Notification</button> */}
+
              <ToastContainer  toastStyle={{ width: "80%",top:'1rem' }} position="top-center" />
 
             

@@ -40,7 +40,7 @@ function InputComponent({ Val, isDisabled }) {
     disabled={isDisabled}
   />
 }
-function ExerciseHistoryTable({ exercises }) {
+function ExerciseHistoryTable({ exercises,edit }) {
   const [openIndex, setOpenIndex] = useState(null);
   console.log('datadata', exercises)
 
@@ -87,12 +87,27 @@ function ExerciseHistoryTable({ exercises }) {
                           <tr>
                             <th>
                               <div className="set-heading">
-  <span>Set</span>
-  <button onClick={()=>{return toast.warning("Please enable edit mode !")}} className="add-set-btn">+</button>
-</div>
+                                <span>Set</span>
+                                <button
+                                  className="add-set-btn"
+                                  onClick={() => {
+                                    if (!edit) {
+                                      toast.warning("Please enable edit mode!");
+                                      return;
+                                    }
 
-                              
-                               </th>
+                                    toast.success("Set added successfully!");
+                                    // call addSet() here
+                                  }}
+                                  // disabled={!edit}
+                                >
+                                  +
+                                </button>
+
+                              </div>
+
+
+                            </th>
                             <th>Reps</th>
                             <th>Weight (kg)</th>
                           </tr>
@@ -131,6 +146,7 @@ export default function DetailWorkoutHistory() {
   // let id=req
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
+  const [edit, setedit] = useState(false)
   const pullupSets = [
     { set: 1, lastReps: 8, lastWeight: 10, currentReps: 10, currentWeight: 0 },
     { set: 2, lastReps: 6, lastWeight: 9, currentReps: 8, currentWeight: 40 },
@@ -185,12 +201,23 @@ export default function DetailWorkoutHistory() {
     <HeadingContainer Title={'History'}></HeadingContainer>
     <div className="ExerciseHistory">
       {/* <div className="ExerciseHistoryTable"></div> */}
-      <ExerciseHistoryTable exercises={data?.Result[0]?.exercises}></ExerciseHistoryTable>
+      <ExerciseHistoryTable exercises={data?.Result[0]?.exercises} edit={edit}></ExerciseHistoryTable>
       <div style={{ width: '100%', height: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: "0.3rem" }}>
 
-        <button className="edit-btn">
+        {edit ? <button onClick={() => {
+          console.log('Changes saved')
+          setedit(false)
+
+        }} className="edit-btn">
           Save Changes
-        </button>
+        </button> :
+          <button onClick={() => {
+            console.log('edit opttion')
+            setedit(true)
+
+          }} className="edit-btn">
+            Edit
+          </button>}
 
       </div>
       <div style={{ width: '100%', height: '40%', display: 'flex', justifyContent: 'center' }}>
