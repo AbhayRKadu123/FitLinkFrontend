@@ -5,7 +5,8 @@ import {
     useAddWorkoutSessionMutation,
     useGetDailySessionQuery,
     useUpdateWorkoutSessionMutation,
-    useGetLastSessionHistoryQuery
+    useGetLastSessionHistoryQuery,
+    useGetAllExercisesLastSessionHistoryQuery
 } from "../features/api/WorkoutApi";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Button from "../components/Button";
@@ -52,6 +53,8 @@ export default function LogWorkoutScreen() {
     } = useGetWorkoutSessoinQuery({ ID, NestedId, ReqDay });
 
     const { data: GetLastSessionHistory, isLoading: isSessionHistoryLoading, isError } = useGetLastSessionHistoryQuery({ SessionTitle: SessionTitle, Currexercise: Currexercise, Day: ReqDay })
+    // useGetAllExercisesLastSessionHistoryQuery
+    const { data: GetAllLastSessionExerciseHistory, isLoading: isAllExercisesSessionHistoryLoading } = useGetAllExercisesLastSessionHistoryQuery({ SessionTitle: SessionTitle, Day: ReqDay })
 
     // --- Fetch existing session for today ---
     const dailyQueryArgs = workoutData?.result
@@ -87,6 +90,62 @@ export default function LogWorkoutScreen() {
 
         }
     }, [workoutData])
+
+    function GetSpecificExerciseSets({ OldExercises, ExerciseName }) {
+        console.log("ExerciseName", ExerciseName)
+        console.log("OldExercises", OldExercises)
+        let Arr = []
+        for (let ele of OldExercises) {
+            if (ele?.name == ExerciseName) {
+                Arr = ele?.sets.map((ele) => {
+                    // if(ele?.isSetCompleted!=false){
+return {
+
+                        reps: ele?.reps,
+                        weight: ele?.weight,
+                        isSetCompleted: false
+                    }
+                        
+                    // }
+                    
+                });
+                break;
+
+            }
+
+
+        }
+        return Arr;
+
+
+
+
+
+    }
+
+    useEffect(() => {
+        console.log('GetAllLastSessionExerciseHistory', GetAllLastSessionExerciseHistory?.result?.exercises)
+        if (!dailySession?.getworkoutsession) {
+        setSessionObject((prev) => {
+            let OldExercises = GetAllLastSessionExerciseHistory?.result?.exercises;
+            let UpdatedExercises = prev?.exercises?.map((ele) => {
+                return { name: ele?.name, sets: GetSpecificExerciseSets({ OldExercises, ExerciseName: ele?.name }) }
+            })
+
+            let Newobj = { ...prev, exercises: UpdatedExercises }
+            return Newobj
+
+
+
+
+        })
+
+        }
+
+
+    }, [GetAllLastSessionExerciseHistory])
+    // GetLastSessionHistory
+
     useEffect(() => {
         if (isError == true) {
             toast.error("some thing went wrong")
@@ -172,9 +231,6 @@ export default function LogWorkoutScreen() {
         }
     }, [workoutData, dailySession]);
 
-    useEffect(() => {
-        console.log('sessionObject', sessionObject)
-    }, [sessionObject])
 
     // --- Add a new set to exercise ---
     const addSet = (exIndex) => {
@@ -182,7 +238,7 @@ export default function LogWorkoutScreen() {
             if (!prev) return prev;
             const updatedExercises = prev.exercises.map((ex, i) =>
                 i === exIndex
-                    ? { ...ex, sets: [...ex.sets, { reps: "", weight: "" }] }
+                    ? { ...ex, sets: [...ex.sets, { reps: "", weight: "",isSetCompleted:false}] }
                     : ex
             );
             return { ...prev, exercises: updatedExercises };
@@ -208,6 +264,34 @@ export default function LogWorkoutScreen() {
             return { ...prev, exercises: updatedExercises };
         });
     };
+
+    const MarkIsSetCompleted = (exIndex, setIndex) => {
+        setSessionObject((prev) => {
+            if (!prev) return prev;
+            const updatedExercises = prev.exercises.map((ex, i) =>
+                i === exIndex
+                    ? {
+                        ...ex, sets: ex.sets.map((ele, idx) => {
+                            if (idx == setIndex) {
+                                return { reps: ele?.reps, weight: ele?.weight, isSetCompleted: true }
+                            } else {
+                                return ele
+                            }
+
+
+                        })
+                    }
+                    : ex
+            );
+            return { ...prev, exercises: updatedExercises }
+
+
+        })
+        console.log('MarkIsSetCompleted exercise index', exIndex)
+        console.log('MarkIsSetCompleted set index', setIndex)
+
+
+    }
 
     // --- Handle input changes for reps & weight ---
     const handleInputChange = (exIndex, setIndex, field, value) => {
@@ -279,7 +363,10 @@ export default function LogWorkoutScreen() {
 
     // --- Debug logging ---
     useEffect(() => {
-        console.log("SessionObject:", sessionObject);
+        // for(let ele in sessionObject){
+        console.log("SessionObject:", sessionObject?.exercises);
+
+        // }
     }, [sessionObject]);
     useEffect(() => {
         console.log('Currexercise',)
@@ -292,7 +379,7 @@ export default function LogWorkoutScreen() {
                     <span style={{ position: 'absolute', top: '1rem', left: '1.5rem', zIndex: '1000' }}><img onClick={() => { setCurrexercise(null); setShowLastSessionHistory(false) }} style={{ width: '1.5rem', height: '1.5rem' }} src="../Images/closered.png"></img></span>
                     <h4 className="HistoryTitle">
                         Last Session History
-                        <span>{Currexercise}</span>
+                        <span>{Currexercise}</span> 
                     </h4>
                     {CurrExerciseSetHistory == null ? <div className="Set_and_Reps_Holder">
 
@@ -300,15 +387,32 @@ export default function LogWorkoutScreen() {
 
                     </div> : <>
                         {console.log('CurrExerciseSetHistory', CurrExerciseSetHistory)}
-                        {isSessionHistoryLoading?<LoadingSpinner></LoadingSpinner>:<div className="Set_and_Reps_Holder">
-                            {CurrExerciseSetHistory.map((ele, index) => {
-                                return <div className="SetRow">
-                                    <span>Set {index + 1}</span>
-                                    <span>{ele?.reps} reps</span>
-                                    <span>{ele?.weight} kg</span>
-                                </div>
+                        {isSessionHistoryLoading ? <LoadingSpinner></LoadingSpinner> : <div className="Set_and_Reps_Holder">
+                            {CurrExerciseSetHistory.map((ele, index) => (
+ 
+//  ele?.isSetCompleted !== false 
 
-                            })}
+    // <div className="SetRow" key={index}>
+    //   <span>Set {index + 1}</span>
+    //   <span>{ele?.reps} reps</span>
+    //   <span>{ele?.weight} kg</span>
+    // </div>
+    <div
+  className={`SetRow ${ele?.isSetCompleted !== false ? "SetRowCompleted" : ""}`}
+  key={index}
+>
+  <span>Set {index + 1}</span>
+  <span>{ele?.reps} reps</span>
+  <span>{ele?.weight} kg</span>
+
+  {ele?.isSetCompleted !== false && (
+    <span className="CompletedTag">Completed</span>
+  )}
+</div>
+
+  
+))}
+
 
 
 
@@ -336,11 +440,11 @@ export default function LogWorkoutScreen() {
                                 fontSize: "1.2rem",
                             }}
                         >
-                            {exercise.name}
+                            {exercise?.name}
                         </h4>
 
                         <div className="SetHolder">
-                            {exercise.sets.map((set, setIndex) => (
+                            {exercise?.sets?.map((set, setIndex) => (
                                 <div
                                     key={setIndex}
                                     style={{
@@ -373,6 +477,32 @@ export default function LogWorkoutScreen() {
                                     />
 
                                     <img onClick={() => removeSet(exIndex, setIndex)} style={{ width: '1.5rem', height: '1.5rem' }} src="Images/closered.png"></img>
+                                    <input
+                                        type="checkbox"
+                                        style={{
+                                            width: "1rem",
+                                            height: "1rem",
+                                            cursor: "pointer",
+                                            accentColor: "#4f46e5",     // soft indigo
+                                            borderRadius: "6px",
+                                            transition: "transform 0.15s ease, box-shadow 0.15s ease",
+                                        }}
+                                        onMouseEnter={(e) =>
+                                            (e.target.style.boxShadow = "0 0 0 4px rgba(79,70,229,0.15)")
+                                        }
+                                        onMouseLeave={(e) =>
+                                            (e.target.style.boxShadow = "none")
+                                        }
+                                        checked={set?.isSetCompleted!==false}
+                                        onClick={() => {
+                                            MarkIsSetCompleted(exIndex, setIndex)
+                                            console.log(`set ${setIndex}`, set?.isSetCompleted)
+
+                                        }}
+                                    />
+
+
+
                                 </div>
                             ))}
                             <div ></div>
@@ -381,11 +511,9 @@ export default function LogWorkoutScreen() {
 
                         <Button onClick={() => addSet(exIndex)} label={"Add Set"} />
                         <Button
-                            onClick={() => { setCurrexercise(exercise.name); console.log('exercise.name', exercise.name); setShowLastSessionHistory(true) }}
+                            onClick={() => { setCurrexercise(exercise?.name); console.log('exercise.name', exercise?.name); setShowLastSessionHistory(true) }}
 
-                            label={
-                                'History'
-                            }
+                            label={'History'}
                         />
                     </div>
                 ))}

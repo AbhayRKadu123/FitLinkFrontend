@@ -3,14 +3,14 @@ import React, { useEffect } from "react";
 // import Butt
 import { useState } from "react";
 // import {useGetWorkoutHistoryDetailQuery} from "../features/api/WorkoutApi"
-import { useGetWorkoutHistoryDetailQuery, useGetWorkoutBarChartDetailQuery } from "../features/api/WorkoutApi";
+import { useGetWorkoutHistoryDetailQuery, useGetWorkoutBarChartDetailQuery,useUpdateUserWorkoutHistoryMutation } from "../features/api/WorkoutApi";
 import { useLocation, useSearchParams } from "react-router-dom";
 // import {
 import HeadingContainer from "../components/HeadingContainer"
 // import SimpleBarChart from "../components/SimpleBarCharts";
 import ExerciseSetComparisonChart from "../components/SimpleBarCharts";
 import { toast } from "react-toastify";
-function InputComponent({ Val, isDisabled }) {
+function InputComponent({ Val, setExercises, isDisabled, onChange ,edit}) {
   return <input
     value={Val}
     style={{
@@ -37,10 +37,51 @@ function InputComponent({ Val, isDisabled }) {
       e.target.style.boxShadow =
         "inset 0 1px 2px rgba(0,0,0,0.08)";
     }}
-    disabled={isDisabled}
+    // onClick={()=>{
+    //   if(!edit){
+    //     toast.warning("Please enable edit mode !")
+    //   }
+    // }}
+    onChange={onChange}
+    // disabled={isDisabled}
   />
 }
-function ExerciseHistoryTable({ exercises,edit }) {
+
+function AddSet(setExercises, exerciseIndex) {
+  setExercises(prev =>
+    prev.map((exercise, index) => {
+      if (index !== exerciseIndex) return exercise;
+
+      return {
+        ...exercise,
+        sets: [
+          ...exercise.sets,
+          { reps: 0, weight: 0 }
+        ]
+      };
+    })
+  );
+}
+const updateSetValue = (setExercises, exerciseIndex, setIndex, field, value) => {
+  setExercises(prev =>
+    prev.map((exercise, exIdx) =>
+      exIdx !== exerciseIndex
+        ? exercise
+        : {
+          ...exercise,
+          sets: exercise.sets.map((set, sIdx) =>
+            sIdx !== setIndex
+              ? set
+              : { ...set, [field]: value }
+          )
+        }
+    )
+  );
+};
+
+
+
+function ExerciseHistoryTable({ exercises, setExercises, edit }) {
   const [openIndex, setOpenIndex] = useState(null);
   console.log('datadata', exercises)
 
@@ -56,6 +97,7 @@ function ExerciseHistoryTable({ exercises,edit }) {
             <th>Exercise Name</th>
             <th>Total Sets</th>
             <th>Action</th>
+
           </tr>
         </thead>
         <tbody>
@@ -95,11 +137,15 @@ function ExerciseHistoryTable({ exercises,edit }) {
                                       toast.warning("Please enable edit mode!");
                                       return;
                                     }
+                                    // console.log('ex=',ex)
+                                    // console.log('index=',index)
+                                    AddSet(setExercises, index)
 
-                                    toast.success("Set added successfully!");
+
+                                    // toast.success("Set added successfully!");
                                     // call addSet() here
                                   }}
-                                  // disabled={!edit}
+                                // disabled={!edit}
                                 >
                                   +
                                 </button>
@@ -110,14 +156,22 @@ function ExerciseHistoryTable({ exercises,edit }) {
                             </th>
                             <th>Reps</th>
                             <th>Weight (kg)</th>
+            <th>Completed</th>
+
                           </tr>
                         </thead>
                         <tbody>
                           {ex.sets.map((set, i) => (
                             <tr key={i}>
                               <td>Set {i + 1}</td>
-                              <td><InputComponent Val={set.reps} isDisabled={false}></InputComponent></td>
-                              <td><InputComponent Val={set.weight} isDisabled={false}></InputComponent></td>
+                              <td><InputComponent Val={set.reps} isDisabled={!edit} onChange={(e) =>{
+                                if(!edit) return toast.warning("Please enable edit mode");
+                                updateSetValue(setExercises, index, i, "reps", e.target.value)}} edit={edit}></InputComponent></td>
+                              <td><InputComponent Val={set.weight} isDisabled={!edit} onChange={(e) =>{
+                                 if(!edit) return toast.warning("Please enable edit mode");
+                                updateSetValue(setExercises, index, i, "weight", e.target.value)}
+                              }edit={edit}></InputComponent></td>
+                              <td style={{color:`${set?.isSetCompleted?'rgba(61, 242, 136, 0.7)':'rgba(243, 70, 70, 0.7)'}`}}>{set?.isSetCompleted?'Completed':'NotCompleted'}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -157,8 +211,10 @@ export default function DetailWorkoutHistory() {
   ];
   let { data } = useGetWorkoutHistoryDetailQuery({ id: id })
   let { data: BarChartData } = useGetWorkoutBarChartDetailQuery({ id: id })
+  const [UpdateHistory,{result,error,success,isSuccess,isError}]=useUpdateUserWorkoutHistoryMutation();
   const [GetGraphData, setGetGraphData] = useState("Select Exercise")
   const [SetData, setSetData] = useState([])
+  const [Exercises, setExercises] = useState(null)
   // console.log('BarChartData', BarChartData?.result)
   useEffect(() => {
     console.log('GetGraphDataBarChartData', BarChartData?.result)
@@ -174,6 +230,24 @@ export default function DetailWorkoutHistory() {
       }
     }
   }, [GetGraphData])
+  useEffect(()=>{
+    if(isSuccess==true){
+      toast.success("History Updated Successfully")
+
+    }
+    if(isError==true){
+      toast.error("Some thing went wrong")
+
+    }
+
+  },[isSuccess,isError])
+  useEffect(() => {
+    if (data?.Result[0]?.exercises) {
+      setExercises(data?.Result[0]?.exercises)
+
+    }
+
+  }, [data])
   let [Arr, setArr] = useState([])
   useEffect(() => {
     console.log('SetData=', SetData)
@@ -201,11 +275,13 @@ export default function DetailWorkoutHistory() {
     <HeadingContainer Title={'History'}></HeadingContainer>
     <div className="ExerciseHistory">
       {/* <div className="ExerciseHistoryTable"></div> */}
-      <ExerciseHistoryTable exercises={data?.Result[0]?.exercises} edit={edit}></ExerciseHistoryTable>
+      <ExerciseHistoryTable exercises={Exercises} setExercises={setExercises} edit={edit}></ExerciseHistoryTable>
       <div style={{ width: '100%', height: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: "0.3rem" }}>
 
-        {edit ? <button onClick={() => {
-          console.log('Changes saved')
+        {edit ? <button onClick={async() => {
+          console.log('Changes saved',Exercises)
+          console.log('id=',id)
+          await UpdateHistory({id, Exercises})
           setedit(false)
 
         }} className="edit-btn">

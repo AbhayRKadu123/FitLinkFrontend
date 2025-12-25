@@ -39,6 +39,10 @@
   padding: 0.2rem;
 }
 
+.CompletedTag{
+ color: rgba(46, 204, 113, 0.7);
+
+}
 .ViewLastSessionHistory::-webkit-scrollbar{
   display: none;
 }
@@ -89,6 +93,10 @@
 
   font-size: 0.9rem;
   color: #333;
+}
+.SetRowCompleted{
+
+  background-color: rgba(173, 235, 199, 0.7);
 }
 
 .SetRow span {
