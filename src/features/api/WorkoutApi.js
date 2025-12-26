@@ -72,6 +72,19 @@ export const WorkoutApi = createApi({
 
 
     }),
+    // AddselectedRoutineDays
+     AddselectedRoutineDays: builder.mutation({
+      query: ({DaysArray}) => ({
+        url: '/Workout/AddselectedRoutineDays',      // your backend API endpoint
+        method: 'POST',        // sending data
+        body: DaysArray,      // data to send in request body
+      }),
+
+
+      //   /workout/UpdateRoutin
+
+
+    }),
     updateUserActiveWorkoutPlan: builder.mutation({
       query: (plantype) => ({
         url: '/Workout/updateUserActiveWorkoutPlan',      // your backend API endpoint
@@ -142,6 +155,11 @@ export const WorkoutApi = createApi({
     GetAllExercisesLastSessionHistory:builder.query({
       query:({SessionTitle,Day})=>`/workout/GetAllExercisesLastSessionHistory?SessionTitle=${SessionTitle}&Day=${Day}`
 
+    }),
+    getstoredselectedRoutineDays:builder.query({
+      // /storedselectedRoutineDays
+       query:({})=>`/workout/storedselectedRoutineDays`
+
     })
     // GenerateDailySession:
 
@@ -151,4 +169,4 @@ export const WorkoutApi = createApi({
 
 });
 
-export const {useGetAllExercisesLastSessionHistoryQuery,useGetLastSessionHistoryQuery,useUpdateDailyWorkoutSessionMutation,useGetUserProgressQuery,  useGetWorkoutBarChartDetailQuery,useGetWorkoutHistoryDetailQuery,useGetWorkoutHistoryQuery, useUpdateWorkoutSessionMutation, useGetDailySessionQuery, useGetWorkoutSessoinQuery, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation, useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutSessionMutation,useUpdateUserWorkoutHistoryMutation} = WorkoutApi;
+export const {useGetstoredselectedRoutineDaysQuery,useAddselectedRoutineDaysMutation,useGetAllExercisesLastSessionHistoryQuery,useGetLastSessionHistoryQuery,useUpdateDailyWorkoutSessionMutation,useGetUserProgressQuery,  useGetWorkoutBarChartDetailQuery,useGetWorkoutHistoryDetailQuery,useGetWorkoutHistoryQuery, useUpdateWorkoutSessionMutation, useGetDailySessionQuery, useGetWorkoutSessoinQuery, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation, useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutSessionMutation,useUpdateUserWorkoutHistoryMutation} = WorkoutApi;

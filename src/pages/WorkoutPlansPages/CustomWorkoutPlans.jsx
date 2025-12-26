@@ -13,7 +13,7 @@ import { useContext } from "react";
 import MyContext from "../../../public/utils/MyContext";
 import BannerContext from "../../../public/utils/BannerContext";
 
-import { useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation } from "../../features/api/WorkoutApi";
+import {useGetstoredselectedRoutineDaysQuery, useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation, useAddselectedRoutineDaysMutation } from "../../features/api/WorkoutApi";
 import { toast } from "react-toastify";
 
 export default function CustomWorkoutPlan({ setNotActive }) {
@@ -24,20 +24,29 @@ export default function CustomWorkoutPlan({ setNotActive }) {
     const [exercise, setexercise] = useState("")
     const [PlanCreatedSuccessfully, setPlanCreatedSuccessfully] = useState(false)
     const [PlanEditSuccessfully, setPlanEditSuccessfully] = useState(false)
+    // useAddselectedRoutineDaysMutation\
+    const [AddSelectedRoutinedays, { data: AddSelectedRoutinedaysdata, error: errorAddSelectedRoutinedays, isLoading: AddSelectedRoutinedaysisLoading, isSuccess: AddSelectedRoutinedaysSuccess }] = useAddselectedRoutineDaysMutation();
 
     const [addWorkoutRoutine, { data, error: errorAddingWorkout, isLoading, isSuccess }] = useAddWorkoutRoutinMutation();
     const [UpdateUserActivePlan, { data: ActivePlan, error: Updatingerror, isLoading: ActivePlanLoading, isSuccess: PlanChanged }] = useUpdateUserActiveWorkoutPlanMutation();
-    const [DeleteRoutinMutation, { data: deleteroutin, error: errordeleting,isLoading:Deleting,isSuccess: DataDeleted }] = useDeleteRoutineMutation();
+    const [DeleteRoutinMutation, { data: deleteroutin, error: errordeleting, isLoading: Deleting, isSuccess: DataDeleted }] = useDeleteRoutineMutation();
     // const [UpdateRoutin, { data: UpdatedRoutin, isSuccess: RoutinUpdated }] = useUpdateWorkoutRoutinMutation();
     const { data: GetExerciseData, refetch, error: errorgettingworkout, isError, isSuccess: dataFetched } = useGetUserWorkoutRoutinQuery();
     const { data: GetUserDetail, error: ErrorLoadingUserDetails, isSuccess: LoadingUserDetailSuccessfull, refetch: RefetchGetUserDetail } = useGetUserDetailsQuery({ Id: null });
-
+    const {data:storedselectedRoutineDays}=useGetstoredselectedRoutineDaysQuery({})
     useEffect(() => {
         let token = localStorage.getItem('token')
         if (!token) {
             navigate("/login")
         }
     }, [navigate])
+    useEffect(()=>{
+        // if(errorAddSelectedRoutinedays){
+        //     toast.warning("Days already exists !")
+        // }
+        console.log('storedselectedRoutineDays',storedselectedRoutineDays)
+
+    },[errorAddSelectedRoutinedays,storedselectedRoutineDays])
 
     console.log('GetExerciseData', GetExerciseData)
     let daysarr = ['mon', 'tue', 'wed', 'thur', 'fri', 'sat', 'sun']
@@ -57,9 +66,8 @@ export default function CustomWorkoutPlan({ setNotActive }) {
         bannerText, setbannerText, useDiffBannerText, setuseDiffBannerText
     } = useContext(BannerContext);
 
-    useEffect(() => {
-        console.log("selecteddays", selecteddays)
-    }, [selecteddays])
+
+   
 
     useEffect(() => {
         if (PlanChanged === true) {
@@ -71,6 +79,19 @@ export default function CustomWorkoutPlan({ setNotActive }) {
             RefetchGetUserDetail && RefetchGetUserDetail();
         }
     }, [PlanChanged, refetch, setShowNotification, setNotificatioinType, setNotificationMessage, RefetchGetUserDetail])
+
+    useEffect(() => {
+        if (AddSelectedRoutinedaysSuccess) {
+            // setselecteddays((prev)=>{
+            //     return [...AddSelectedRoutinedaysdata?.result]
+            // })
+            console.log("AddSelectedRoutinedaysdata?.result",AddSelectedRoutinedaysdata?.result)
+            setCreateWorkoutPlan(true);
+
+        }
+
+
+    }, [AddSelectedRoutinedaysSuccess])
 
     useEffect(() => {
         if (DataDeleted === true) {
@@ -118,33 +139,42 @@ export default function CustomWorkoutPlan({ setNotActive }) {
             setselectedday(selecteddays[0])
         }
     }, [selecteddays])
+    const dayIndex = {
+  mon: 0, tue: 1, wed: 2, thur: 3, fri: 4, sat: 5, sun: 6
+};
+
+const arrangeDays = (days) =>
+  [...days].sort((a, b) => dayIndex[a] - dayIndex[b]);
+
 
     const ToggleDay = (day) => {
-        setselecteddays((prev) =>
-            prev.includes(day)
+        setselecteddays((prev) =>{
+            let UpdatedDaysArray=prev.includes(day)
                 ? prev.filter((d) => d !== day) // remove if already selected
                 : [...prev, day] // add if not selected
-        );
+                return arrangeDays(UpdatedDaysArray)
+    });
     };
 
     async function deleteuserroutin(id) {
         try {
-            if(Deleting==true) return
+            if (Deleting == true) return
             await DeleteRoutinMutation({ id })
         } catch (err) {
             console.error("deleteuserroutin error:", err)
         }
     }
 
-    function handleSaveAndNext() {
+    async function handleSaveAndNext() {
         if (selecteddays.length === 0) return;
+        console.log("AddSelectedRoutinedays", selecteddays)
+        await AddSelectedRoutinedays({ DaysArray: selecteddays });
 
         // Update context FIRST
-        setuseDiffBannerText(true);
-        setbannerText("Now Enter Title Of Exercise and Enter Exercise name Click on Add Exercise it will be added to exercise list and then click on Save Routin ")
+        // setuseDiffBannerText(true);
+        // setbannerText("Now Enter Title Of Exercise and Enter Exercise name Click on Add Exercise it will be added to exercise list and then click on Save Routin ")
 
         // THEN switch UI state
-        setCreateWorkoutPlan(true);
     }
 
     useEffect(() => {
@@ -205,7 +235,13 @@ export default function CustomWorkoutPlan({ setNotActive }) {
 
     return <div className="CustomWorkoutPlanContainer">
         <Outlet></Outlet>
-        <div onClick={() => { navigate(-1) }} className="CustomWorkoutPlanBackBtn"><img className="backarrow" src="Images/left-arrow.png" alt="back"></img></div>
+        <div onClick={() => {
+            if (CreateWorkoutPlan) {
+                setCreateWorkoutPlan(false);
+
+
+            } else { navigate(-1) }
+        }} className="CustomWorkoutPlanBackBtn"><img className="backarrow" src="Images/left-arrow.png" alt="back"></img></div>
         <div className="CustomWorkoutPlanAddWorkoutContainer">
             {/* Notifications (kept commented as original) */}
             {IsCustomWorkout ? <div className="CheckCustomExercise" >
@@ -222,12 +258,12 @@ export default function CustomWorkoutPlan({ setNotActive }) {
                     />
                 ))}
 
-                <Button label={Deleting?"Deleting Routin":'Delete Workout Routin'} disabled={Deleting} onClick={() => { deleteuserroutin(GetExerciseData?.result?._id) }}></Button>
+                <Button label={Deleting ? "Deleting Routin" : 'Delete Workout Routin'} disabled={Deleting} onClick={() => { deleteuserroutin(GetExerciseData?.result?._id) }}></Button>
 
                 {GetUserDetail?.Detail?.[0]?.planName && GetUserDetail?.Detail?.[0]?.planName === "CustomPlan"
                     ? <h4 style={{ color: 'black' }}>Plan Activated</h4>
-                    : <Button label={ActivePlanLoading?'Activting..':'Follow Workout Routin'} disabled={ActivePlanLoading} onClick={async () => {
-                        if(ActivePlanLoading==true) return
+                    : <Button label={ActivePlanLoading ? 'Activting..' : 'Follow Workout Routin'} disabled={ActivePlanLoading} onClick={async () => {
+                        if (ActivePlanLoading == true) return
                         try {
                             await UpdateUserActivePlan({ Id: GetExerciseData?.result?._id });
                             console.log('follow workout routin')
@@ -240,7 +276,7 @@ export default function CustomWorkoutPlan({ setNotActive }) {
             </div> :
                 <div className="CreateCustomWorkout">
                     {CreateWorkoutPlan ? <div className="AddExercisesContainer">
-                        <div className="AddExercisesDays">{selecteddays.map((ele) => <span style={{ backgroundColor: selectedday === ele ? '#ffcc00' : undefined, border: selectedday === ele ? '#ffcd07ff' : undefined }} onClick={() => {  console.log('slected day', ele) }} className="SelectedExerciseDays" key={ele}>{ele}</span>)}</div>
+                        <div className="AddExercisesDays">{selecteddays.map((ele) => <span style={{ backgroundColor: selectedday === ele ? '#ffcc00' : undefined, border: selectedday === ele ? '#ffcd07ff' : undefined }} onClick={() => { console.log('slected day', ele) }} className="SelectedExerciseDays" key={ele}>{ele}</span>)}</div>
                         <div className="AddExerciseCotent">
                             <h2 style={{ textAlign: 'center', marginTop: "2rem", fontWeight: '600', color: "black" }}>{selectedday}</h2>
 
@@ -284,45 +320,73 @@ export default function CustomWorkoutPlan({ setNotActive }) {
 
                         </div>
                         <div className="AddExerciseSaveBtn">
+                            <Button onClick={() => {
+                                const currentIndex = selecteddays.indexOf(selectedday);
+                               
+
+                                if (currentIndex > 0) {
+                                    setselectedday(selecteddays[currentIndex - 1]); // move to next day
+                                }
+
+                            }} label={'Prev'}></Button>
+
                             <Button
-                                label={isLoading?'Saving..':'Save Routine'}
+                                label={isLoading ? 'Saving..' : 'Save'}
                                 variant="outline"
                                 disabled={isLoading}
                                 onClick={async () => {
-                                    if(isLoading==true) return
+                                    if (isLoading == true) return
                                     if (selecteddays.length === 0) {
                                         // Using Alert component as in original (kept as JSX call as original did, but better would be to show real UI)
-                                       toast.error("No days selected")
+                                        toast.error("No days selected")
                                         return
                                     };
                                     if (selectedday && (!formData[selectedday]?.Title || formData[selectedday].Title.trim() === "")) {
                                         // <Alert message='Title is missing'></Alert>
-                                       toast.error("Title is missing")
+                                        toast.error("Title is missing")
 
                                         return;
                                     };
                                     if (!formData[selectedday]?.exercises || formData[selectedday].exercises.length === 0) {
                                         // alert("please add some exercise")
-                                         toast.error("please add some exercise")
+                                        toast.error("please add some exercise")
                                         return;
                                     }
 
                                     const currentIndex = selecteddays.indexOf(selectedday);
-                                    if (currentIndex < selecteddays.length - 1) {
-                                        setselectedday(selecteddays[currentIndex + 1]); // move to next day
-                                    } else {
-                                        console.log("✅ All routines saved!", formData);
-                                        try {
-                                            let result = await addWorkoutRoutine({ data: formData })
-                                            console.log('result-', result)
-                                            // set flag to show custom workout UI
-                                            setIsCustomWorkout(true)
-                                        } catch (err) {
-                                            console.error("addWorkoutRoutine error:", err)
-                                        }
+                                    // if (currentIndex < selecteddays.length - 1) {
+                                    //     setselectedday(selecteddays[currentIndex + 1]); // move to next day
+                                    // } else {
+                                    console.log("✅ All routines saved!", formData);
+                                    try {
+                                        let result = await addWorkoutRoutine({ data: formData })
+                                        console.log('result-', result)
+                                        // set flag to show custom workout UI
+                                        setIsCustomWorkout(true)
+                                    } catch (err) {
+                                        console.error("addWorkoutRoutine error:", err)
                                     }
+                                    // }
                                 }}
                             ></Button>
+                            <Button onClick={() => {
+                                const currentIndex = selecteddays.indexOf(selectedday);
+                                if (selectedday && (!formData[selectedday]?.Title || formData[selectedday].Title.trim() === "")) {
+                                    // <Alert message='Title is missing'></Alert>
+                                    toast.error("Title is missing")
+
+                                    return;
+                                };
+                                if (!formData[selectedday]?.exercises || formData[selectedday].exercises.length === 0) {
+                                    // alert("please add some exercise")
+                                    toast.error("please add some exercise")
+                                    return;
+                                }
+                                if (currentIndex < selecteddays.length - 1) {
+                                    setselectedday(selecteddays[currentIndex + 1]); // move to next day
+                                }
+                            }} label={'Next'}></Button>
+
                         </div>
 
                     </div> : <div className="CreateCustomWorkoutPage1">

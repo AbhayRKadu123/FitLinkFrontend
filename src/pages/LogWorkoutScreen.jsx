@@ -43,6 +43,8 @@ export default function LogWorkoutScreen() {
     const [SessionTitle, setSessionTitle] = useState(null)
     const [Currexercise, setCurrexercise] = useState(null)
     const [CurrExerciseSetHistory, setCurrExerciseSetHistory] = useState(null)
+    const [historyApplied, setHistoryApplied] = useState(false);
+
 
 
     // --- Fetch base workout template ---
@@ -95,6 +97,7 @@ export default function LogWorkoutScreen() {
         console.log("ExerciseName", ExerciseName)
         console.log("OldExercises", OldExercises)
         let Arr = []
+        if(OldExercises){
         for (let ele of OldExercises) {
             if (ele?.name == ExerciseName) {
                 Arr = ele?.sets.map((ele) => {
@@ -114,7 +117,7 @@ return {
             }
 
 
-        }
+        }}
         return Arr;
 
 
@@ -125,8 +128,15 @@ return {
 
     useEffect(() => {
         console.log('GetAllLastSessionExerciseHistory', GetAllLastSessionExerciseHistory?.result?.exercises)
+        if (
+    historyApplied ||                     // 🚫 already applied
+    dailySession?.getworkoutsession ||     // 🚫 today exists
+    !GetAllLastSessionExerciseHistory?.result?.exercises
+  ) return;
         if (!dailySession?.getworkoutsession) {
         setSessionObject((prev) => {
+            if (!prev || !prev.exercises) return prev;
+
             let OldExercises = GetAllLastSessionExerciseHistory?.result?.exercises;
             let UpdatedExercises = prev?.exercises?.map((ele) => {
                 return { name: ele?.name, sets: GetSpecificExerciseSets({ OldExercises, ExerciseName: ele?.name }) }
@@ -139,11 +149,12 @@ return {
 
 
         })
+        setHistoryApplied(true)
 
         }
 
 
-    }, [GetAllLastSessionExerciseHistory])
+    }, [GetAllLastSessionExerciseHistory,dailySession])
     // GetLastSessionHistory
 
     useEffect(() => {
@@ -235,7 +246,8 @@ return {
     // --- Add a new set to exercise ---
     const addSet = (exIndex) => {
         setSessionObject((prev) => {
-            if (!prev) return prev;
+           if (!prev || !prev.exercises) return prev;
+
             const updatedExercises = prev.exercises.map((ex, i) =>
                 i === exIndex
                     ? { ...ex, sets: [...ex.sets, { reps: "", weight: "",isSetCompleted:false}] }
@@ -255,7 +267,8 @@ return {
     // --- Remove a set ---
     const removeSet = (exIndex, setIndex) => {
         setSessionObject((prev) => {
-            if (!prev) return prev;
+            if (!prev || !prev.exercises) return prev;
+
             const updatedExercises = prev.exercises.map((ex, i) =>
                 i === exIndex
                     ? { ...ex, sets: ex.sets.filter((_, idx) => idx !== setIndex) }
@@ -267,13 +280,14 @@ return {
 
     const MarkIsSetCompleted = (exIndex, setIndex) => {
         setSessionObject((prev) => {
-            if (!prev) return prev;
+            if (!prev || !prev.exercises) return prev;
+
             const updatedExercises = prev.exercises.map((ex, i) =>
                 i === exIndex
                     ? {
                         ...ex, sets: ex.sets.map((ele, idx) => {
                             if (idx == setIndex) {
-                                return { reps: ele?.reps, weight: ele?.weight, isSetCompleted: true }
+                                return { reps: ele?.reps, weight: ele?.weight, isSetCompleted: !ele?.isSetCompleted}
                             } else {
                                 return ele
                             }
@@ -296,7 +310,8 @@ return {
     // --- Handle input changes for reps & weight ---
     const handleInputChange = (exIndex, setIndex, field, value) => {
         setSessionObject((prev) => {
-            if (!prev) return prev;
+            if (!prev || !prev.exercises) return prev;
+
             const updatedExercises = prev.exercises.map((ex, i) =>
                 i === exIndex
                     ? {
@@ -493,7 +508,9 @@ return {
                                         onMouseLeave={(e) =>
                                             (e.target.style.boxShadow = "none")
                                         }
-                                        checked={set?.isSetCompleted!==false}
+                                        // checked={set?.isSetCompleted!==false}
+                                        checked={Boolean(set?.isSetCompleted)}
+
                                         onClick={() => {
                                             MarkIsSetCompleted(exIndex, setIndex)
                                             console.log(`set ${setIndex}`, set?.isSetCompleted)
