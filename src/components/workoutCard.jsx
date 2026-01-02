@@ -3,9 +3,10 @@
 
 import { useEffect, useState } from "react";
 import "../styles/workoutCard.css";
-import { useUpdateWorkoutRoutinMutation } from "../features/api/WorkoutApi";
+import { useUpdateWorkoutRoutinMutation, useDeleteWorkoutRoutineExeriseMutation } from "../features/api/WorkoutApi";
 import { useContext } from "react";
 import MyContext from "../../public/utils/MyContext";
+import { toast } from "react-toastify";
 export default function WorkoutCard({ day, Title, ExerciseList, id, refetch, PlanEditSuccessfully, setPlanEditSuccessfully }) {
     if (ExerciseList?.length == 0) return null
     if (!ExerciseList) return null
@@ -14,21 +15,36 @@ export default function WorkoutCard({ day, Title, ExerciseList, id, refetch, Pla
     const [exerciseList, setExerciseList] = useState([...ExerciseList]);
 
     const [newExercise, setNewExercise] = useState("");
-    const [UpdateRoutin, { data: UpdatedRoutin, error, isSuccess: RoutinUpdated }] = useUpdateWorkoutRoutinMutation();
- const {
-  ShowNotification,
-  setShowNotification,
-  NotificatonType,
-  setNotificatioinType,
-  NotificationMessage,
-  setNotificationMessage
-} = useContext(MyContext);
+    // useDeleteWorkoutRoutineExeriseMutation
+    const [DeleteSpecificDayRoutine, { data: DeleteSpecificDayRoutinedata, error: DeleteSpecificDayRoutineerror, isError: DeleteSpecificDayRoutineisError, isSuccess: DeleteSpecificDayRoutineRoutinDeleted }] = useDeleteWorkoutRoutineExeriseMutation();
+
+    const [UpdateRoutin, { data: UpdatedRoutin, error, isError, isSuccess: RoutinUpdated }] = useUpdateWorkoutRoutinMutation();
+    const {
+        ShowNotification,
+        setShowNotification,
+        NotificatonType,
+        setNotificatioinType,
+        NotificationMessage,
+        setNotificationMessage
+    } = useContext(MyContext);
 
     useEffect(() => {
+        console.log("error", error?.data?.message)
         refetch()
+
+        if (error) {
+            toast.error(error?.data?.message || 'Something went wrong');
+        }
     }, [error])
+    useEffect(()=>{
+        if(DeleteSpecificDayRoutineRoutinDeleted){
+            toast.success("deletion successfull")
+            refetch();
+        }
+
+    },[DeleteSpecificDayRoutineRoutinDeleted])
     useEffect(() => {
-        console.log("RoutinUpdated",RoutinUpdated)
+        console.log("RoutinUpdated", RoutinUpdated)
         if (RoutinUpdated == true) {
             refetch()
             setShowNotification(true)
@@ -38,7 +54,7 @@ export default function WorkoutCard({ day, Title, ExerciseList, id, refetch, Pla
             // setPlanEditSuccessfully(true)
 
         }
-    },[RoutinUpdated])
+    }, [RoutinUpdated])
 
     function handleAddExercise() {
         if (newExercise.trim() === "") return;
@@ -50,6 +66,18 @@ export default function WorkoutCard({ day, Title, ExerciseList, id, refetch, Pla
         console.log("Title-", title),
             console.log('Exercise List', exerciseList)
         console.log('HandleEdit done')
+        if (title.trim() == "") {
+            refetch()
+
+            return toast.error("Title is Missing")
+        }
+        if (exerciseList.length == 0) {
+            refetch()
+
+            return toast.error("Exercise List cant be empty!")
+
+
+        }
         UpdateRoutin({ id: id, day: day, title: title, exercise: exerciseList })
     }
 
@@ -62,7 +90,15 @@ export default function WorkoutCard({ day, Title, ExerciseList, id, refetch, Pla
                     <input
                         className="titleInput"
                         value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        onChange={(e) => setTitle((prev) => {
+                            let OldTitle = prev;
+                            if (e.target.value.trim() == "") {
+                                toast.warning("Title Can't be empty !")
+                                return OldTitle
+                            } else {
+                                return e.target.value
+                            }
+                        })}
                     />
                     <ul className="exerciseList">
                         {exerciseList?.map((ex, index) => (
@@ -70,8 +106,12 @@ export default function WorkoutCard({ day, Title, ExerciseList, id, refetch, Pla
                                 {ex}
                                 <button
                                     className="deleteBtn"
-                                    onClick={() =>
+                                    onClick={() => {
+                                        if (exerciseList.length <= 1) {
+                                            return toast.warning("there must be at least one exercise")
+                                        }
                                         setExerciseList(exerciseList.filter((_, i) => i !== index))
+                                    }
                                     }
                                 >
                                     ✕
@@ -105,6 +145,9 @@ export default function WorkoutCard({ day, Title, ExerciseList, id, refetch, Pla
                     </ul>
                     <button className="editBtn" onClick={() => setIsEditing(true)}>
                         ✏️ Edit
+                    </button>
+                    <button className="editBtn" onClick={async () => { await DeleteSpecificDayRoutine({ Day: day, id: id,Title:title}); console.log('delete', id) }}>
+                        Delete
                     </button>
                 </>
             )}

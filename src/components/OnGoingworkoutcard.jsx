@@ -56,16 +56,17 @@ export default function OnGoingworkoutcard({ value, ele }) {
         let ID = GetExerciseData?.result?._id;
         let NestedId = GetExerciseData?.result?.[ReqDay]?._id
         console.log('ID=', ID)
-        { Heading != "Rest Day" && navigate(`/LogWorkoutScreen?Id=${ID}&NestedId=${NestedId}&ReqDay=${ReqDay}`) }
+        { Heading == "Please Set Your Workout for today"? navigate('/CustomWorkoutPlan') : navigate(`/LogWorkoutScreen?Id=${ID}&NestedId=${NestedId}&ReqDay=${ReqDay}`) }
 
 
 
     }
+    // /CustomWorkoutPlan
     const ReqDay = daysOfWeek[ele?.day];
     let Heading = "";
 
     if (GetExerciseData?.result?.[ReqDay]) {
-        Heading = GetExerciseData?.result?.[ReqDay]?.Title || "Rest Day";
+        Heading = GetExerciseData?.result?.[ReqDay]?.Title || "Please Set Your Workout for today";
         console.log("Found Title:", Heading);
     } else {
         console.log("Not found, rest day");

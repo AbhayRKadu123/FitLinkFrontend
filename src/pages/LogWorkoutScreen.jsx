@@ -56,7 +56,13 @@ export default function LogWorkoutScreen() {
 
     const { data: GetLastSessionHistory, isLoading: isSessionHistoryLoading, isError } = useGetLastSessionHistoryQuery({ SessionTitle: SessionTitle, Currexercise: Currexercise, Day: ReqDay })
     // useGetAllExercisesLastSessionHistoryQuery
-    const { data: GetAllLastSessionExerciseHistory, isLoading: isAllExercisesSessionHistoryLoading } = useGetAllExercisesLastSessionHistoryQuery({ SessionTitle: SessionTitle, Day: ReqDay })
+    const allExerciseArgs =
+  SessionTitle
+    ? { SessionTitle, Day: ReqDay }
+    : skipToken;
+
+const { data: GetAllLastSessionExerciseHistory } =
+  useGetAllExercisesLastSessionHistoryQuery(allExerciseArgs);
 
     // --- Fetch existing session for today ---
     const dailyQueryArgs = workoutData?.result

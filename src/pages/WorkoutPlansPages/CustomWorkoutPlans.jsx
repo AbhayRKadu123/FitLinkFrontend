@@ -13,7 +13,7 @@ import { useContext } from "react";
 import MyContext from "../../../public/utils/MyContext";
 import BannerContext from "../../../public/utils/BannerContext";
 
-import {useGetstoredselectedRoutineDaysQuery, useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation, useAddselectedRoutineDaysMutation } from "../../features/api/WorkoutApi";
+import {useUpdateCustomWorkoutPlanMutation, useUpdateSelectedRoutinedaysMutation, useGetSelectedRoutineDaysQuery, useGetstoredselectedRoutineDaysQuery, useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation, useAddselectedRoutineDaysMutation } from "../../features/api/WorkoutApi";
 import { toast } from "react-toastify";
 
 export default function CustomWorkoutPlan({ setNotActive }) {
@@ -24,16 +24,22 @@ export default function CustomWorkoutPlan({ setNotActive }) {
     const [exercise, setexercise] = useState("")
     const [PlanCreatedSuccessfully, setPlanCreatedSuccessfully] = useState(false)
     const [PlanEditSuccessfully, setPlanEditSuccessfully] = useState(false)
+    const [daysInitialized, setDaysInitialized] = useState(false);
+    const [selecteddays,setselecteddays,] = useState([]);
+    const [IsContinueEditing,setIsContinueEditing]=useState(false);
     // useAddselectedRoutineDaysMutation\
     const [AddSelectedRoutinedays, { data: AddSelectedRoutinedaysdata, error: errorAddSelectedRoutinedays, isLoading: AddSelectedRoutinedaysisLoading, isSuccess: AddSelectedRoutinedaysSuccess }] = useAddselectedRoutineDaysMutation();
-
     const [addWorkoutRoutine, { data, error: errorAddingWorkout, isLoading, isSuccess }] = useAddWorkoutRoutinMutation();
     const [UpdateUserActivePlan, { data: ActivePlan, error: Updatingerror, isLoading: ActivePlanLoading, isSuccess: PlanChanged }] = useUpdateUserActiveWorkoutPlanMutation();
     const [DeleteRoutinMutation, { data: deleteroutin, error: errordeleting, isLoading: Deleting, isSuccess: DataDeleted }] = useDeleteRoutineMutation();
+    // useUpdateCustomWorkoutPlanMutation
+    const [UpdateCustomWorkoutPlan, { data: UpdateCustomWorkoutPlandata, error: UpdateCustomWorkoutPlanerror, isLoading:UpdateCustomWorkoutPlanloading, isSuccess: UpdateCustomWorkoutPlansuccess }] = useUpdateCustomWorkoutPlanMutation();
+
     // const [UpdateRoutin, { data: UpdatedRoutin, isSuccess: RoutinUpdated }] = useUpdateWorkoutRoutinMutation();
     const { data: GetExerciseData, refetch, error: errorgettingworkout, isError, isSuccess: dataFetched } = useGetUserWorkoutRoutinQuery();
     const { data: GetUserDetail, error: ErrorLoadingUserDetails, isSuccess: LoadingUserDetailSuccessfull, refetch: RefetchGetUserDetail } = useGetUserDetailsQuery({ Id: null });
-    const {data:storedselectedRoutineDays}=useGetstoredselectedRoutineDaysQuery({})
+    const { data: storedselectedRoutineDays } = useGetstoredselectedRoutineDaysQuery({});
+    const { data: GetSelectedRoutineDays } = useGetSelectedRoutineDaysQuery({});
     useEffect(() => {
         let token = localStorage.getItem('token')
         if (!token) {
@@ -41,14 +47,23 @@ export default function CustomWorkoutPlan({ setNotActive }) {
         }
     }, [navigate])
     useEffect(()=>{
-        // if(errorAddSelectedRoutinedays){
-        //     toast.warning("Days already exists !")
-        // }
-        console.log('storedselectedRoutineDays',storedselectedRoutineDays)
+        if(UpdateCustomWorkoutPlansuccess){
+            toast.success("Workout routine updated successfully !")
+            setIsContinueEditing(false);
+        }
 
-    },[errorAddSelectedRoutinedays,storedselectedRoutineDays])
+    },[UpdateCustomWorkoutPlansuccess])
 
-    console.log('GetExerciseData', GetExerciseData)
+    useEffect(() => {
+        if (
+            !daysInitialized &&
+            GetSelectedRoutineDays?.Days?.daysArr?.length > 0
+        ) {
+            setselecteddays(GetSelectedRoutineDays?.Days?.daysArr);
+            setDaysInitialized(true);
+        }
+    }, [GetSelectedRoutineDays, daysInitialized]);
+
     let daysarr = ['mon', 'tue', 'wed', 'thur', 'fri', 'sat', 'sun']
 
     const {
@@ -58,16 +73,17 @@ export default function CustomWorkoutPlan({ setNotActive }) {
         setNotificatioinType,
         NotificationMessage,
         setNotificationMessage,
-        selecteddays,
-        setselecteddays,
+        // selecteddays,
+        // setselecteddays,
     } = useContext(MyContext);
 
     const {
         bannerText, setbannerText, useDiffBannerText, setuseDiffBannerText
     } = useContext(BannerContext);
+    const [UpdateSelectedDaysMutation, { data: UpdateSelectedDayMutationdata, error: UpdateSelectedDayMutationdataerror, isLoading: UpdateSelectedDayMutationdataLoading, isSuccess: UpdateSelectedDayMutationdataupdated }] = useUpdateSelectedRoutinedaysMutation();
 
 
-   
+
 
     useEffect(() => {
         if (PlanChanged === true) {
@@ -85,13 +101,19 @@ export default function CustomWorkoutPlan({ setNotActive }) {
             // setselecteddays((prev)=>{
             //     return [...AddSelectedRoutinedaysdata?.result]
             // })
-            console.log("AddSelectedRoutinedaysdata?.result",AddSelectedRoutinedaysdata?.result)
+            console.log("AddSelectedRoutinedaysdata?.result", AddSelectedRoutinedaysdata?.result)
             setCreateWorkoutPlan(true);
 
         }
 
 
     }, [AddSelectedRoutinedaysSuccess])
+    useEffect(() => {
+        if (UpdateSelectedDayMutationdata) {
+            console.log('UpdateSelectedDayMutationdata', UpdateSelectedDayMutationdata)
+
+        }
+    }, [UpdateSelectedDayMutationdata])
 
     useEffect(() => {
         if (DataDeleted === true) {
@@ -116,17 +138,44 @@ export default function CustomWorkoutPlan({ setNotActive }) {
             setNotificationMessage('Plan Created Successfully')
         }
     }, [isSuccess, refetch, setShowNotification, setNotificatioinType, setNotificationMessage])
+   
+
+    function GetFormattedFormData(Data){
+        function FilterId(data){
+            return {
+ Title:data?.Title,
+day:data?.day,
+exercises:data?.exercises
+            }
+
+        }
+        return {
+            mon: FilterId(Data?.mon),
+        tue:FilterId(Data?.tue),
+        wed:FilterId(Data?.wed),
+        thur: FilterId(Data?.thur),
+        fri: FilterId(Data?.fri),
+        sat: FilterId(Data?.sat),
+        sun: FilterId(Data?.sun)
+        }
+
+    }
 
     useEffect(() => {
-        console.log('GetExerciseData?.result', GetExerciseData?.result)
+        console.log('GetFormattedFormData', GetFormattedFormData(GetExerciseData?.result))
         console.log('formData', formData)
         // if GetExerciseData?.result is not null -> custom workout exists
         if (GetExerciseData?.result != null) {
+            setformData((prev)=>{
+return GetFormattedFormData(GetExerciseData?.result)
+
+            })
             setIsCustomWorkout(true)
         } else {
             setIsCustomWorkout(false)
         }
     }, [GetExerciseData?.result])
+
 
     // Removed noisy / unnecessary refetch-on-error effect to reduce duplicate API calls.
     // useEffect(() => {
@@ -140,20 +189,21 @@ export default function CustomWorkoutPlan({ setNotActive }) {
         }
     }, [selecteddays])
     const dayIndex = {
-  mon: 0, tue: 1, wed: 2, thur: 3, fri: 4, sat: 5, sun: 6
-};
+        mon: 0, tue: 1, wed: 2, thur: 3, fri: 4, sat: 5, sun: 6
+    };
 
-const arrangeDays = (days) =>
-  [...days].sort((a, b) => dayIndex[a] - dayIndex[b]);
+    const arrangeDays = (days) =>
+        [...days].sort((a, b) => dayIndex[a] - dayIndex[b]);
 
 
     const ToggleDay = (day) => {
-        setselecteddays((prev) =>{
-            let UpdatedDaysArray=prev.includes(day)
+        setselecteddays((prev) => {
+            let UpdatedDaysArray = prev.includes(day)
                 ? prev.filter((d) => d !== day) // remove if already selected
                 : [...prev, day] // add if not selected
-                return arrangeDays(UpdatedDaysArray)
-    });
+            return arrangeDays(UpdatedDaysArray)
+            // return UpdatedDaysArray
+        });
     };
 
     async function deleteuserroutin(id) {
@@ -168,8 +218,13 @@ const arrangeDays = (days) =>
     async function handleSaveAndNext() {
         if (selecteddays.length === 0) return;
         console.log("AddSelectedRoutinedays", selecteddays)
-        await AddSelectedRoutinedays({ DaysArray: selecteddays });
+        if (GetSelectedRoutineDays?.Days?.daysArr) {
+            await UpdateSelectedDaysMutation({ DaysArray: selecteddays });
+        } else {
+            await AddSelectedRoutinedays({ DaysArray: selecteddays });
 
+        }
+        setCreateWorkoutPlan(true);
         // Update context FIRST
         // setuseDiffBannerText(true);
         // setbannerText("Now Enter Title Of Exercise and Enter Exercise name Click on Add Exercise it will be added to exercise list and then click on Save Routin ")
@@ -234,7 +289,7 @@ const arrangeDays = (days) =>
     }, [data])
 
     return <div className="CustomWorkoutPlanContainer">
-        <Outlet></Outlet>
+        {/* <Outlet></Outlet> */}
         <div onClick={() => {
             if (CreateWorkoutPlan) {
                 setCreateWorkoutPlan(false);
@@ -244,7 +299,7 @@ const arrangeDays = (days) =>
         }} className="CustomWorkoutPlanBackBtn"><img className="backarrow" src="Images/left-arrow.png" alt="back"></img></div>
         <div className="CustomWorkoutPlanAddWorkoutContainer">
             {/* Notifications (kept commented as original) */}
-            {IsCustomWorkout ? <div className="CheckCustomExercise" >
+            {IsCustomWorkout && !IsContinueEditing ? <div className="CheckCustomExercise" >
                 {GetExerciseData?.result && Object.entries(GetExerciseData?.result).map(([key, value]) => (
                     <WorkoutCard
                         id={GetExerciseData?.result?._id}
@@ -259,6 +314,7 @@ const arrangeDays = (days) =>
                 ))}
 
                 <Button label={Deleting ? "Deleting Routin" : 'Delete Workout Routin'} disabled={Deleting} onClick={() => { deleteuserroutin(GetExerciseData?.result?._id) }}></Button>
+                <Button label={'Continue editing workout'} disabled={Deleting} onClick={() => {setCreateWorkoutPlan(true); setIsContinueEditing(true); console.log("Continue setting custom workout routien") }}></Button>
 
                 {GetUserDetail?.Detail?.[0]?.planName && GetUserDetail?.Detail?.[0]?.planName === "CustomPlan"
                     ? <h4 style={{ color: 'black' }}>Plan Activated</h4>
@@ -300,7 +356,11 @@ const arrangeDays = (days) =>
                                 }}
                             ></Input>
 
-                            <List title={'Exercise List'} items={[...formData[selectedday]?.exercises]}></List>
+                            <List
+                                title={'Exercise List'}
+                                items={[...(formData[selectedday]?.exercises || [])]}
+                            />
+
 
                             <Input label={'Enter ExerciseName'} placeholder={'Enter ExerciseName'} onChange={(event) => { setexercise(event.target.value) }} value={exercise} ></Input>
 
@@ -322,7 +382,7 @@ const arrangeDays = (days) =>
                         <div className="AddExerciseSaveBtn">
                             <Button onClick={() => {
                                 const currentIndex = selecteddays.indexOf(selectedday);
-                               
+
 
                                 if (currentIndex > 0) {
                                     setselectedday(selecteddays[currentIndex - 1]); // move to next day
@@ -331,10 +391,11 @@ const arrangeDays = (days) =>
                             }} label={'Prev'}></Button>
 
                             <Button
-                                label={isLoading ? 'Saving..' : 'Save'}
+                                label={GetExerciseData?.result?'Update':isLoading ? 'Saving..' : 'Save'}
+                                // GetExerciseData?.result
                                 variant="outline"
                                 disabled={isLoading}
-                                onClick={async () => {
+                                onClick={GetExerciseData?.result?async()=>{console.log("Update workout",await UpdateCustomWorkoutPlan({Id:GetExerciseData?.result?._id,formData:formData}))}:async () => {
                                     if (isLoading == true) return
                                     if (selecteddays.length === 0) {
                                         // Using Alert component as in original (kept as JSX call as original did, but better would be to show real UI)
@@ -371,17 +432,17 @@ const arrangeDays = (days) =>
                             ></Button>
                             <Button onClick={() => {
                                 const currentIndex = selecteddays.indexOf(selectedday);
-                                if (selectedday && (!formData[selectedday]?.Title || formData[selectedday].Title.trim() === "")) {
-                                    // <Alert message='Title is missing'></Alert>
-                                    toast.error("Title is missing")
+                                // if (selectedday && (!formData[selectedday]?.Title || formData[selectedday].Title.trim() === "")) {
+                                //     // <Alert message='Title is missing'></Alert>
+                                //     toast.error("Title is missing")
 
-                                    return;
-                                };
-                                if (!formData[selectedday]?.exercises || formData[selectedday].exercises.length === 0) {
-                                    // alert("please add some exercise")
-                                    toast.error("please add some exercise")
-                                    return;
-                                }
+                                //     return;
+                                // };
+                                // if (!formData[selectedday]?.exercises || formData[selectedday].exercises.length === 0) {
+                                //     // alert("please add some exercise")
+                                //     toast.error("please add some exercise")
+                                //     return;
+                                // }
                                 if (currentIndex < selecteddays.length - 1) {
                                     setselectedday(selecteddays[currentIndex + 1]); // move to next day
                                 }
@@ -395,9 +456,9 @@ const arrangeDays = (days) =>
                             return <span style={{ backgroundColor: selecteddays.includes(day) ? '#ffcc00' : 'white' }} key={day} onClick={() => { ToggleDay(day) }}>{day}</span>
                         })}</div>
                         <div>
-                            <Button label={'Save And Next'} onClick={() => {
+                            <Button label={GetSelectedRoutineDays?.Days?.daysArr ? 'Update' : 'Save And Next'} onClick={() => {
                                 handleSaveAndNext()
-                            }}>Save And Next</Button>
+                            }}></Button>
                         </div>
                     </div>}
 
