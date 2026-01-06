@@ -1,0 +1,140 @@
+.AddProgressPhotoContainer{
+    width: 100%;
+    height: 90%;
+    /* background-color: black; */
+    
+}
+.AddProgressPhotoInnerContainer{
+    width: 100%;
+    height: 90%;
+    
+}
+
+.AddProgressPhotoInnerContainerTopMenu{
+    width: 100%;
+    height: 6%;
+    /* background-color: aqua; */
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.AddProgressPhotoInnerContainerTopMenu>span{
+    width: 19%;
+    height: 80%;
+    /* background-color: antiquewhite; */
+    border: 1px solid rgb(87, 86, 86);
+    /* background-color: rgb(87, 86, 86); */
+    border-radius: 3px;
+    margin: 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: black;
+    margin-right: 0.3rem;
+    /* background-color: antiquewhite; */
+
+}
+.AddProgressPhotoInnerContainerTopMenu>span>h5{
+
+}
+
+.AddProgressPhotoInnerContainerTopMenu >div{
+    display: flex;
+    width: 80%;
+    height: 80%;
+    padding-left: 3px;
+
+
+}
+.ProgressPhotoContainers{
+     width: 100%;
+    height: 95%;
+    /* background-color: aqua; */
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    overflow-y: auto;
+    justify-content: flex-start;
+
+}
+.ProgressPhotoCard{
+    width: 93%;
+    height: 40%;
+    /* background-color: aqua; */
+    margin-top: 0.7rem;
+    margin-bottom: 0.5rem;
+    /* border: 1px solid black; */
+    border-radius: 0.5rem;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+
+
+
+}
+.ProgressPhotoCardDate{
+    width: 95%;
+    height: 15%;
+    margin-top: 0.3rem;
+        box-shadow: 1px 1px 1px rgba(104, 103, 103, 0.5);
+
+    border-radius: 0.5rem;
+
+
+}
+.ProgressPhotoCardPhotos{
+     width: 95%;
+    height: 75%;
+    margin-top: 0.3rem;
+     /* box-shadow: 1px 1px 1px rgba(104, 103, 103, 0.5); */
+    border-radius: 0.5rem;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+
+}
+.ProgressPhotoCardDate>h4{
+    margin-left: 0.4rem;
+    color: black;
+    font-weight:700;
+}
+.ProgressPhotoCardPhoto{
+    width: 30%;
+    height: 90%;
+    border: 1px solid rgb(87, 86, 86);
+    /* background-color: rgb(87, 86, 86); */
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+/* h4 */
+
+.AddProgressPhotoInnerContainerTopMenu >div>span{
+    width: 30%;
+    height: 90%;
+    
+    /* background-color: antiquewhite; */
+    border: 1px solid rgb(87, 86, 86);
+    /* background-color: rgb(87, 86, 86); */
+    border-radius: 3px;
+    margin: 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: black;
+}
+.Selected{
+    background-color: rgb(50, 49, 49);
+}
+.Selected>h5{
+    color: white;
+
+
+}

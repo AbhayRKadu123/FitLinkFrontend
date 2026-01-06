@@ -3,14 +3,45 @@ import React, { useEffect } from "react";
 // import Butt
 import { useState } from "react";
 // import {useGetWorkoutHistoryDetailQuery} from "../features/api/WorkoutApi"
-import { useGetWorkoutHistoryDetailQuery, useGetWorkoutBarChartDetailQuery,useUpdateUserWorkoutHistoryMutation } from "../features/api/WorkoutApi";
+import { useGetWorkoutHistoryDetailQuery, useGetWorkoutBarChartDetailQuery, useUpdateUserWorkoutHistoryMutation } from "../features/api/WorkoutApi";
 import { useLocation, useSearchParams } from "react-router-dom";
 // import {
 import HeadingContainer from "../components/HeadingContainer"
 // import SimpleBarChart from "../components/SimpleBarCharts";
 import ExerciseSetComparisonChart from "../components/SimpleBarCharts";
 import { toast } from "react-toastify";
-function InputComponent({ Val, setExercises, isDisabled, onChange ,edit}) {
+function DropBox(){
+  return <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+  <select
+    value={set?.isSetCompleted ? "completed" : "notCompleted"}
+    onChange={(e) => {
+      const value = e.target.value === "completed";
+      // update your state here
+      // handleSetStatus(set.id, value)
+    }}
+    style={{
+      width: "100%",
+      maxWidth: "160px",
+      padding: "6px 10px",
+      borderRadius: "8px",
+      border: "1px solid #ddd",
+      backgroundColor: set?.isSetCompleted ? "#e6f9f0" : "#fff3f3",
+      color: set?.isSetCompleted ? "#1b7f5a" : "#b42318",
+      fontWeight: "600",
+      fontSize: "14px",
+      cursor: "pointer",
+      outline: "none",
+      boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
+      transition: "all 0.2s ease-in-out",
+    }}
+  >
+    <option value="completed">✅ Completed</option>
+    <option value="notCompleted">❌ Not Completed</option>
+  </select>
+</div>
+
+}
+function InputComponent({ Val, setExercises, isDisabled, onChange, edit }) {
   return <input
     value={Val}
     style={{
@@ -43,7 +74,7 @@ function InputComponent({ Val, setExercises, isDisabled, onChange ,edit}) {
     //   }
     // }}
     onChange={onChange}
-    // disabled={isDisabled}
+  // disabled={isDisabled}
   />
 }
 
@@ -56,7 +87,10 @@ function AddSet(setExercises, exerciseIndex) {
         ...exercise,
         sets: [
           ...exercise.sets,
-          { reps: 0, weight: 0 }
+          {
+            reps: 0, weight: 0,
+            isSetCompleted: true
+          }
         ]
       };
     })
@@ -156,7 +190,7 @@ function ExerciseHistoryTable({ exercises, setExercises, edit }) {
                             </th>
                             <th>Reps</th>
                             <th>Weight (kg)</th>
-            <th>Completed</th>
+                            <th>Completed</th>
 
                           </tr>
                         </thead>
@@ -164,14 +198,46 @@ function ExerciseHistoryTable({ exercises, setExercises, edit }) {
                           {ex.sets.map((set, i) => (
                             <tr key={i}>
                               <td>Set {i + 1}</td>
-                              <td><InputComponent Val={set.reps} isDisabled={!edit} onChange={(e) =>{
-                                if(!edit) return toast.warning("Please enable edit mode");
-                                updateSetValue(setExercises, index, i, "reps", e.target.value)}} edit={edit}></InputComponent></td>
-                              <td><InputComponent Val={set.weight} isDisabled={!edit} onChange={(e) =>{
-                                 if(!edit) return toast.warning("Please enable edit mode");
-                                updateSetValue(setExercises, index, i, "weight", e.target.value)}
-                              }edit={edit}></InputComponent></td>
-                              <td style={{color:`${set?.isSetCompleted?'rgba(61, 242, 136, 0.7)':'rgba(243, 70, 70, 0.7)'}`}}>{set?.isSetCompleted?'Completed':'NotCompleted'}</td>
+                              <td><InputComponent Val={set.reps} isDisabled={!edit} onChange={(e) => {
+                                if (!edit) return toast.warning("Please enable edit mode");
+                                updateSetValue(setExercises, index, i, "reps", e.target.value)
+                              }} edit={edit}></InputComponent></td>
+                              <td><InputComponent Val={set.weight} isDisabled={!edit} onChange={(e) => {
+                                if (!edit) return toast.warning("Please enable edit mode");
+                                updateSetValue(setExercises, index, i, "weight", e.target.value)
+                              }
+                              } edit={edit}></InputComponent></td>
+                              <td style={{ color: `${set?.isSetCompleted ? 'rgba(61, 242, 136, 0.7)' : 'rgba(243, 70, 70, 0.7)'}` }}>
+                                
+                                {/* {set?.isSetCompleted ? 'Completed' : 'NotCompleted'} */}
+                                 <input
+                                        type="checkbox"
+                                        style={{
+                                            width: "1rem",
+                                            height: "1rem",
+                                            cursor: "pointer",
+                                            accentColor: "#4f46e5",     // soft indigo
+                                            borderRadius: "6px",
+                                            transition: "transform 0.15s ease, box-shadow 0.15s ease",
+                                        }}
+                                        onMouseEnter={(e) =>
+                                            (e.target.style.boxShadow = "0 0 0 4px rgba(79,70,229,0.15)")
+                                        }
+                                        onMouseLeave={(e) =>
+                                            (e.target.style.boxShadow = "none")
+                                        }
+                                        // checked={set?.isSetCompleted!==false}
+                                        checked={Boolean(set?.isSetCompleted)}
+
+                                        onClick={() => {
+                                          if(!edit){
+                                            return toast.warning("Please enable edit mode")
+                                          }
+                                          updateSetValue(setExercises, index, i, "isSetCompleted", !set?.isSetCompleted)
+
+                                        }}
+                                    />
+                                </td>
                             </tr>
                           ))}
                         </tbody>
@@ -211,7 +277,7 @@ export default function DetailWorkoutHistory() {
   ];
   let { data } = useGetWorkoutHistoryDetailQuery({ id: id })
   let { data: BarChartData } = useGetWorkoutBarChartDetailQuery({ id: id })
-  const [UpdateHistory,{result,error,success,isSuccess,isError}]=useUpdateUserWorkoutHistoryMutation();
+  const [UpdateHistory, { result, error, success, isSuccess, isError }] = useUpdateUserWorkoutHistoryMutation();
   const [GetGraphData, setGetGraphData] = useState("Select Exercise")
   const [SetData, setSetData] = useState([])
   const [Exercises, setExercises] = useState(null)
@@ -230,17 +296,17 @@ export default function DetailWorkoutHistory() {
       }
     }
   }, [GetGraphData])
-  useEffect(()=>{
-    if(isSuccess==true){
+  useEffect(() => {
+    if (isSuccess == true) {
       toast.success("History Updated Successfully")
 
     }
-    if(isError==true){
+    if (isError == true) {
       toast.error("Some thing went wrong")
 
     }
 
-  },[isSuccess,isError])
+  }, [isSuccess, isError])
   useEffect(() => {
     if (data?.Result[0]?.exercises) {
       setExercises(data?.Result[0]?.exercises)
@@ -278,10 +344,10 @@ export default function DetailWorkoutHistory() {
       <ExerciseHistoryTable exercises={Exercises} setExercises={setExercises} edit={edit}></ExerciseHistoryTable>
       <div style={{ width: '100%', height: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: "0.3rem" }}>
 
-        {edit ? <button onClick={async() => {
-          console.log('Changes saved',Exercises)
-          console.log('id=',id)
-          await UpdateHistory({id, Exercises})
+        {edit ? <button onClick={async () => {
+          console.log('Changes saved', Exercises)
+          console.log('id=', id)
+          await UpdateHistory({ id, Exercises })
           setedit(false)
 
         }} className="edit-btn">

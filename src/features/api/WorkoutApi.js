@@ -70,8 +70,19 @@ export const WorkoutApi = createApi({
   }),
   invalidatesTags: ["WorkoutHistory"]
 }),
+// /AddProgressPhoto
+
+AddProgressPhoto: builder.mutation({
+      query: (Data) => ({
+        url: '/Workout/AddProgressPhoto',      // your backend API endpoint
+        method: 'POST',        // sending data
+        body: Data,      // data to send in request body
+      }),
 
 
+     
+
+    }),
     AddWorkoutRoutin: builder.mutation({
       query: (newRoutine) => ({
         url: '/Workout/CustomWorkout',      // your backend API endpoint
@@ -80,8 +91,7 @@ export const WorkoutApi = createApi({
       }),
 
 
-      //   /workout/UpdateRoutin
-
+     
 
     }),
     // AddselectedRoutineDays
@@ -108,6 +118,7 @@ export const WorkoutApi = createApi({
       query: ({ ID, NestedId, ReqDay }) => `/Workout/getworkoutsession?ID=${ID}&NestedId=${NestedId}&ReqDay=${ReqDay}`
     })
     ,
+    
     GetLastSessionHistory:builder.query({
 
  query: ({SessionTitle,Currexercise,Day}) => `/Workout/GetLastSessionHistory?SessionTitle=${SessionTitle}&Currexercise=${Currexercise}&Day=${Day}`
@@ -186,14 +197,15 @@ export const WorkoutApi = createApi({
          })     // data to send in request body
 
     }),
-  //  /UpdateCustomWorkoutPlan
-    // /UpdateSelectedRoutinedays
-    // GenerateDailySession:
+ GetAllProgressPhoto:builder.query({
+      query:({})=>`/Workout/GetAllProgressPhoto`
+        // GetAllProgressPhoto
 
+    }),
 
   }),
  
 
 });
 
-export const {useDeleteWorkoutRoutineExeriseMutation,useUpdateCustomWorkoutPlanMutation,useUpdateSelectedRoutinedaysMutation,useGetSelectedRoutineDaysQuery,useGetstoredselectedRoutineDaysQuery,useAddselectedRoutineDaysMutation,useGetAllExercisesLastSessionHistoryQuery,useGetLastSessionHistoryQuery,useUpdateDailyWorkoutSessionMutation,useGetUserProgressQuery,  useGetWorkoutBarChartDetailQuery,useGetWorkoutHistoryDetailQuery,useGetWorkoutHistoryQuery, useUpdateWorkoutSessionMutation, useGetDailySessionQuery, useGetWorkoutSessoinQuery, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation, useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutSessionMutation,useUpdateUserWorkoutHistoryMutation} = WorkoutApi;
+export const {useGetAllProgressPhotoQuery,useAddProgressPhotoMutation,useDeleteWorkoutRoutineExeriseMutation,useUpdateCustomWorkoutPlanMutation,useUpdateSelectedRoutinedaysMutation,useGetSelectedRoutineDaysQuery,useGetstoredselectedRoutineDaysQuery,useAddselectedRoutineDaysMutation,useGetAllExercisesLastSessionHistoryQuery,useGetLastSessionHistoryQuery,useUpdateDailyWorkoutSessionMutation,useGetUserProgressQuery,  useGetWorkoutBarChartDetailQuery,useGetWorkoutHistoryDetailQuery,useGetWorkoutHistoryQuery, useUpdateWorkoutSessionMutation, useGetDailySessionQuery, useGetWorkoutSessoinQuery, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation, useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutSessionMutation,useUpdateUserWorkoutHistoryMutation} = WorkoutApi;
