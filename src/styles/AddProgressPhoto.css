@@ -72,9 +72,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative; 
 
 
 
+
+}
+.SelectImage{
+    position: absolute;
+    margin-left: 0.2rem;
+    margin-top: 0.2rem;
+    width: 0.9rem;
+    height: 0.9rem;
 
 }
 .ProgressPhotoCardDate{
@@ -137,4 +146,35 @@
     color: white;
 
 
+}
+
+.compare-parent {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  gap: 8px; /* space between images */
+}
+
+.compare-image {
+  position: relative;
+  flex: 1; /* equal width */
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.compare-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* VERY important */
+}
+
+.label {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
 }
