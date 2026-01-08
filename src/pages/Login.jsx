@@ -38,10 +38,11 @@ toast.success('User Logged in')
 
 useEffect(()=>{
     if(isError==true){
-toast.error("Something went wrong")
+        console.log("error",error)
+toast.error(error?.data?.message||"Something went wrong")
     }
 
-},[isError])
+},[isError,error])
     const navigate = useNavigate();
 
     const [Login, setLogin] = useState({
@@ -94,8 +95,11 @@ setError(true)
 
             <Input label={'Enter Password'}
                 placeholder={'Enter Password'} labelcolor={'white'} value={Login.password} onChange={(event) => { setLogin((prev) => { return { ...prev, password: event.target.value } }) }}></Input>
+                <div  style={{width:'100%',marginBottom:'0.5rem',padding:"0px",marginRight:'0.9rem'}}><p onClick={()=>{navigate("/ForgotPassword")}} style={{padding:"0px",fontSize:"0.7rem",display:'flex',marginRight:'0.3rem',justifyContent:'flex-end'}}>Forgot Password ?</p></div>
 
             <span className="SignupinLogin">dont have a account ? <span style={{ marginLeft: '0.1rem', fontSize: "0.4" }} onClick={()=>{navigate("/signup")}}>SignUp</span> </span>
+            {/* <span className="SignupinLogin" onClick={()=>{console.log("ForgotPassword")}}><p style={{textAlign:'left'}}></p>Forgot password </span> */}
+
 
             <Button isLoading={isLoading} label={isLoading?'Logging in':'Login'} disabled={isLoading} onClick={() => { LoginUser(Login); console.log(Login) }}></Button>
 

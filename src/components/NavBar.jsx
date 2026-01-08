@@ -90,7 +90,7 @@ export default function NavBar() {
   const location = useLocation();
 
   const hide =
-    location.pathname === "/login" || location.pathname === "/signup";
+    location.pathname === "/login" || location.pathname === "/signup" || location.pathname==="/ForgotPassword";
 
   if (hide) return null;
 

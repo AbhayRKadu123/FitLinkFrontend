@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import "../styles/UserDetail.css"
 import CommonHeader from "../components/CommonHeader";
-import { useGetUserDetailsQuery, useUpdateAddFriendUserMutation } from "../features/api/UserApi";
+import {useGetUserDetailLoginQuery, useGetUserDetailsQuery, useUpdateAddFriendUserMutation } from "../features/api/UserApi";
 import socket from "../../public/utils/SocketConnect";
 import { useEffect, useState } from "react";
 import { useContext } from "react";
@@ -12,7 +12,7 @@ export default function UserDetails() {
 
     const userid = searchParams.get("ID");
     const CurrUserId = searchParams.get("CurrUserId")
-    let { data, refetch, isLoading, error } = useGetUserDetailsQuery({ Id: userid })
+    let { data, refetch, isLoading, error } = useGetUserDetailLoginQuery({ Id: userid })
     let [AddFriend, { data: AddUserFriend, isError, isSuccess, isLoading: AddingFriend }] = useUpdateAddFriendUserMutation()
     const { HasNotification, setHasNotification } = useContext(MyContext);
     let navigate=useNavigate()

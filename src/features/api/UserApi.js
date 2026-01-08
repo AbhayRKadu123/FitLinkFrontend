@@ -31,6 +31,11 @@ export const UserApi = createApi({
             query: ({ Id }) => `/User/getUserDetail?Id=${Id}`
 
         }),
+        // getUserDetailLogin
+        GetUserDetailLogin: builder.query({
+            query: ({ Id }) => `/User/getUserDetailLogin?Id=${Id}`
+
+        }),
         GetUserFeed: builder.query({
             query: () => '/User/GetUserFeed'
         }),
@@ -60,6 +65,10 @@ export const UserApi = createApi({
         query:({MsgId})=>`/User/GetReplyMessage?MsgId=${MsgId}`
 
         }),
+        GetPassword:builder.query({
+        query:({MsgId})=>`/User/GetPassword?MsgId=${MsgId}`
+
+        }),
         UploadImage:builder.mutation({
             query:({formData})=>({
                 url:'/User/UploadImage',
@@ -69,16 +78,25 @@ export const UserApi = createApi({
             })
 
         }),
+        UpdatePassword:builder.mutation({
+            query: ({username,emaiL }) => ({
+                url: `/User/UpdatePassword`,      // your backend API endpoint
+                method: 'PUT',        // sending data
+                body: { username,email },      // data to send in request body
+            }),}),
+        // /UpdatePassword
          HandleDeleteMessage: builder.mutation({
             query: ({ Id }) => ({
                 url: `/User/HandleDeleteMessage`,      // your backend API endpoint
                 method: 'DELETE',        // sending data
                 body: { userId: Id },      // data to send in request body
-            }),})
+            }),}),
+
+
 
 
 // /GetReplyMessage
 
     })
 })
-export const {useUploadImageMutation,useHandleDeleteMessageMutation,useGetAllUserConversationQuery, useGetUserNotificationQuery, useGetAllFriendRequestQuery, useUpdateAddFriendUserMutation, useGetUserDetailsQuery, useGetUserFeedQuery,useGetReplyMessageQuery } = UserApi;
+export const {useUpdatePasswordMutation,useGetUserDetailLoginQuery,useUploadImageMutation,useHandleDeleteMessageMutation,useGetAllUserConversationQuery, useGetUserNotificationQuery, useGetAllFriendRequestQuery, useUpdateAddFriendUserMutation, useGetUserDetailsQuery, useGetUserFeedQuery,useGetReplyMessageQuery } = UserApi;

@@ -39,6 +39,7 @@ import PremiumPlanContainer from "./pages/PremiumPlanExercisePlan.jsx";
 import 'react-toastify/dist/ReactToastify.css';
 import AddProgressPhoto from "./pages/AddProgressPhoto.jsx";
 import { enablePush } from "../public/utils/push.js";
+import ForgotPasswordscreen from "./pages/ForgotPasswordscreen.jsx";
 function App() {
   //  function getFormattedToday() {
   //       const today = new Date();
@@ -109,7 +110,7 @@ const {data:UserWeight,isLoading:LoadingUserWeight,refetch:refetchUserWt,isError
 
 
       }
-      if(location.pathname=='/signup'||location.pathname=="/login"){
+      if(location.pathname=='/signup'||location.pathname=="/login"|| location.pathname=="/ForgotPassword  qa"){
         setShowBot(false)
       }
     }, [location.pathname]);
@@ -197,7 +198,7 @@ setShowBot(false)
     const navigate = useNavigate();
 
     useEffect(() => {
-      const publicRoutes = ["/login", "/signup"];
+      const publicRoutes = ["/login", "/signup","/ForgotPassword"];
       if (publicRoutes.includes(location.pathname)) return; // ✅ Skip check for login/signup
 
       if (isTokenExpired()) {
@@ -251,11 +252,13 @@ setShowBot(false)
                   <Route path="/" element={<Home />} />
                   <Route path="/login" element={< Login ></Login>}></Route>
                   <Route path="/signup" element={<SignUp></SignUp>}></Route>
+                  <Route path="/ForgotPassword" element={<ForgotPasswordscreen></ForgotPasswordscreen>}></Route>
                   <Route path="/Community" element={<Community />} />
                   <Route path="/Nutrition" element={<Nutrition />} />
                   <Route path="/Profile" element={<Profile />} />
                   <Route path="/WorkoutHistory" element={< WorkoutHistory />} />
                   <Route path="/AddProgressPhoto" element={< AddProgressPhoto />} />
+              
 
                   <Route path="/WeightHistory" element={< WeightHistoryChart />} />
                   <Route path="/SpecificPlanWorkoutHistory" element={< SpecificPlanWorkoutHistory />} />
