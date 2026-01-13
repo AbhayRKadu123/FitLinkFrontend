@@ -123,10 +123,10 @@ export default function Profile() {
                 <ProfileOption Title={'Profile Setting'}></ProfileOption>
                 <ProfileOption Title={'Account Settings'}></ProfileOption>
                 <ProfileOption Title={'Manage My Subscription'}></ProfileOption>
-                <ProfileOption Title={'Change Password'}></ProfileOption>
+                <ProfileOption OnClick={()=>{navigate("/ChangePassword")}} Title={'Change Password'}></ProfileOption>
                 <ProfileOption Title={'Change Program'}></ProfileOption>
                 <ProfileOption Title={'Privacy Policy'}></ProfileOption>
-                <ProfileOption Title={'Terms of Use'}></ProfileOption>
+                <ProfileOption OnClick={()=>{navigate("/TermsAndCondition")}} Title={'Terms And Condition'}></ProfileOption>
                 <ProfileOption Title={'FeedBack'}></ProfileOption>
                 <ProfileOption Title={'Invite a Friend'}></ProfileOption>
                 <ProfileOption Title={'Contact Us'}></ProfileOption>

@@ -13,7 +13,10 @@ export default function SignUp() {
     const navigate = useNavigate();
     async function CreateUserAccount() {
         if (signup?.username.trim() == "" || signup?.email.trim() == "" || signup?.password.trim() == "" || signup?.confirmpassword.trim() == "") {
-            return null
+            return toast.warning("all fields are required!")
+        }
+        if(signup?.password.trim() != signup?.confirmpassword.trim() ){
+            return toast.warning("Confirm password and password does not match!")
         }
         await SignUpUser(signup)
         console.log(signup)

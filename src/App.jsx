@@ -40,6 +40,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import AddProgressPhoto from "./pages/AddProgressPhoto.jsx";
 import { enablePush } from "../public/utils/push.js";
 import ForgotPasswordscreen from "./pages/ForgotPasswordscreen.jsx";
+import ChangePassword from "./pages/ChangePassword.jsx";
+import TermsAndCondition from "./pages/TermsAndCondition.jsx";
 function App() {
   //  function getFormattedToday() {
   //       const today = new Date();
@@ -258,6 +260,8 @@ setShowBot(false)
                   <Route path="/Profile" element={<Profile />} />
                   <Route path="/WorkoutHistory" element={< WorkoutHistory />} />
                   <Route path="/AddProgressPhoto" element={< AddProgressPhoto />} />
+                  <Route path="/ChangePassword" element={< ChangePassword />}></Route>
+                  <Route path="/TermsAndCondition" element={<TermsAndCondition></TermsAndCondition>}></Route>
               
 
                   <Route path="/WeightHistory" element={< WeightHistoryChart />} />

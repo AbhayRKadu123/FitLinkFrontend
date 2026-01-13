@@ -2,7 +2,7 @@ import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const rawBaseQuery = fetchBaseQuery({
     // baseUrl: 'http://localhost:8080',
-
+// 
   baseUrl: 'https://fitlink-vbdq.onrender.com', // replace with your actual backend URL
   prepareHeaders: (headers) => {
     const token = localStorage.getItem('token');

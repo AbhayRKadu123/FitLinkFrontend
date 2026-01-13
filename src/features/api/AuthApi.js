@@ -18,6 +18,16 @@ export const authApi = createApi({
 
 
         }),
+        UpdateOldPassword:builder.mutation({
+            query:(UpdatedPassword)=>({
+                url: '/UpdateOldPassword',      // your backend API endpoint
+                method: 'PUT',        // sending data
+                body: UpdatedPassword, 
+
+            })
+
+
+        }),
         AddUserSignUp: builder.mutation({
             query: (signup) => ({
                 url: '/signup',      // your backend API endpoint
@@ -31,6 +41,6 @@ export const authApi = createApi({
     }),
 });
 
-export const { useAddUserLoginMutation,useAddUserSignUpMutation } = authApi;
+export const { useUpdateOldPasswordMutation,useAddUserLoginMutation,useAddUserSignUpMutation } = authApi;
 
 
