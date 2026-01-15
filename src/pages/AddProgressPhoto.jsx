@@ -57,6 +57,8 @@ export default function AddProgressPhoto() {
   const [getImagePreview, setGetImagePreview] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
   const [compareImage, setcompareImage] = useState(false)
+  // UploadingImage, setIsAddImageOpen, setSelectedFile, preview, setPreview, UploadNewImage
+  const [openImageModel,setImageModel]=useState(false);
   let [UploadImage, { data: UploadedImage, isLoading: UploadingImage, error: errorUploading, success: UploadSuccessfull }] = useUploadImageMutation();
   let [AddUserProgressPhoto, { data: AddProgressPhotoData, isLoading: AddingProgressPhoto, error: Error, success: Success, isSuccess }] = useAddProgressPhotoMutation();
   let { data: GetAllProgressPhoto,refetch, isLoading, isError } = useGetAllProgressPhotoQuery({});

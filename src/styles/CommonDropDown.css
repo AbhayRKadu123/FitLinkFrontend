@@ -1,0 +1,52 @@
+.SelectContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0.8rem 0;
+}
+
+.SelectLabel {
+    font-size: 0.95rem;
+    color: #000; /* black */
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.CustomSelect {
+    padding: 0.7rem 1rem;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.2s ease-in-out;
+    outline: none;
+    background-color: #fff;
+    color: #000 !important; /* force black */
+    cursor: pointer;
+
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2rem;
+}
+
+/* dropdown options */
+.CustomSelect option {
+    color: #000;
+}
+
+/* when focused */
+.CustomSelect:focus {
+    border-color: #ffcc00;
+    box-shadow: 0 0 6px rgba(255, 204, 0, 0.4);
+}
+
+/* disabled state */
+.CustomSelect:disabled {
+    background-color: #f5f5f5;
+    color: #000; /* still black */
+    cursor: not-allowed;
+}

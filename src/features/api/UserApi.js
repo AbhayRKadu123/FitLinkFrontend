@@ -31,6 +31,7 @@ export const UserApi = createApi({
             query: ({ Id }) => `/User/getUserDetail?Id=${Id}`
 
         }),
+
         // getUserDetailLogin
         GetUserDetailLogin: builder.query({
             query: ({ Id }) => `/User/getUserDetailLogin?Id=${Id}`
@@ -44,10 +45,10 @@ export const UserApi = createApi({
         }),
         // UserNotification
         GetUserNotification: builder.query({
-            query: ({}) => '/User/UserNotifications'
+            query: ({ }) => '/User/UserNotifications'
         }),
-        GetAllUserConversation:builder.query({
-            query:({UserId,OtherUserId})=>`/User/GetAllUserConversation?UserId=${UserId}&&OtherUserId=${OtherUserId}`
+        GetAllUserConversation: builder.query({
+            query: ({ UserId, OtherUserId }) => `/User/GetAllUserConversation?UserId=${UserId}&&OtherUserId=${OtherUserId}`
         }),
 
         UpdateAddFriendUser: builder.mutation({
@@ -56,66 +57,82 @@ export const UserApi = createApi({
                 method: 'PUT',        // sending data
                 body: { userId: Id },      // data to send in request body
             }),
-            
-       
+
+
             // /HandleDeleteMessage
 
         }),
-        GetReplyMessage:builder.query({
-        query:({MsgId})=>`/User/GetReplyMessage?MsgId=${MsgId}`
+        GetReplyMessage: builder.query({
+            query: ({ MsgId }) => `/User/GetReplyMessage?MsgId=${MsgId}`
 
         }),
-        GetPassword:builder.query({
-        query:({MsgId})=>`/User/GetPassword?MsgId=${MsgId}`
+       GetProfileSettingUsersData: builder.query({
+  query: () => '/User/ProfileSettingUserData',
+  providesTags: ['UserProfile'],
+}),
+        GetPassword: builder.query({
+            query: ({ MsgId }) => `/User/GetPassword?MsgId=${MsgId}`
 
         }),
-        UploadImage:builder.mutation({
-            query:({formData})=>({
-                url:'/User/UploadImage',
-                method:'POST',
-                body:formData
+        UploadImage: builder.mutation({
+            query: ({ formData }) => ({
+                url: '/User/UploadImage',
+                method: 'POST',
+                body: formData
 
             })
 
         }),
-        VerifyOtp:builder.mutation({
-            query:(Data)=>(
+        VerifyOtp: builder.mutation({
+            query: (Data) => (
                 {
                     // VerifyOtp
-                    url:'/User/VerifyOtp',
-                method:'POST',
-                body:Data
+                    url: '/User/VerifyOtp',
+                    method: 'POST',
+                    body: Data
 
 
                 }
             )
         }),
-           HandleChangePassword: builder.mutation({
+        HandleChangePassword: builder.mutation({
             query: (Data) => ({
                 url: `/User/HandlePasswordChange`,      // your backend API endpoint
                 method: 'POST',        // sending data
-                body:Data,      // data to send in request body
-            }),}),
-        UpdatePassword:builder.mutation({
-            query: ({username,email }) => ({
+                body: Data,      // data to send in request body
+            }),
+        }),
+        UpdatePassword: builder.mutation({
+            query: ({ username, email }) => ({
                 url: `/User/UpdatePassword`,      // your backend API endpoint
                 method: 'PUT',        // sending data
-                body: { username:username,email:email },      // data to send in request body
-            }),}),
+                body: { username: username, email: email },      // data to send in request body
+            }),
+        }),
         // /UpdatePassword
-         HandleDeleteMessage: builder.mutation({
+        HandleDeleteMessage: builder.mutation({
             query: ({ Id }) => ({
                 url: `/User/HandleDeleteMessage`,      // your backend API endpoint
                 method: 'DELETE',        // sending data
                 body: { userId: Id },      // data to send in request body
-            }),}),
-        
-     
+            }),
+        }),
+        UpdateProfileSetting: builder.mutation({
+            query: (UserData) => ({
+                url: `/User/ProfileSetting`,      // your backend API endpoint
+                method: 'PUT',        // sending data
+                body: UserData,      // data to send in request body
+            }),
+            // /ProfileSetting
+
+        }),
+      
 
 
 
-// /GetReplyMessage
+
+        // /GetReplyMessage
 
     })
 })
-export const {useHandleChangePasswordMutation,useVerifyOtpMutation,useUpdatePasswordMutation,useGetUserDetailLoginQuery,useUploadImageMutation,useHandleDeleteMessageMutation,useGetAllUserConversationQuery, useGetUserNotificationQuery, useGetAllFriendRequestQuery, useUpdateAddFriendUserMutation, useGetUserDetailsQuery, useGetUserFeedQuery,useGetReplyMessageQuery } = UserApi;
+export const {useGetProfileSettingUsersDataQuery, useUpdateProfileSettingMutation, useHandleChangePasswordMutation, useVerifyOtpMutation, useUpdatePasswordMutation, useGetUserDetailLoginQuery, useUploadImageMutation, useHandleDeleteMessageMutation, useGetAllUserConversationQuery, useGetUserNotificationQuery, useGetAllFriendRequestQuery, useUpdateAddFriendUserMutation, useGetUserDetailsQuery, useGetUserFeedQuery, useGetReplyMessageQuery } = UserApi;

@@ -9,7 +9,7 @@ export default function Input({
     onChange,
     name,
     labelcolor,
-    isLogWorkout,key
+    isLogWorkout,key,disabled
 }) {
     return (
         <div style={isLogWorkout&&{width:"35%"}} className="InputContainer">
@@ -22,6 +22,7 @@ export default function Input({
                 onChange={onChange}
                 name={name}
                 key={key}
+                disabled={disabled}
                 
                 
                 

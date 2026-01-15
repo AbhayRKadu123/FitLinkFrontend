@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import Button from "../components/Button.jsx"
 import LogTodaysWeightPopup from "../components/LogTodaysWeightPopup.jsx";
 import { toast } from "react-toastify";
-
+import ProfileSetting from "./ProfileSetting.jsx";
 function ProfileOption({Title,OnClick}) {
     return <div onClick={()=>{OnClick()}} className="ProfileSettingOptions">
         <h4>{Title}</h4>
@@ -120,7 +120,7 @@ export default function Profile() {
                 <ProfileOption OnClick={()=>navigate("/WeightHistory")} Title={'Weight History'}></ProfileOption>
 
                 <ProfileOption OnClick={()=>{navigate("/AddProgressPhoto")}} Title={'Progress Photo'}></ProfileOption>
-                <ProfileOption Title={'Profile Setting'}></ProfileOption>
+                <ProfileOption OnClick={()=>{navigate("/ProfileSetting")}} Title={'Profile Setting'}></ProfileOption>
                 <ProfileOption Title={'Account Settings'}></ProfileOption>
                 <ProfileOption Title={'Manage My Subscription'}></ProfileOption>
                 <ProfileOption OnClick={()=>{navigate("/ChangePassword")}} Title={'Change Password'}></ProfileOption>
