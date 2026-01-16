@@ -20,11 +20,11 @@ function HeaderDate({ DateNumber = 'DateNumber', value, setVisibleBox, ele }) {
 }
 export default function HeaderTop({ visibleBox, setVisibleBox, isHomeTab, Dates, IsPlanAvailable }) {
   let { data, refetch, isLoading, error } = useGetUserDetailsQuery({ Id: null })
-  // console.log("data?.Detail[0]?.username.split[0]",data?.Detail[0]?.username[0].toUpperCase())
+  // console.log("data?.Detail[0]?.username.split[0]",data?.Detail[0]?.Points)
   return <div className="Header">
-    
-    <div className="HeaderUserDetails"><h4 className="HeaderUserDetailUsername">Hi,<span>{localStorage.getItem('username')}</span></h4><span className="HeaderUserDetailProfile">{data?.Detail[0]?.username[0].toUpperCase() || 'U'}</span></div>
-  
+
+    <div className="HeaderUserDetails"><h4 className="HeaderUserDetailUsername">Hi,<span>{localStorage.getItem('username')}</span></h4><span style={{ display: 'flex',alignItems:"center",justifyContent:"center" }}><span style={{backgroundColor:"rgba(34, 197, 94, 0.2)", display: 'flex', justifyContent: "center",borderRadius:"1.5rem", alignItems: 'center',width:"3rem",height:"1.3rem", marginRight: "1rem",boxShadow: "0 4px 12px rgba(34, 197, 94, 0.12)"}}><p style={{ fontSize:"0.7rem",fontWeight:"600",color:"black"}}>{data?.Detail[0]?.Points||0}</p><img style={{ width: "0.7rem", height: '0.7rem',marginLeft:"0.3rem" }} src="Images/coin.png"></img></span><span className="HeaderUserDetailProfile">{data?.Detail[0]?.username[0].toUpperCase() || 'U'}</span></span></div>
+
     {isHomeTab && <div className="HeaderWorkoutTracker">
       {IsPlanAvailable && <div className="HeaderWorkoutTrackerPrevNextWeekbtn"><span className="PreviousWeekBtn">Previous week</span><span className="NextWeekBtn">Next Week</span></div>}
       {IsPlanAvailable && <div className="Headerdate">

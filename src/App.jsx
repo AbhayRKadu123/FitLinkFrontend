@@ -47,6 +47,7 @@ import ForgotPasswordscreen from "./pages/ForgotPasswordscreen.jsx";
 import ChangePassword from "./pages/ChangePassword.jsx";
 import TermsAndCondition from "./pages/TermsAndCondition.jsx";
 import ProfileSetting from "./pages/ProfileSetting.jsx";
+import ContactUs from "./pages/ContactUs.jsx";
 function App() {
   //  function getFormattedToday() {
   //       const today = new Date();
@@ -274,6 +275,8 @@ setShowBot(false)
                   <Route path="/SpecificPlanWorkoutHistory" element={< SpecificPlanWorkoutHistory />} />
                   {/* MessagePage */}
                   <Route path="/MessagePage" element={<MessagePage />} />
+                  {/* ContactUs */}
+                  <Route path="/ContactUs" element={<ContactUs></ContactUs>}></Route>
                   <Route path="/Premium/PushPullLegPlan" element={<PremiumPlanContainer/>} />
 
                  

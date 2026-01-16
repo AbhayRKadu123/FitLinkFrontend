@@ -157,7 +157,7 @@ export default function Profile() {
 
 
                 }} Title={'Invite a Friend'}></ProfileOption>
-                <ProfileOption Title={'Contact Us'}></ProfileOption>
+                <ProfileOption OnClick={()=>{navigate("/ContactUs")}} Title={'Contact Us'}></ProfileOption>
 
 
             </div>

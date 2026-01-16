@@ -1,0 +1,20 @@
+.ContactUsContainer{
+    width: 100%;
+    height: 90%;
+}
+.ContackUsInnerContainer{
+    width: 100%;
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: aqua; */
+}
+.ContactUsTextAreaAndBtn{
+    width: 80%;
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}

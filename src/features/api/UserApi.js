@@ -65,6 +65,18 @@ export const UserApi = createApi({
             // /HandleDeleteMessage
 
         }),
+        SendQuery:builder.mutation({
+            query: ({Data}) => ({
+                url: `/User/SendQuery`,      // your backend API endpoint
+                method: 'POST',
+                body:{Data}       // sending data
+                     // data to send in request body
+            }),
+
+
+            // /HandleDeleteMessage
+
+        }),
         GenerateCouponCode :builder.mutation({
             query: ({}) => ({
                 url: `/User/GenerateCouponCode`,      // your backend API endpoint
@@ -154,4 +166,4 @@ export const UserApi = createApi({
 
     })
 })
-export const {useGenerateCouponCodeMutation,useGetReferalCodeQuery, useGetProfileSettingUsersDataQuery, useUpdateProfileSettingMutation, useHandleChangePasswordMutation, useVerifyOtpMutation, useUpdatePasswordMutation, useGetUserDetailLoginQuery, useUploadImageMutation, useHandleDeleteMessageMutation, useGetAllUserConversationQuery, useGetUserNotificationQuery, useGetAllFriendRequestQuery, useUpdateAddFriendUserMutation, useGetUserDetailsQuery, useGetUserFeedQuery, useGetReplyMessageQuery } = UserApi;
+export const {useSendQueryMutation,useGenerateCouponCodeMutation,useGetReferalCodeQuery, useGetProfileSettingUsersDataQuery, useUpdateProfileSettingMutation, useHandleChangePasswordMutation, useVerifyOtpMutation, useUpdatePasswordMutation, useGetUserDetailLoginQuery, useUploadImageMutation, useHandleDeleteMessageMutation, useGetAllUserConversationQuery, useGetUserNotificationQuery, useGetAllFriendRequestQuery, useUpdateAddFriendUserMutation, useGetUserDetailsQuery, useGetUserFeedQuery, useGetReplyMessageQuery } = UserApi;
