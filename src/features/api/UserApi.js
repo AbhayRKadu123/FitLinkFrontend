@@ -1,6 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { customBaseQuery } from './CustomBaseQuery';
 
+
+
 export const UserApi = createApi({
     reducerPath: 'UserApi',
     baseQuery: customBaseQuery,
@@ -10,6 +12,7 @@ export const UserApi = createApi({
     baseQuery: fetchBaseQuery({
         // baseUrl: 'http://localhost:8080',
         baseUrl: 'https://fitlink-vbdq.onrender.com',
+        // const frontendUrl = process.env.FRONTEND_URL;
 
 
 
@@ -62,14 +65,25 @@ export const UserApi = createApi({
             // /HandleDeleteMessage
 
         }),
+        GenerateCouponCode :builder.mutation({
+            query: ({}) => ({
+                url: `/User/GenerateCouponCode`,      // your backend API endpoint
+                method: 'PUT',        // sending data
+                body: { userId: "GenerateCode" },      // data to send in request body
+            }),
+
+
+            // /HandleDeleteMessage
+
+        }),
         GetReplyMessage: builder.query({
             query: ({ MsgId }) => `/User/GetReplyMessage?MsgId=${MsgId}`
 
         }),
-       GetProfileSettingUsersData: builder.query({
-  query: () => '/User/ProfileSettingUserData',
-  providesTags: ['UserProfile'],
-}),
+        GetProfileSettingUsersData: builder.query({
+            query: () => '/User/ProfileSettingUserData',
+            providesTags: ['UserProfile'],
+        }),
         GetPassword: builder.query({
             query: ({ MsgId }) => `/User/GetPassword?MsgId=${MsgId}`
 
@@ -126,7 +140,12 @@ export const UserApi = createApi({
             // /ProfileSetting
 
         }),
-      
+        GetReferalCode:builder.query({
+            query: () => '/User/GetReferalCode',
+            providesTags: ['UserProfile'],
+        }),
+        // GetReferalCode
+
 
 
 
@@ -135,4 +154,4 @@ export const UserApi = createApi({
 
     })
 })
-export const {useGetProfileSettingUsersDataQuery, useUpdateProfileSettingMutation, useHandleChangePasswordMutation, useVerifyOtpMutation, useUpdatePasswordMutation, useGetUserDetailLoginQuery, useUploadImageMutation, useHandleDeleteMessageMutation, useGetAllUserConversationQuery, useGetUserNotificationQuery, useGetAllFriendRequestQuery, useUpdateAddFriendUserMutation, useGetUserDetailsQuery, useGetUserFeedQuery, useGetReplyMessageQuery } = UserApi;
+export const {useGenerateCouponCodeMutation,useGetReferalCodeQuery, useGetProfileSettingUsersDataQuery, useUpdateProfileSettingMutation, useHandleChangePasswordMutation, useVerifyOtpMutation, useUpdatePasswordMutation, useGetUserDetailLoginQuery, useUploadImageMutation, useHandleDeleteMessageMutation, useGetAllUserConversationQuery, useGetUserNotificationQuery, useGetAllFriendRequestQuery, useUpdateAddFriendUserMutation, useGetUserDetailsQuery, useGetUserFeedQuery, useGetReplyMessageQuery } = UserApi;

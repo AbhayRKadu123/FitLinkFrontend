@@ -1,3 +1,6 @@
+// import dotenv from "dotenv";
+// dotenv.config();
+
 import "./App.css"
 import "shepherd.js/dist/css/shepherd.css";
 
@@ -16,6 +19,7 @@ import LogWorkoutScreen from "./pages/LogWorkoutScreen";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useGetUserDetailsQuery } from "../src/features/api/UserApi"
 import { useRef } from "react";
+
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import WorkoutHistory from "./pages/WorkoutHistory";
