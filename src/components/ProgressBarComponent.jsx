@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/ProgressBar.css";
 
-export default function ProgressBar({ value = 20, label }) {
+export default function ProgressBar({ value = 20, label,HidePersentage }) {
   // Ensure value stays between 0 and 100
   const progress = Math.min(Math.max(value, 0), 100);
 
@@ -14,7 +14,7 @@ export default function ProgressBar({ value = 20, label }) {
           style={{ width: `${progress}%` }}
         ></div>
       </div>
-      <span className="progress-percentage">{progress}%</span>
+      {!HidePersentage&&<span className="progress-percentage">{progress}%</span>}
     </div>
   );
 }

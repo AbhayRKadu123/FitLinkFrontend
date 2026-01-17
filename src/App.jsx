@@ -48,6 +48,7 @@ import ChangePassword from "./pages/ChangePassword.jsx";
 import TermsAndCondition from "./pages/TermsAndCondition.jsx";
 import ProfileSetting from "./pages/ProfileSetting.jsx";
 import ContactUs from "./pages/ContactUs.jsx";
+import PointsPage from "./pages/PointsPage.jsx";
 function App() {
   //  function getFormattedToday() {
   //       const today = new Date();
@@ -269,6 +270,10 @@ setShowBot(false)
                   <Route path="/ChangePassword" element={< ChangePassword />}></Route>
                   <Route path="/ProfileSetting" element={< ProfileSetting></ProfileSetting>}></Route>
                   <Route path="/TermsAndCondition" element={<TermsAndCondition></TermsAndCondition>}></Route>
+                  <Route path="/PointsPage" element={<PointsPage></PointsPage>}></Route>
+
+                  {/* /PointsPage */}
+
               
 
                   <Route path="/WeightHistory" element={< WeightHistoryChart />} />

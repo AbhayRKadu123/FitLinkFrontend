@@ -93,7 +93,7 @@ setError(true)
                 placeholder={'Enter Username'} labelcolor={'white'} value={Login.username}
                 onChange={(event) => { setLogin((prev) => { return { ...prev, username: event.target.value } }) }}></Input>
 
-            <Input label={'Enter Password'}
+            <Input type={"password"} label={'Enter Password'}
                 placeholder={'Enter Password'} labelcolor={'white'} value={Login.password} onChange={(event) => { setLogin((prev) => { return { ...prev, password: event.target.value } }) }}></Input>
                 <div  style={{width:'100%',marginBottom:'0.5rem',padding:"0px",marginRight:'0.9rem'}}><p onClick={()=>{navigate("/ForgotPassword")}} style={{padding:"0px",fontSize:"0.7rem",display:'flex',marginRight:'0.3rem',justifyContent:'flex-end'}}>Forgot Password ?</p></div>
 
