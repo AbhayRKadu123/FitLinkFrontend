@@ -1,84 +1,90 @@
 import "../styles/WeightHistoryChart.css"
 import HeadingContainer from "../components/HeadingContainer"
-import { useGetAllWeightGraphandDetailQuery } from "../features/api/WeightTrackingApi"
+import { useGetAllWeightGraphandDetailQuery, useAddUserWeightMutation } from "../features/api/WeightTrackingApi"
+import Input from "../components/Input.jsx"
+import Button from "../components/Button.jsx"
+import { useEffect, useState } from "react"
+import { toast } from "react-toastify"
+
 function WeightLogCard({ data }) {
   const { username, weight, TodaysDate } = data || {};
 
   return (
     <div
+      className="WeightCard"
       style={{
-        width: "260px",
-        // background: "#fff",
-        border: "1px solid #000",
-        borderRadius: "8px",
-        padding: "16px",
-        fontFamily: "sans-serif",
-        display: "flex",
-        flexDirection: "column",
-        gap: "10px",
-        flexShrink: 0,
-        margin: "0.5rem 0",
+        // width: "260px",
+        // // background: "#fff",
+        // // border: "1px solid #000000",
+        // backgroundColor:"rgba(0,0,0)",
+        // borderRadius: "8px",
+        // padding: "16px",
+        // fontFamily: "sans-serif",
+        // display: "flex",
+        // flexDirection: "column",
+        // gap: "10px",
+        // flexShrink: 0,
+        // margin: "0.5rem 0",
       }}
     >
-      <h2
-        style={{
-          margin: 0,
-          fontSize: "1.1rem",
-          fontWeight: "600",
-          color: "#000",
-        }}
-      >
-        Weight Log
-      </h2>
+      <h6>Date : 25/02/2025</h6>
+      <p>Weight : 76kg</p>
 
-      <div style={{ fontSize: "0.95rem", color: "#000" }}>
-        <strong>User:</strong> {username}
-      </div>
-
-      <div
-        style={{
-          fontSize: "1rem",
-          fontWeight: "600",
-          color: "#000",
-          padding: "6px 0",
-          border: "1px solid #000",
-          borderRadius: "6px",
-          textAlign: "center",
-        }}
-      >
-        {weight} kg
-      </div>
-
-      <div
-        style={{
-          fontSize: "0.9rem",
-          color: "#000",
-          display: "flex",
-          justifyContent: "space-between",
-          borderTop: "1px solid #000",
-          paddingTop: "6px",
-        }}
-      >
-        <strong>Date:</strong> {TodaysDate}
-      </div>
     </div>
   );
 }
+function getFormattedToday() {
+  // const utcNow = new Date().toISOString();
+  const utcDate = new Date();
+  console.log('utcDate', utcDate)
+  const istDate = new Date(utcDate.getTime() + (5.5 * 60 * 60 * 1000));
+  console.log('isodate', istDate.toISOString()?.split('T')[0]);
 
+  return istDate.toISOString()?.split('T')[0]
+}
 
 export default function WeightHistoryChart() {
-    const {data}= useGetAllWeightGraphandDetailQuery({})
-    console.log('data==',typeof data?.data)
-    return <div className="WeightHistoryChartContainer">
-        <HeadingContainer Title={'Weight History'}></HeadingContainer>
-        <div className="WeightChartContainer">
-{data?.data?.map((ele)=>WeightLogCard({data:ele}))}
+  const { data, refetch } = useGetAllWeightGraphandDetailQuery({})
+  // useAddUserWeightMutation
+  const [AddWeight, { data: Add, isLoading, isError, isSuccess, error }] = useAddUserWeightMutation();
+  const [weight, setweight] = useState(0)
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Weight Logged successfully!")
+      setweight(0)
+      refetch()
+    }
+  }, [isSuccess])
+  useEffect(() => {
+    if (isError) {
+      toast.error(error?.data?.message || "Error logging weight!")
+      setweight(0)
+      refetch()
 
 
+    }
 
-        </div>
+  }, [isError])
+  console.log('data==', typeof data?.data)
+  return <div className="WeightHistoryChartContainer">
+    <HeadingContainer Title={'Weight History'}></HeadingContainer>
+    <div className="WeightChartContainer">
+      <div className="EnterWeightContainer">
+        <div className="EnterWeightInputContainer"><Input value={weight} onChange={(event) => { setweight(event.target.value) }} placeholder={"Weight in kg"}></Input> </div>
+        <Button onClick={async () => { if (weight==0) return toast.warning("Weight Cant be 0!"); await AddWeight({ weight, TodaysDate: getFormattedToday() }) }} label={"Submit"}></Button>
+      </div>
+      <div className="ShowWeightHistoryContainer">
+
+        {data?.data?.map((ele) => WeightLogCard({ data: ele }))}
+
+      </div>
+
 
 
 
     </div>
+
+
+
+  </div>
 }

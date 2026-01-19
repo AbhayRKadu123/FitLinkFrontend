@@ -137,7 +137,7 @@ export default function Profile() {
             <div className="SettingOptions">
                 <ProfileOption OnClick={() => navigate("/WorkoutHistory")} Title={'Workout History'}></ProfileOption>
                 <ProfileOption OnClick={() => navigate("/WeightHistory")} Title={'Weight History'}></ProfileOption>
-                <ProfileOption OnClick={() => navigate("/WeightHistory")} Title={'Payment-Methods'}></ProfileOption>
+                <ProfileOption OnClick={() => navigate("/PaymentMethod")} Title={'Payment-Methods'}></ProfileOption>
 
 
                 <ProfileOption OnClick={() => { navigate("/AddProgressPhoto") }} Title={'Progress Photo'}></ProfileOption>

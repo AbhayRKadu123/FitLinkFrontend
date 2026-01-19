@@ -1,0 +1,56 @@
+.PaymentMethodContainer{
+    width: 100%;
+    height: 90%;
+}
+.PaymentMethodInnerContainer{
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+.PaymentOptionCard{
+
+    width: 80%;
+    height: 25%;
+    border: 1px solid black;
+}
+.PaymentOptions{
+ width: 100%;
+    height: 10%;
+    /* background-color: antiquewhite; */
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-x: auto;
+}
+.PaymentOptionpill>img{
+    width: 1.5rem;
+    height: 1.5rem;
+}
+.PaymentOptionpill>span{
+    font-size: 0.8rem;
+    color: purple;
+    font-weight: 600;
+}
+.PaymentOptionpill{
+    height: 55%;
+    min-width: 25%;
+    margin-left: 0.3rem;
+    margin-right: 0.3rem;
+    border-radius:1rem;
+    /* background-color: rgba(240, 233, 233, 0.3); */
+   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15),
+            0 8px 24px rgba(0, 0, 0, 0.08);
+
+
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+}
+.PaymentOptions::-webkit-scrollbar{
+    display: none;
+}

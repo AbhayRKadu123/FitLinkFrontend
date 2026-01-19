@@ -1,6 +1,9 @@
 .WeightHistoryChartContainer{
     width: 100%;
     height: 90%;
+     /* background-color:rgba(40, 156, 14, 0.2) */
+     background-color:rgba(104, 97, 97, 0.2)
+
 }
 .WeightChartContainer{
     display: flex;
@@ -10,6 +13,57 @@
     overflow-y: auto;
     width: 100%;
     height: 90%;
+}
+.WeightCard{
+
+    width: 260px;
+    height:100px;
+    border-radius: 8px;
+    background-color: black;
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+.WeightCard>h6{
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: left;
+}.WeightCard>p{
+     color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: left;
+}
+.EnterWeightContainer{
+    width: 100%;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    
+    /* background-color: aqua; */
+}
+.EnterWeightInputContainer{
+    width: 60%;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.ShowWeightHistoryContainer{
+    width: 100%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    justify-content: flex-start;
+    align-items: center;
+    /* background-color: rebeccapurple; */
 }
 .WeightChartContainer::-webkit-scrollbar{
     display: none;

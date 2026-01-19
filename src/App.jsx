@@ -14,7 +14,7 @@ import UserDetails from "./pages/UserDetails";
 import HeaderTop from "./components/Header";
 import React, { useState } from "react";
 import CustomWorkoutPlan from "./pages/WorkoutPlansPages/CustomWorkoutPlans";
-import {useGetUserWeightChartQuery} from "../src/features/api/WeightTrackingApi.js"
+import { useGetUserWeightChartQuery } from "../src/features/api/WeightTrackingApi.js"
 import LogWorkoutScreen from "./pages/LogWorkoutScreen";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useGetUserDetailsQuery } from "../src/features/api/UserApi"
@@ -49,6 +49,7 @@ import TermsAndCondition from "./pages/TermsAndCondition.jsx";
 import ProfileSetting from "./pages/ProfileSetting.jsx";
 import ContactUs from "./pages/ContactUs.jsx";
 import PointsPage from "./pages/PointsPage.jsx";
+import PaymentMethod from "./pages/PaymentMethod.jsx";
 function App() {
   //  function getFormattedToday() {
   //       const today = new Date();
@@ -60,14 +61,14 @@ function App() {
   //       return `${year}-${month}-${day}`;
   //   }
   function getFormattedToday() {
-  // const utcNow = new Date().toISOString();
-  const utcDate = new Date();
-  console.log('utcDate',utcDate)
-const istDate = new Date(utcDate.getTime() + (5.5 * 60 * 60 * 1000));
-console.log('isodate',istDate.toISOString()?.split('T')[0]);
+    // const utcNow = new Date().toISOString();
+    const utcDate = new Date();
+    console.log('utcDate', utcDate)
+    const istDate = new Date(utcDate.getTime() + (5.5 * 60 * 60 * 1000));
+    console.log('isodate', istDate.toISOString()?.split('T')[0]);
 
-  return istDate.toISOString()?.split('T')[0]
-}
+    return istDate.toISOString()?.split('T')[0]
+  }
   const [isloginorsignup, setisloginorsignup] = useState(false)
   const [tourStep, setTourStep] = useState(0);
   const [ShowNotification, setShowNotification] = useState(false);
@@ -75,18 +76,18 @@ console.log('isodate',istDate.toISOString()?.split('T')[0]);
   const [NotificationMessage, setNotificationMessage] = useState("")
   const [selecteddays, setselecteddays] = useState([])
   const [expanded, setExpanded] = useState(true);
-  const[HasNotification, setHasNotification]=useState(false)
+  const [HasNotification, setHasNotification] = useState(false)
 
   const [NotActive, setNotActive] = useState(false)
   const [ShowBot, setShowBot] = useState(false)
   const [bannerText, setbannerText] = useState("")
-  const [WeightUpdated,setWeightUpdated]=useState(false)
-  const [ShowTourGuide,setShowTourGuide]=useState(false)
+  const [WeightUpdated, setWeightUpdated] = useState(false)
+  const [ShowTourGuide, setShowTourGuide] = useState(false)
   // const bannerTextRef = useRef("");
 
   const [useDiffBannerText, setuseDiffBannerText] = useState(false);
   let { data, refetch, isLoading, error } = useGetUserDetailsQuery({ Id: null })
-const {data:UserWeight,isLoading:LoadingUserWeight,refetch:refetchUserWt,isError:ErrorGettingWeight}=useGetUserWeightChartQuery({TodaysDate:getFormattedToday()})
+  const { data: UserWeight, isLoading: LoadingUserWeight, refetch: refetchUserWt, isError: ErrorGettingWeight } = useGetUserWeightChartQuery({ TodaysDate: getFormattedToday() })
 
   function RouteWatcher() {
     const location = useLocation();
@@ -104,22 +105,22 @@ const {data:UserWeight,isLoading:LoadingUserWeight,refetch:refetchUserWt,isError
         // bannerTextRef.current='Now Select The Days You Want to workout and click on Save and Next'
 
 
-      } if(location.pathname=='/Community'){
+      } if (location.pathname == '/Community') {
         setbannerText('Buy Premium to access Social Tab')
 
 
       }
-      if(location.pathname=='/Nutrition'){
+      if (location.pathname == '/Nutrition') {
         setbannerText('Buy Premium to access Nutrition Tab')
 
 
       }
-        if(location.pathname=='/Profile'){
+      if (location.pathname == '/Profile') {
         setbannerText('Update Your Profile ')
 
 
       }
-      if(location.pathname=='/signup'||location.pathname=="/login"|| location.pathname=="/ForgotPassword  qa"){
+      if (location.pathname == '/signup' || location.pathname == "/login" || location.pathname == "/ForgotPassword  qa") {
         setShowBot(false)
       }
     }, [location.pathname]);
@@ -128,24 +129,24 @@ const {data:UserWeight,isLoading:LoadingUserWeight,refetch:refetchUserWt,isError
   }
   useEffect(() => {
     console.log('data from APP.jsx', data?.Detail[0]?.LoginCount)
-    if (data?.Detail && data?.Detail[0]?.LoginCount < 2 && data?.Detail[0]?.CustomWorkoutPlanActivated!=true ) {
+    if (data?.Detail && data?.Detail[0]?.LoginCount < 2 && data?.Detail[0]?.CustomWorkoutPlanActivated != true) {
       setShowTourGuide(true)
       setShowBot(true)
 
 
-    }else if(WeightUpdated==false){
+    } else if (WeightUpdated == false) {
       setShowTourGuide(false)
       setShowBot(true)
 
     }
   }, [data])
-  
-  useEffect(()=>{
-    if(UserWeight && UserWeight?.Data){
-setShowBot(false)
+
+  useEffect(() => {
+    if (UserWeight && UserWeight?.Data) {
+      setShowBot(false)
 
     }
-  },[UserWeight])
+  }, [UserWeight])
   // function isTokenExpired() {
   //   const token = localStorage.getItem("token");
   //   if (!token) return true;
@@ -167,21 +168,21 @@ setShowBot(false)
   //   }
   // }
   function isTokenExpired() {
-  const token = localStorage.getItem("token");
-  if (!token) return true;
+    const token = localStorage.getItem("token");
+    if (!token) return true;
 
-  try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
 
-    // If JWT has no expiration, consider it VALID
-    if (!payload.exp) return false;
+      // If JWT has no expiration, consider it VALID
+      if (!payload.exp) return false;
 
-    const currentTime = Date.now() / 1000;
-    return payload.exp < currentTime;
-  } catch {
-    return true;
+      const currentTime = Date.now() / 1000;
+      return payload.exp < currentTime;
+    } catch {
+      return true;
+    }
   }
-}
 
 
   // useEffect
@@ -207,7 +208,7 @@ setShowBot(false)
     const navigate = useNavigate();
 
     useEffect(() => {
-      const publicRoutes = ["/login", "/signup","/ForgotPassword"];
+      const publicRoutes = ["/login", "/signup", "/ForgotPassword"];
       if (publicRoutes.includes(location.pathname)) return; // ✅ Skip check for login/signup
 
       if (isTokenExpired()) {
@@ -239,18 +240,18 @@ setShowBot(false)
     <Router>
       <RouteWatcher></RouteWatcher>
 
-      <MyContext.Provider value={{HasNotification, setHasNotification, ShowNotification, setShowNotification, NotificatonType, setNotificatioinType, NotificationMessage, setNotificationMessage, selecteddays, setselecteddays }}>
+      <MyContext.Provider value={{ HasNotification, setHasNotification, ShowNotification, setShowNotification, NotificatonType, setNotificatioinType, NotificationMessage, setNotificationMessage, selecteddays, setselecteddays }}>
         {/* <TourGuide> */}
         <BannerContext.Provider value={{ bannerText, setbannerText, useDiffBannerText, setuseDiffBannerText }}>
 
 
-          <div  className="container">
-            <div  className="MainLayoutContainer">
-            {/* <button onClick={()=>{enablePush()}}>Enable Notification</button> */}
+          <div className="container">
+            <div className="MainLayoutContainer">
+              {/* <button onClick={()=>{enablePush()}}>Enable Notification</button> */}
 
-             <ToastContainer  toastStyle={{ width: "80%",top:'1rem' }} position="top-center" />
+              <ToastContainer toastStyle={{ width: "80%", top: '1rem' }} position="top-center" />
 
-            
+
               {/* <button onClick={() => setTourStep(1)}>Start App Tour</button>  */}
               {ShowNotification && <Notification type={NotificatonType} message={NotificationMessage} onClose={() => { setShowNotification(false) }} ></Notification>}
 
@@ -271,10 +272,11 @@ setShowBot(false)
                   <Route path="/ProfileSetting" element={< ProfileSetting></ProfileSetting>}></Route>
                   <Route path="/TermsAndCondition" element={<TermsAndCondition></TermsAndCondition>}></Route>
                   <Route path="/PointsPage" element={<PointsPage></PointsPage>}></Route>
+                  <Route path="/PaymentMethod" element={<PaymentMethod></PaymentMethod>}></Route>
 
                   {/* /PointsPage */}
 
-              
+
 
                   <Route path="/WeightHistory" element={< WeightHistoryChart />} />
                   <Route path="/SpecificPlanWorkoutHistory" element={< SpecificPlanWorkoutHistory />} />
@@ -282,9 +284,9 @@ setShowBot(false)
                   <Route path="/MessagePage" element={<MessagePage />} />
                   {/* ContactUs */}
                   <Route path="/ContactUs" element={<ContactUs></ContactUs>}></Route>
-                  <Route path="/Premium/PushPullLegPlan" element={<PremiumPlanContainer/>} />
+                  <Route path="/Premium/PushPullLegPlan" element={<PremiumPlanContainer />} />
 
-                 
+
 
 
                   {/* /WorkoutHistory */}
@@ -309,7 +311,7 @@ setShowBot(false)
                 {/* {ShowBot && <FuturisticRobotBanner refetchUserWt={refetchUserWt} setShowTourGuide={setShowTourGuide} ShowTourGuide={ShowTourGuide} WeightUpdated={WeightUpdated} expanded={expanded}  setExpanded={setExpanded}  bannerText={bannerText} />} */}
 
 
-                
+
 
                 <NavBar isLoginSignUp={isloginorsignup} Active={NotActive} NotActive={NotActive}></NavBar>
               </TokenChecker>
