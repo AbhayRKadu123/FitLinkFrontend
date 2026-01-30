@@ -34,12 +34,28 @@ export const UserApi = createApi({
             query: ({ Id }) => `/User/getUserDetail?Id=${Id}`
 
         }),
+        // GetAllPointHistoryOptions
+        GetAllPointHistoryOptions:builder.query({
+            query: ({ Option }) => `/User/GetAllPointHistoryOptions?Option=${Option}`
+
+        }),
+        // /GetAllPointHistoryData
+         GetAllPointHistoryData:builder.query({
+            query: ({ Option }) => `/User/GetAllPointHistoryData?Option=${Option}`
+
+        }),
+        GetPaymentMethods: builder.query({
+            query: ({PayMentOption }) => `/User/HandleGetPaymentMethods?PayMentOption=${PayMentOption}`
+
+        }),
+        // /HandleGetPaymentMethods
 
         // getUserDetailLogin
         GetUserDetailLogin: builder.query({
             query: ({ Id }) => `/User/getUserDetailLogin?Id=${Id}`
 
         }),
+
         GetUserFeed: builder.query({
             query: () => '/User/GetUserFeed'
         }),
@@ -54,6 +70,24 @@ export const UserApi = createApi({
             query: ({ UserId, OtherUserId }) => `/User/GetAllUserConversation?UserId=${UserId}&&OtherUserId=${OtherUserId}`
         }),
 
+        // /HandleUpdatePaymentMethod
+        // /HandleDeletePaymentMethod
+        HandleDeletePaymentMethod:builder.mutation({
+              query: ({ Id }) => ({
+                url: `/User/HandleDeletePaymentMethod`,      // your backend API endpoint
+                method: 'DELETE',        // sending data
+                body: { Id: Id },      // data to send in request body
+            }),
+        }),
+        HandleUpdatePaymentMethod:builder.mutation({
+ query: ({ _id,paymentoption, Id,
+    number}) => ({
+                url: `/User/HandleUpdatePaymentMethod`,      // your backend API endpoint
+                method: 'PUT',        // sending data
+                body: {PaymentMethodId: _id,paymentoption:paymentoption,Id:Id,number:number },      // data to send in request body
+            }),
+        }),
+        
         UpdateAddFriendUser: builder.mutation({
             query: ({ Id }) => ({
                 url: `/User/AddFriendUser`,      // your backend API endpoint
@@ -128,6 +162,14 @@ export const UserApi = createApi({
                 body: Data,      // data to send in request body
             }),
         }),
+        // /HandleAddPaymentMethod
+        HandleAddPaymentMethod: builder.mutation({
+            query: (Data) => ({
+                url: `/User/HandleAddPaymentMethod`,      // your backend API endpoint
+                method: 'POST',        // sending data
+                body: Data,      // data to send in request body
+            }),
+        }),
         UpdatePassword: builder.mutation({
             query: ({ username, email }) => ({
                 url: `/User/UpdatePassword`,      // your backend API endpoint
@@ -166,4 +208,4 @@ export const UserApi = createApi({
 
     })
 })
-export const {useSendQueryMutation,useGenerateCouponCodeMutation,useGetReferalCodeQuery, useGetProfileSettingUsersDataQuery, useUpdateProfileSettingMutation, useHandleChangePasswordMutation, useVerifyOtpMutation, useUpdatePasswordMutation, useGetUserDetailLoginQuery, useUploadImageMutation, useHandleDeleteMessageMutation, useGetAllUserConversationQuery, useGetUserNotificationQuery, useGetAllFriendRequestQuery, useUpdateAddFriendUserMutation, useGetUserDetailsQuery, useGetUserFeedQuery, useGetReplyMessageQuery } = UserApi;
+export const {useGetAllPointHistoryDataQuery,useGetAllPointHistoryOptionsQuery,useHandleDeletePaymentMethodMutation,useHandleUpdatePaymentMethodMutation,useGetPaymentMethodsQuery,useHandleAddPaymentMethodMutation,useSendQueryMutation,useGenerateCouponCodeMutation,useGetReferalCodeQuery, useGetProfileSettingUsersDataQuery, useUpdateProfileSettingMutation, useHandleChangePasswordMutation, useVerifyOtpMutation, useUpdatePasswordMutation, useGetUserDetailLoginQuery, useUploadImageMutation, useHandleDeleteMessageMutation, useGetAllUserConversationQuery, useGetUserNotificationQuery, useGetAllFriendRequestQuery, useUpdateAddFriendUserMutation, useGetUserDetailsQuery, useGetUserFeedQuery, useGetReplyMessageQuery } = UserApi;

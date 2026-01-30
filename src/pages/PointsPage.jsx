@@ -4,15 +4,17 @@ import { useEffect, useState } from "react"
 import ProgressBar from "../components/ProgressBarComponent"
 import { useGetUserDetailsQuery } from "../features/api/UserApi"
 import { toast } from "react-toastify"
+import { useNavigate } from "react-router-dom"
 
 function PointConversionCard({ amount = 0, Inr = 0, Convert, Points }) {
+    const navigate=useNavigate();
 
     const percentage = (Points / amount) * 100;
     console.log(percentage)
 
 
 
-    return <div className="PointConversionCard">
+    return <div onClick={()=>{navigate("/DetailPointCnversionScreen")}} className="PointConversionCard">
         <div className="PointConversionCardTop">
             <img src="Images/money-bag.png"></img>
             <span>

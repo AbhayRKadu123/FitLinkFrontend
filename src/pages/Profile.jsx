@@ -135,6 +135,8 @@ export default function Profile() {
         <div className="ProfileMainSection">
             <div className="Settingheading"><h4>Setting</h4></div>
             <div className="SettingOptions">
+                <ProfileOption OnClick={() => navigate("/all-point-history")} Title={'All Point History'}></ProfileOption>
+
                 <ProfileOption OnClick={() => navigate("/WorkoutHistory")} Title={'Workout History'}></ProfileOption>
                 <ProfileOption OnClick={() => navigate("/WeightHistory")} Title={'Weight History'}></ProfileOption>
                 <ProfileOption OnClick={() => navigate("/PaymentMethod")} Title={'Payment-Methods'}></ProfileOption>

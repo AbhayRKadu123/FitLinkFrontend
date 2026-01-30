@@ -1,21 +1,35 @@
 .PaymentMethodContainer{
     width: 100%;
     height: 90%;
+    background-color: white;
+
 }
 .PaymentMethodInnerContainer{
     width: 100%;
     height: 80%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
+    background-color: white;
 }
 .PaymentOptionCard{
 
     width: 80%;
-    height: 25%;
-    border: 1px solid black;
+    min-height: 80%;
+    height: auto;
+    /* border: 1px solid black; */
+    border-radius: 5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15),
+            0 8px 24px rgba(0, 0, 0, 0.08);
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
 }
+
 .PaymentOptions{
  width: 100%;
     height: 10%;
@@ -33,6 +47,14 @@
     font-size: 0.8rem;
     color: purple;
     font-weight: 600;
+}
+.PaymentOptionDetail{
+    width: 70%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 .PaymentOptionpill{
     height: 55%;
@@ -53,4 +75,11 @@
 }
 .PaymentOptions::-webkit-scrollbar{
     display: none;
+}
+.PaymentOptionActive{
+    box-shadow:
+  0 3px 8px rgba(22, 101, 52, 0.28),
+  0 10px 30px rgba(22, 101, 52, 0.18);
+
+
 }

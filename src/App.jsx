@@ -38,6 +38,7 @@ import WeightHistoryChart from "./pages/WeightHistoryChart";
 import BannerContext from "../public/utils/BannerContext";
 import MessagePage from "./pages/MessagePage.jsx";
 import SpecificPlanWorkoutHistory from "./pages/SpecificPlanWorkoutHistory.jsx";
+import DetailPointCnversionScreen from "./pages/DetailPointCnversionScreen.jsx";
 import { ToastContainer } from 'react-toastify';
 import PremiumPlanContainer from "./pages/PremiumPlanExercisePlan.jsx";
 import 'react-toastify/dist/ReactToastify.css';
@@ -50,6 +51,7 @@ import ProfileSetting from "./pages/ProfileSetting.jsx";
 import ContactUs from "./pages/ContactUs.jsx";
 import PointsPage from "./pages/PointsPage.jsx";
 import PaymentMethod from "./pages/PaymentMethod.jsx";
+import AllPointHistory from "./pages/AllPointHistory.jsx";
 function App() {
   //  function getFormattedToday() {
   //       const today = new Date();
@@ -262,6 +264,7 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/login" element={< Login ></Login>}></Route>
                   <Route path="/signup" element={<SignUp></SignUp>}></Route>
+                  <Route path="/all-point-history" element={<AllPointHistory></AllPointHistory>}></Route>
                   <Route path="/ForgotPassword" element={<ForgotPasswordscreen></ForgotPasswordscreen>}></Route>
                   <Route path="/Community" element={<Community />} />
                   <Route path="/Nutrition" element={<Nutrition />} />
@@ -273,6 +276,8 @@ function App() {
                   <Route path="/TermsAndCondition" element={<TermsAndCondition></TermsAndCondition>}></Route>
                   <Route path="/PointsPage" element={<PointsPage></PointsPage>}></Route>
                   <Route path="/PaymentMethod" element={<PaymentMethod></PaymentMethod>}></Route>
+                  <Route path="/DetailPointCnversionScreen" element={<DetailPointCnversionScreen></DetailPointCnversionScreen>}></Route>
+
 
                   {/* /PointsPage */}
 
