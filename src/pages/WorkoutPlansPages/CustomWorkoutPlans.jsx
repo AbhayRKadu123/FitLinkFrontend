@@ -12,29 +12,33 @@ import Notification from "../../components/ToastNotification";
 import { useContext } from "react";
 import MyContext from "../../../public/utils/MyContext";
 import BannerContext from "../../../public/utils/BannerContext";
+import Exercisedetail from "../../components/Exercisedetail";
 
-import {useUpdateCustomWorkoutPlanMutation, useUpdateSelectedRoutinedaysMutation, useGetSelectedRoutineDaysQuery, useGetstoredselectedRoutineDaysQuery, useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation, useAddselectedRoutineDaysMutation } from "../../features/api/WorkoutApi";
+import { useGetRelatedExerciseDataQuery, useUpdateCustomWorkoutPlanMutation, useUpdateSelectedRoutinedaysMutation, useGetSelectedRoutineDaysQuery, useGetstoredselectedRoutineDaysQuery, useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation, useAddselectedRoutineDaysMutation } from "../../features/api/WorkoutApi";
 import { toast } from "react-toastify";
 
 export default function CustomWorkoutPlan({ setNotActive }) {
     const navigate = useNavigate();
     const [IsCustomWorkout, setIsCustomWorkout] = useState(false)
-    const [selectedday, setselectedday] = useState('')
+    const [selectedday, setselectedday] = useState('mon')
     const [CreateWorkoutPlan, setCreateWorkoutPlan] = useState(false)
     const [exercise, setexercise] = useState("")
     const [PlanCreatedSuccessfully, setPlanCreatedSuccessfully] = useState(false)
     const [PlanEditSuccessfully, setPlanEditSuccessfully] = useState(false)
     const [daysInitialized, setDaysInitialized] = useState(false);
-    const [selecteddays,setselecteddays,] = useState([]);
-    const [IsContinueEditing,setIsContinueEditing]=useState(false);
+    const [selecteddays, setselecteddays,] = useState([]);
+    const [IsContinueEditing, setIsContinueEditing] = useState(false);
+    const [debouncedExercise, setDebouncedExercise] = useState("")
+    const [showDetail, setshowDetail] = useState(false)
+    const [exercisedata, setexercisedata] = useState(null)
     // useAddselectedRoutineDaysMutation\
     const [AddSelectedRoutinedays, { data: AddSelectedRoutinedaysdata, error: errorAddSelectedRoutinedays, isLoading: AddSelectedRoutinedaysisLoading, isSuccess: AddSelectedRoutinedaysSuccess }] = useAddselectedRoutineDaysMutation();
     const [addWorkoutRoutine, { data, error: errorAddingWorkout, isLoading, isSuccess }] = useAddWorkoutRoutinMutation();
     const [UpdateUserActivePlan, { data: ActivePlan, error: Updatingerror, isLoading: ActivePlanLoading, isSuccess: PlanChanged }] = useUpdateUserActiveWorkoutPlanMutation();
     const [DeleteRoutinMutation, { data: deleteroutin, error: errordeleting, isLoading: Deleting, isSuccess: DataDeleted }] = useDeleteRoutineMutation();
     // useUpdateCustomWorkoutPlanMutation
-    const [UpdateCustomWorkoutPlan, { data: UpdateCustomWorkoutPlandata, error: UpdateCustomWorkoutPlanerror, isLoading:UpdateCustomWorkoutPlanloading, isSuccess: UpdateCustomWorkoutPlansuccess }] = useUpdateCustomWorkoutPlanMutation();
-
+    const [UpdateCustomWorkoutPlan, { data: UpdateCustomWorkoutPlandata, error: UpdateCustomWorkoutPlanerror, isLoading: UpdateCustomWorkoutPlanloading, isSuccess: UpdateCustomWorkoutPlansuccess }] = useUpdateCustomWorkoutPlanMutation();
+    const { data: RelatedExercise, isLoading: LoadingExercise } = useGetRelatedExerciseDataQuery({ Val: debouncedExercise })
     // const [UpdateRoutin, { data: UpdatedRoutin, isSuccess: RoutinUpdated }] = useUpdateWorkoutRoutinMutation();
     const { data: GetExerciseData, refetch, error: errorgettingworkout, isError, isSuccess: dataFetched } = useGetUserWorkoutRoutinQuery();
     const { data: GetUserDetail, error: ErrorLoadingUserDetails, isSuccess: LoadingUserDetailSuccessfull, refetch: RefetchGetUserDetail } = useGetUserDetailsQuery({ Id: null });
@@ -46,13 +50,29 @@ export default function CustomWorkoutPlan({ setNotActive }) {
             navigate("/login")
         }
     }, [navigate])
-    useEffect(()=>{
-        if(UpdateCustomWorkoutPlansuccess){
+    useEffect(() => {
+        if (UpdateCustomWorkoutPlansuccess) {
             toast.success("Workout routine updated successfully !")
             setIsContinueEditing(false);
         }
 
-    },[UpdateCustomWorkoutPlansuccess])
+    }, [UpdateCustomWorkoutPlansuccess])
+    useEffect(() => {
+        // toast.warning(`debouncedExercise is ${debouncedExercise}`)
+        console.log("Debounce exercise=", debouncedExercise)
+
+    }, [debouncedExercise])
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedExercise(exercise)
+        }, 500)
+
+        return () => clearTimeout(timer)
+    }, [exercise])
+
+    useEffect(() => {
+        console.log("RelatedExercise", RelatedExercise?.message)
+    }, [RelatedExercise])
 
     useEffect(() => {
         if (
@@ -138,36 +158,37 @@ export default function CustomWorkoutPlan({ setNotActive }) {
             setNotificationMessage('Plan Created Successfully')
         }
     }, [isSuccess, refetch, setShowNotification, setNotificatioinType, setNotificationMessage])
-   
 
-    function GetFormattedFormData(Data){
-        function FilterId(data){
+
+    function GetFormattedFormData(Data) {
+        function FilterId(data) {
             return {
- Title:data?.Title,
-day:data?.day,
-exercises:data?.exercises
+                Title: data?.Title,
+                day: data?.day,
+                exercises: data?.exercises
             }
 
         }
         return {
             mon: FilterId(Data?.mon),
-        tue:FilterId(Data?.tue),
-        wed:FilterId(Data?.wed),
-        thur: FilterId(Data?.thur),
-        fri: FilterId(Data?.fri),
-        sat: FilterId(Data?.sat),
-        sun: FilterId(Data?.sun)
+            tue: FilterId(Data?.tue),
+            wed: FilterId(Data?.wed),
+            thur: FilterId(Data?.thur),
+            fri: FilterId(Data?.fri),
+            sat: FilterId(Data?.sat),
+            sun: FilterId(Data?.sun)
         }
 
     }
+
 
     useEffect(() => {
         console.log('GetFormattedFormData', GetFormattedFormData(GetExerciseData?.result))
         console.log('formData', formData)
         // if GetExerciseData?.result is not null -> custom workout exists
         if (GetExerciseData?.result != null) {
-            setformData((prev)=>{
-return GetFormattedFormData(GetExerciseData?.result)
+            setformData((prev) => {
+                return GetFormattedFormData(GetExerciseData?.result)
 
             })
             setIsCustomWorkout(true)
@@ -284,10 +305,10 @@ return GetFormattedFormData(GetExerciseData?.result)
         }
     })
 
-    useEffect(() => {
-        console.log('formData-', data)
-    }, [data])
 
+    useEffect(() => {
+        console.log("formData", formData)
+    }, [formData])
     return <div className="CustomWorkoutPlanContainer">
         {/* <Outlet></Outlet> */}
         <div onClick={() => {
@@ -305,16 +326,15 @@ return GetFormattedFormData(GetExerciseData?.result)
                         id={GetExerciseData?.result?._id}
                         key={key}
                         day={key}
-                        ExerciseList={value.exercises}
-                        Title={value.Title}
+                        ExerciseList={value?.exercises}
+                        Title={value?.Title}
                         refetch={refetch}
                         PlanEditSuccessfully={PlanEditSuccessfully}
                         setPlanEditSuccessfully={setPlanEditSuccessfully}
                     />
                 ))}
-
                 <Button label={Deleting ? "Deleting Routin" : 'Delete Workout Routin'} disabled={Deleting} onClick={() => { deleteuserroutin(GetExerciseData?.result?._id) }}></Button>
-                <Button label={'Continue editing workout'} disabled={Deleting} onClick={() => {setCreateWorkoutPlan(true); setIsContinueEditing(true); console.log("Continue setting custom workout routien") }}></Button>
+                <Button label={'Continue editing workout'} disabled={Deleting} onClick={() => { setCreateWorkoutPlan(true); setIsContinueEditing(true); console.log("Continue setting custom workout routien") }}></Button>
 
                 {GetUserDetail?.Detail?.[0]?.planName && GetUserDetail?.Detail?.[0]?.planName === "CustomPlan"
                     ? <h4 style={{ color: 'black' }}>Plan Activated</h4>
@@ -355,28 +375,46 @@ return GetFormattedFormData(GetExerciseData?.result)
                                     })
                                 }}
                             ></Input>
+                            {/* { RelatedExercise?.message?.sort((a, b) => {
+                                let aMatch = formData[selectedday].includes(a.name);
+                            let bMatch = formData[selectedday].includes(b.name);
+
+                            return bMatch - aMatch;
+});} */}
+
 
                             <List
                                 title={'Exercise List'}
-                                items={[...(formData[selectedday]?.exercises || [])]}
+                                // items={[...(formData[selectedday]?.exercises || [])]}
+                                items={RelatedExercise?.message || []}
+                            setshowDetail={setshowDetail}
+                            exercisedata={exercisedata}
+                            setexercisedata={setexercisedata}
+                            selectedday={selectedday}
+                            formData={formData}
+                            setformData={setformData}
+                            setexercise={setexercise}
                             />
+
+                            <Exercisedetail showDetail={showDetail} setshowDetail={setshowDetail} exercisedata={exercisedata} setexercisedata={setexercisedata}></Exercisedetail >
 
 
                             <Input label={'Enter ExerciseName'} placeholder={'Enter ExerciseName'} onChange={(event) => { setexercise(event.target.value) }} value={exercise} ></Input>
 
-                            <Button label={'Add Exercise'} onClick={() => {
-                                if (exercise.trim() === "") return; // avoid empty input
+                            {/* <Button label={'Add Exercisess'} onClick={() => {
+                                // if (exercise.trim() === "") return; // avoid empty input
 
-                                setformData((prev) => ({
-                                    ...prev,
-                                    [selectedday]: {
-                                        ...prev[selectedday],
-                                        exercises: [...(prev[selectedday]?.exercises || []), exercise] // append new exercise safely
-                                    }
-                                }));
+                                // setformData((prev) => ({
+                                //     ...prev,
+                                //     [selectedday]: {
+                                //         ...prev[selectedday],
+                                //         exercises: [...(prev[selectedday]?.exercises || []), exercise] // append new exercise safely
+                                //     }
+                                // }));
+                                console.log("selected days", selectedday)
 
                                 setexercise("");
-                            }} ></Button>
+                            }} ></Button> */}
 
                         </div>
                         <div className="AddExerciseSaveBtn">
@@ -391,11 +429,11 @@ return GetFormattedFormData(GetExerciseData?.result)
                             }} label={'Prev'}></Button>
 
                             <Button
-                                label={GetExerciseData?.result?'Update':isLoading ? 'Saving..' : 'Save'}
+                                label={GetExerciseData?.result ? 'Update' : isLoading ? 'Saving..' : 'Save'}
                                 // GetExerciseData?.result
                                 variant="outline"
                                 disabled={isLoading}
-                                onClick={GetExerciseData?.result?async()=>{console.log("Update workout",await UpdateCustomWorkoutPlan({Id:GetExerciseData?.result?._id,formData:formData}))}:async () => {
+                                onClick={GetExerciseData?.result ? async () => { console.log("Update workout", await UpdateCustomWorkoutPlan({ Id: GetExerciseData?.result?._id, formData: formData })) } : async () => {
                                     if (isLoading == true) return
                                     if (selecteddays.length === 0) {
                                         // Using Alert component as in original (kept as JSX call as original did, but better would be to show real UI)
@@ -408,7 +446,7 @@ return GetFormattedFormData(GetExerciseData?.result)
 
                                         return;
                                     };
-                                    if (!formData[selectedday]?.exercises || formData[selectedday].exercises.length === 0) {
+                                    if (!formData[selectedday]?.exercises || formData[selectedday]?.exercises?.length === 0) {
                                         // alert("please add some exercise")
                                         toast.error("please add some exercise")
                                         return;
