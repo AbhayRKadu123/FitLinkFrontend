@@ -1,4 +1,6 @@
-import "../styles/LogWorkoutNewScreen.css"
+// import "styles/LogWorkoutNewScreen.css"
+import "../styles/log-workout-new-screen.css"
+
 import CommonHeader from "../components/CommonHeader"
 import HeadingContainer from "../components/HeadingContainer"
 import { useEffect, useState } from "react"
