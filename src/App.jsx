@@ -52,6 +52,7 @@ import ContactUs from "./pages/ContactUs.jsx";
 import PointsPage from "./pages/PointsPage.jsx";
 import PaymentMethod from "./pages/PaymentMethod.jsx";
 import AllPointHistory from "./pages/AllPointHistory.jsx";
+import LogWorkoutNewScreen from "./pages/LogWorkoutNewScreen.jsx";
 function App() {
   //  function getFormattedToday() {
   //       const today = new Date();
@@ -298,7 +299,9 @@ function App() {
                   <Route path="/CustomWorkoutPlan" element={<CustomWorkoutPlan setNotActive={setNotActive}></CustomWorkoutPlan>}>
 
                   </Route>
-                  <Route path="/LogWorkoutScreen" element={<LogWorkoutScreen></LogWorkoutScreen>}></Route>
+                  <Route path="/LogWorkoutScreen" element={<LogWorkoutNewScreen></LogWorkoutNewScreen>}></Route>
+
+                  {/* <Route path="/LogWorkoutScreen" element={<LogWorkoutScreen></LogWorkoutScreen>}></Route> */}
                   <Route path="/DetailWorkoutHistory" element={<DetailWorkoutHistory></DetailWorkoutHistory>}></Route>
                   <Route path="/UserDetail" element={< UserDetails></ UserDetails>}></Route>
                   <Route path="/AllNotification" element={<AllNotification></AllNotification>}></Route>
