@@ -6,7 +6,7 @@ export default function HeadingContainer({isColorBlack,Title}){
                 <img
                     onClick={() => navigate(-1)}
                     style={{ width: "1.5rem", height: "1.5rem", cursor: "pointer" }}
-                    src="Images/left-arrow.png"
+                    src={isColorBlack?"Images/backwhite.png":"Images/left-arrow.png"}
                     alt="back"
                 />
                 <h4 style={{ color:isColorBlack? "white":"black", marginLeft: "0.5rem", fontSize: "1.5rem" }}>
