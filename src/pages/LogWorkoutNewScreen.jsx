@@ -7,12 +7,18 @@ import HeadingContainer from "../components/HeadingContainer"
 import { useEffect, useState } from "react"
 import Input from "../components/Input"
 import Button from "../components/Button"
-import { useGetWorkoutSessoinQuery, useAddWorkoutSessionMutation,useGetDailySessionQuery,useUpdateWorkoutSessionMutation, } from "../features/api/WorkoutApi"
+import {  useGetWorkoutSessoinQuery,
+    useAddWorkoutSessionMutation,
+    useGetDailySessionQuery,
+    useUpdateWorkoutSessionMutation,
+    useGetLastSessionHistoryQuery,
+    useGetAllExercisesLastSessionHistoryQuery } from "../features/api/WorkoutApi"
+import ViewWorkoutHistory from "../components/ViewWorkoutHistory";
 import { useSearchParams } from "react-router-dom"
 import LoadingSpinner from "../components/LoadingSpinner"
 import { toast } from "react-toastify"
 // import 
-function LogWorkoutExerciseNewCard({ Title, openOptionname, OptionOpen, OnClick, SessionObject, ind, setSessionObject,handleInputChange }) {
+function LogWorkoutExerciseNewCard({ Title,setCurrentexerise, openOptionname, OptionOpen, OnClick, SessionObject, ind, setSessionObject,handleInputChange }) {
     return <><div className="LogWorkoutNewCard">
         <h3>{Title}</h3>
         <span className="DropDown">
@@ -99,11 +105,16 @@ export default function LogWorkoutNewScreen() {
     const ReqDay = searchParams.get("ReqDay");
     let [OptionOpen, setOptionopen] = useState(false);
     let [openOptionname, setOpenOptionname] = useState("");
+    const [SessionTitle,setSessionTitle]=useState(null);
+    const [Currentexerise,setCurrentExercise]=useState(null);
     const [SessionObject, setSessionObject] = useState(null);
+    const [showDetail,setshowDetail]=useState(false);
     const [addWorkout, { isLoading: isSaving, isSuccess: saveSuccess, error: saveError }] =
         useAddWorkoutSessionMutation();
          const [updateWorkout, { isLoading: isupdating, isSuccess: updateSuccess, error: updateError }] =
                 useUpdateWorkoutSessionMutation();
+                    const { data: GetLastSessionHistory, isLoading: isSessionHistoryLoading, isError } = useGetLastSessionHistoryQuery({ SessionTitle: SessionTitle, Currexercise: Currentexerise, Day: ReqDay })
+                
     //     const [SessionObject,setSessionObject]=useState(
     // {
     //     isCompleted: false,
@@ -121,6 +132,7 @@ export default function LogWorkoutNewScreen() {
     //     }]
     // }
     //     );
+    
     const {
         data: workoutData,
         isLoading: isWorkoutLoading,
@@ -166,6 +178,15 @@ export default function LogWorkoutNewScreen() {
     useEffect(() => {
         console.log("SessionObject", SessionObject)
     }, [SessionObject])
+     useEffect(() => {
+            if (workoutData?.result?.Title) {
+                setSessionTitle(workoutData?.result?.Title.trim())
+    
+            }
+        }, [workoutData])
+        useEffect(()=>{
+console.log("GetLastSessionHistory",GetLastSessionHistory?.result[0]?.exercises)
+        },[GetLastSessionHistory])
     useEffect(()=>{
 console.log("dailySession",dailySession?.getworkoutsession
 )
@@ -248,13 +269,18 @@ console.log("dailySession",dailySession?.getworkoutsession
 
 
     return <div className="LogWorkoutNewScreencontainer">
-        <HeadingContainer isColorBlack={true} Title={"Chest workout"}></HeadingContainer>
+        <HeadingContainer isColorBlack={true} Title={SessionTitle}></HeadingContainer>
         <div className="Logworkoutnewscreeninnercontainer">
+            <ViewWorkoutHistory exerciseName={Currentexerise} ExerciseData={null} showDetail={showDetail}  setshowDetail={setshowDetail} data={GetLastSessionHistory}></ViewWorkoutHistory>
             {(isWorkoutLoading ||isDailySessionLoading)&& <LoadingSpinner></LoadingSpinner>}
             {!isDailySessionLoading&&workoutData?.result?.exercises.map((ele, index) => {
-                return <LogWorkoutExerciseNewCard Title={ele} openOptionname={openOptionname} OptionOpen={OptionOpen} OnClick={() => {
+                return <LogWorkoutExerciseNewCard Title={ele} setCurrentexerise={setCurrentExercise} openOptionname={openOptionname} OptionOpen={OptionOpen} OnClick={() => {
                     setOpenOptionname(ele);
+                    setCurrentExercise(ele);
                     setOptionopen((prev) => {
+                        if(prev==true){
+                            setCurrentExercise(null)
+                        }
                         return !prev;
                     })
                 }} SessionObject={SessionObject} setSessionObject={setSessionObject} ind={index} handleInputChange={handleInputChange}></LogWorkoutExerciseNewCard>
@@ -270,6 +296,13 @@ console.log("dailySession",dailySession?.getworkoutsession
                updateworkout();
 
             }} label={"Update workout"}></Button>}
+            <span style={{width:'100%',height:'5px'}}></span>
+              { <Button disabled={!Currentexerise}   onClick={() => {
+
+            //    updateworkout();
+            setshowDetail(true);
+
+            }} label={"View History"}></Button>}
 
 
         </div>
