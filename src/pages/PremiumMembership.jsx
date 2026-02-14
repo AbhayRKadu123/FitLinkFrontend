@@ -5,7 +5,7 @@ import { toast } from "react-toastify"
 function PremiumMembershipCard({title,price}){
     return <div className="PremiumMembershipCard">
         <div className="premiumcardheadertop">
-            <img style={{width:"1.5rem",height:"1.5rem"}} src="public/Images/crown.png"></img>
+            <img style={{width:"1.5rem",height:"1.5rem"}} src="Images/crown.png"></img>
             <h3>{title}</h3>
         </div>
         <div className="premiumcardheadermiddle">
@@ -14,9 +14,9 @@ function PremiumMembershipCard({title,price}){
         </div>
         <div className="premiumcardheaderbottom">
             <ul>
-                <li><img style={{width:'0.8rem',height:"0.8rem"}} src="public/Images/check-mark-gold.png"></img><p>access to advance workout plan</p></li>
-                <li><img style={{width:'0.8rem',height:"0.8rem"}} src="public/Images/check-mark-gold.png"></img><p>access to advance workout plan</p></li>
-                <li><img style={{width:'0.8rem',height:"0.8rem"}} src="public/Images/check-mark-gold.png"></img><p>access to advance workout plan</p></li>
+                <li><img style={{width:'0.8rem',height:"0.8rem"}} src="Images/check-mark-gold.png"></img><p>access to advance workout plan</p></li>
+                <li><img style={{width:'0.8rem',height:"0.8rem"}} src="Images/check-mark-gold.png"></img><p>access to advance workout plan</p></li>
+                <li><img style={{width:'0.8rem',height:"0.8rem"}} src="Images/check-mark-gold.png"></img><p>access to advance workout plan</p></li>
 
             </ul>
         </div>
