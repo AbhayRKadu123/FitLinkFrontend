@@ -1,0 +1,114 @@
+.PremiumMembershipContainer{
+    width: 100%;
+    height: 90%;
+}
+.PremiumMembershipinnercontainer{
+    width: 100%;
+    height: 90%;
+}
+.PremiumMembershipinnercontainer{
+    width: 100%;
+    height: 90%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items:center ;
+    overflow-y: auto;
+}
+.PremiumMembershipCard{
+    width: 70%;
+    height: 50%;
+    /* background-color: antiquewhite; */
+    border: 1px solid rgb(212, 205, 205);
+    border-radius: 1.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+   box-shadow: 5px 5px 9px 0px rgb(101, 100, 100);
+   flex-shrink: 0;
+
+}
+.premiumcardheadertop{
+    width: 100%;
+    height: 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid rgb(194, 187, 187);
+}
+.premiumcardheadermiddle{
+    width: 100%;
+    height: 25%;
+    border-bottom: 1px solid rgb(194, 187, 187);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+
+
+}
+.premiumcardheadermiddle>p{
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: black;
+}
+.PremiumcardPrice{
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: black;
+
+}
+.premiumcardheadertop>h3{
+    font-size: 1.1rem;
+    font-weight: 600;
+    color:black
+}
+.premiumcardheaderbottom{
+    width: 100%;
+    height: 35%;
+}
+.premiumcardheaderbottom>ul{
+    padding-top: 0.3rem;
+}
+.premiumcardheaderbottom>ul>li>p{
+    color: black;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+.premiumcardheaderbottom>ul>li{
+    display: flex;
+    justify-content: space-evenly;
+    margin: 0.2rem;
+}
+.premiumcardheaderbottombtn {
+    width: 100%;
+    height: 15%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+}
+
+.premiumcardheaderbottombtn > button {
+    width: 40%;
+    height: 80%;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.premiumcardheaderbottombtn > button:first-child {
+    background-color: #ffb400;
+    color: white;
+    border: none;
+}
+
+.premiumcardheaderbottombtn > button:last-child {
+    background-color: transparent;
+    border: 2px solid #ffb400;
+    color: #ffb400;
+}

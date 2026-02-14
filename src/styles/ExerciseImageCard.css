@@ -1,0 +1,35 @@
+.exercise-card-horizontal {
+  display: flex;
+  align-items: center;
+  width: 95%;
+  max-width: 500px;
+  background: rgb(174, 174, 174);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.exercise-card-horizontal:hover {
+  transform: translateY(-4px);
+}
+
+.exercise-gif {
+  width: 30%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.exercise-content {
+  padding: 16px;
+  flex: 1;
+}
+
+.exercise-name {
+  color: black;
+  font-size: 18px;
+  margin: 0;
+}

@@ -53,6 +53,8 @@ import PointsPage from "./pages/PointsPage.jsx";
 import PaymentMethod from "./pages/PaymentMethod.jsx";
 import AllPointHistory from "./pages/AllPointHistory.jsx";
 import LogWorkoutNewScreen from "./pages/LogWorkoutNewScreen.jsx";
+import ExerciseLibrary from "./pages/ExerciseLibrary.jsx";
+import PremiumMembership from "./pages/PremiumMembership.jsx";
 function App() {
   //  function getFormattedToday() {
   //       const today = new Date();
@@ -264,6 +266,7 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/login" element={< Login ></Login>}></Route>
+                  <Route path="/PremiumMembership" element={<PremiumMembership></PremiumMembership>}></Route>
                   <Route path="/signup" element={<SignUp></SignUp>}></Route>
                   <Route path="/all-point-history" element={<AllPointHistory></AllPointHistory>}></Route>
                   <Route path="/ForgotPassword" element={<ForgotPasswordscreen></ForgotPasswordscreen>}></Route>
@@ -285,6 +288,9 @@ function App() {
 
 
                   <Route path="/WeightHistory" element={< WeightHistoryChart />} />
+                  {/* ExerciseLibrary */}
+                  <Route path="/ExerciseLibrary" element={< ExerciseLibrary />} />
+
                   <Route path="/SpecificPlanWorkoutHistory" element={< SpecificPlanWorkoutHistory />} />
                   {/* MessagePage */}
                   <Route path="/MessagePage" element={<MessagePage />} />

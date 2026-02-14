@@ -41,11 +41,12 @@
     flex-shrink: 0;
     /* overflow-y: auto; */
     color: black;
-    padding: 0.5rem;
+    /* padding: 0.5rem; */
     display: flex;
     flex-direction: column;
     background-color: white;
     align-items: flex-start;
+    justify-content: center;
 
 }
 .exercise-card {
