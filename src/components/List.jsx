@@ -28,7 +28,7 @@ export default function List({ title, items = [], onItemClick, icon, setshowDeta
                         >
                             {/* {icon && <span className="ListIcon">{icon}</span>}
                             <div className="ListText">{item}</div> */}
-                            <div  className="ExerciseListItem">
+                            <div  className="OldExerciseListItem">
                                 <img
                                 onClick={() => {  setexercisedata(item); setshowDetail(true) }}
                                     src={item.gifUrl||"Images/failed.png"}

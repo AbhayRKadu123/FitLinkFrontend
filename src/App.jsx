@@ -55,6 +55,7 @@ import AllPointHistory from "./pages/AllPointHistory.jsx";
 import LogWorkoutNewScreen from "./pages/LogWorkoutNewScreen.jsx";
 import ExerciseLibrary from "./pages/ExerciseLibrary.jsx";
 import PremiumMembership from "./pages/PremiumMembership.jsx";
+import CustomWorkoutPlannew from "./pages/CustomWorkoutPlannew.jsx";
 function App() {
   //  function getFormattedToday() {
   //       const today = new Date();
@@ -303,8 +304,11 @@ function App() {
 
                   {/* /WorkoutHistory */}
                   <Route path="/CustomWorkoutPlan" element={<CustomWorkoutPlan setNotActive={setNotActive}></CustomWorkoutPlan>}>
-
                   </Route>
+
+{/* /CustomNew
+ */}
+                  <Route path="CustomWorkoutPlannew" element={<CustomWorkoutPlannew setNotActive={setNotActive}></CustomWorkoutPlannew>}></Route>
                   <Route path="/LogWorkoutScreen" element={<LogWorkoutNewScreen></LogWorkoutNewScreen>}></Route>
 
                   {/* <Route path="/LogWorkoutScreen" element={<LogWorkoutScreen></LogWorkoutScreen>}></Route> */}

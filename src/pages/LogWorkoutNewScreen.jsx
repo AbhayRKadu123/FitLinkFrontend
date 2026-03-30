@@ -262,6 +262,9 @@ console.log("dailySession",dailySession?.getworkoutsession
     
             // setIsActionRunning(false);
         }
+        useEffect(()=>{
+console.log("CurrExerciseDetail?.Currentexerise",CurrExerciseDetail?.Currentexerise)
+        },[showDetail])
 
 
     return <div className="LogWorkoutNewScreencontainer">

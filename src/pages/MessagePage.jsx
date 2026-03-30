@@ -304,7 +304,7 @@ setistypingmsg(null)
 
     }
     return <div className="MessagePageContainer">
-        <CommonHeader Title={'Messaging'} ShowBadge={false} SocketStatus={SocketStatus}></CommonHeader>
+        <CommonHeader Title={'Messaging'} ShowBadge={false} SocketStatus={SocketStatus} VideoCall={true}></CommonHeader>
          {istyping&&<div style={{color:'black',display:'flex',justifySelf:'flex-start',padding:"0.5rem"}}><p style={{display:'flex',justifyContent:'flex-start',fontSize:'1rem'}}>{istyping}</p></div>}
 
         <div className="MessageContainer">

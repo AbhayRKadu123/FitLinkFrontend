@@ -148,7 +148,9 @@ export default function Home() {
                 )}
 
             </div>}
-            <WorkoutPlanCard Url={'/Images/CustomWorkoutRoutin.jpg'} Title={'Custom Workout'} Description={'Create Your Own Custom plan and follow it'} comingSoon={false} NavGateTo={'/CustomWorkoutPlan'}></WorkoutPlanCard>
+            <WorkoutPlanCard Url={'/Images/CustomNew.png'} Title={'Custom Workout'} Description={'Create Your Own Custom plan and follow it'} comingSoon={false} NavGateTo={'/CustomWorkoutPlannew'}></WorkoutPlanCard>
+
+            <WorkoutPlanCard Url={'/Images/CustomWorkoutRoutin.jpg'} Title={'Personal Training Mode'} Description={'Unlock a custom workout plan built for you by certified trainers.'} comingSoon={false} NavGateTo={'/CustomWorkoutPlan'}></WorkoutPlanCard>
             <WorkoutPlanCard Url={'/Images/PushPullLegs.jpg'} Title={'Push Pull Leg'} Description={'Follow Push Pull Leg Split to Gain Maximum Size and strength'} comingSoon={true} NavGateTo={'/Premium/PushPullLegPlan'}></WorkoutPlanCard>
             <WorkoutPlanCard Url={'/Images/fst7backgroundimage.jpeg'} Title={'Fst7 Workout'} Description={'Unlock new levels of size with the FST-7 (Fascia Stretch Training) system'} comingSoon={true}></WorkoutPlanCard>
             {/* High-Intensity Training (HIT) */}

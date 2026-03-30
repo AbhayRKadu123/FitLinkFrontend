@@ -15,14 +15,15 @@ function ExerciseHistoryPill({reps,weight}){
 
 }
 export default function ViewWorkoutHistory({ exerciseName,ExerciseData,showDetail, setshowDetail,data }) {
-    // console.log('data=',data?.result[0].exercises[0].sets)
+    console.log('data=',data?.result[0]?.exercises[0]?.sets)
+    console.log('GetLastSessionHistory data is as followed',data);
     if (!showDetail) return null;
     return <div className="modalOverlay">
         <div className="modalContent">
-            <h3 className="modalTitle">{`${data?.result[0]?.exercises[0]?.name||data[0]?.exercises.name} History`}</h3>
+            <h3 className="modalTitle">{`${ exerciseName||data?.result[0]?.exercises[0]?.name||data[0]?.exercises.name} History`}</h3>
 
             <div className="ExerciseHistoryContainer">
-                {data?.result==0?<h2 style={{color:"black"}}>No History Available</h2>:<>
+                {data?.result[0]?.exercises[0]?.sets==undefined||data?.result[0]?.exercises[0]?.sets==0?<h2 style={{color:"black"}}>No History Available</h2>:<>
                 
 {data?.result[0]?.exercises[0]?.sets?.map((ele,i)=>{
     console.log(ele.reps)
