@@ -26,13 +26,13 @@ function LogWorkoutExerciseNewCard({ setshowexerciseDetail,Title,setCurrentexeri
             <img onClick={OnClick} style={{ width: '2rem', height: "2rem" }} src={OptionOpen && openOptionname.trim() == Title.trim() ? "Images/chevron.png" : "Images/up-arrows.png"}></img>
         </span>
     </div>
-        {OptionOpen && openOptionname.trim() == Title.trim() && <SetHolder setshowexerciseDetail={setshowexerciseDetail} handleInputChange={handleInputChange} SessionObject={SessionObject} openOptionname={openOptionname} ind={ind} setSessionObject={setSessionObject}></SetHolder>}
+        {OptionOpen && openOptionname.trim() == Title.trim() && <SetHolder setshowexerciseDetail={setshowexerciseDetail} handleInputChange={handleInputChange} SessionObject={SessionObject} openOptionname={openOptionname} ind={ind} setSessionObject={setSessionObject} ></SetHolder>}
 
     </>
 
 }
-function SetHolder({handleInputChange,setshowexerciseDetail, openOptionname, ind, SessionObject, setSessionObject }) {
-    console.log(SessionObject?.exercises[ind]?.sets)
+function SetHolder({handleInputChange,setshowexerciseDetail, openOptionname, ind, SessionObject, setSessionObject}) {
+    console.log("SessionObject?.exercises[ind]?.sets",SessionObject?.exercises)
     return <> <div className="SetHolderContainer">
         <div className="SetsContainer">
             {SessionObject?.exercises[ind]?.sets?.map((ele, idx) => {
@@ -118,8 +118,8 @@ export default function LogWorkoutNewScreen() {
                     const { data: GetLastSessionHistory, isLoading: isSessionHistoryLoading, isError } = useGetLastSessionHistoryQuery({ SessionTitle: SessionTitle, Currexercise: Currentexerise, Day: ReqDay })
                 
     useEffect(()=>{
-console.log("Currentexerise",Currentexerise)
-    },[Currentexerise])
+console.log("SessionObject",SessionObject)
+    },[SessionObject])
     
     const {
         data: workoutData,
@@ -146,6 +146,9 @@ console.log("Currentexerise",Currentexerise)
             error: dailySessionError,
             refetch
         } = useGetDailySessionQuery(dailyQueryArgs);
+        useEffect(()=>{
+console.log("dailySession",dailySession)
+        },[dailySession])
     useEffect(() => {
         console.log("workoutData", workoutData?.result)
         // set
@@ -187,6 +190,11 @@ console.log("GetLastSessionHistory",GetLastSessionHistory?.result[0]?.exercises)
 console.log("dailySession",dailySession?.getworkoutsession
 )
     },[dailySession])
+    useEffect(()=>{
+// workoutData
+console.log("workoutData",workoutData
+)
+    },[workoutData])
     useEffect(() => {
         if(saveSuccess){
         toast.success("Workout saved successfully!")

@@ -2,246 +2,253 @@
     width: 100%;
     height: 90%;
     background-color: black;
-
 }
-*::-webkit-scrollbar {
-    width: 0px;
-}
-
-.NewCustomWorkplaninnercontainer{
+.NewCustomWorkoutPlanInnerContainer{
     width: 100%;
     height: 90%;
-     background-color: black;
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-
 }
-.NewCustomSetsContainer{
+.NewCustomWorkoutUpperSection{
     width: 100%;
-    height: 87%;
-}
-.ExerciseInputContainer{
-    width: 80%;
-    height: 13%;
-    display: flex;
+    height: 5%;
+    display:flex;
+    justify-content: space-between;
+    /* padding-left: 0.2rem;
+    padding-right: 0.2rem; */
     align-items: center;
+    /* background-color: antiquewhite; */
+}
+.NewCustomWorkoutSecondSection{
+    width: 100%;
+    height: 10%;
     display: flex;
     justify-content: space-evenly;
-    /* justify-content: center;s */
+    align-items: center;
 }
-.TodaysSessionContainer{
-     width: 70%;
-    height: 50%;
-    background-color: #2b2b2b; /* dark matte gray */
-    color: #f0f0f0; /* light text for contrast */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -55%);
-    border-radius: 2rem;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); /* soft shadow for depth */
-    padding: 1rem;
+.NewCustomWorkoutSecondSection>span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.NewCustomWorkoutSecondSection>span>img{
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-right: 0.2rem;
+    display: flex;
+    
+}
+.NewCustomWorkoutSecondSection>span>p{
+    font-size: 0.8rem;
+    font-weight: 300;
+    margin-left: 0.1rem;
+    vertical-align: center;
+}
+.FolderContainer{
+    width: 100%;
+    height: 85%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     align-items: center;
-    gap: 1rem; /* spacing between inner elements */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    justify-content: flex-start;
     overflow-y: auto;
 }
-.TodaysSessionContainer>.Nosession{
-    width: 90%;
-    height: 90%;
+.FolderComponent{
+    width: 80%;
+    height: 10%;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    
+}
+.FolderComponent>p{
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgb(154, 152, 152);
+}
+.FolderComponentOptions{
+    width: 0.7rem;
+    height: 0.7rem;
+    margin-left: auto;
+    margin-right: 0.3rem;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+.NewCustomWorkplanCreateFoldercontainer{
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    background-color: rgb(52, 51, 51,0.4);
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.NewCustomWorkplanCreateFolderInnercontainer{
+    width: 70%;
+    height: 30%;
+    background-color: rgb(43, 42, 42);
+    border-radius: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.NewCustomWorkplanCreateFolderInnercontainer>p{
+
+    font-size: 1rem;
+    font-weight: 400;
+}
+.ChooseFolderContainer{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1000;
+    background-color: rgb(52, 51, 51,0.4);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+.ChooseFolderFolderList{
+    width: 70%;
+    height: 60%;
+    margin-top: 0.5rem;
+    border-radius: 0.6rem;
+    background-color: black;
+    border-radius: 0.4rem;
+    margin-bottom: 0.8rem;
+       box-shadow: 1px 1px rgb(34, 34, 34);
+       display: flex;
+       flex-direction: column;
+       justify-content: flex-start;
+       align-items: center;
+       padding-top: 0.4rem;
+       overflow-y: auto;
+
 
 }
-.Nosession>h1{
-    color: white;
-    font-weight: 600;
-    font-size: 1rem;
-    text-align: center;
-    margin-bottom: 0.3rem;
-}
-.Nosession>img{
-    width: 6rem;
-    height: 6rem;
-    margin-top: 0.3rem;
-}
-.SessionContainer{
-    width: 94%;
-    height: 90%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    
-    overflow-y: auto;
-    margin-right: 0.2rem;
-    margin-left: 0.2rem;
-   
-}
-.SessionContainerExercise>img{
-    width: 1.2rem;
-    height: 1.2rem;
-    margin-right: 0.5rem;
-}
-.SessionContainerExercise>p{
-    margin-left: 0.5rem;
-}
-.CustomWorkoutTitle{
-    font-size: 2rem;
-    font-weight: 400;
-}
-.ExerciseListContainer {
-    width: 70%;
-    height: 50%;
-    background-color: #2b2b2b; /* dark matte gray */
-    color: #f0f0f0; /* light text for contrast */
+.FolderSettingScreenContainer{
+    width: 100%;
+    height: 100%;
+    background-color: rgb(52, 51, 51,0.4);
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -55%);
-    border-radius: 2rem;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); /* soft shadow for depth */
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 1rem; /* spacing between inner elements */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    overflow-y: auto;
     z-index: 1000;
-    
-    /* scroll if content exceeds height */
-}
-.OuterSessionContainerExercise{
-     width: 100%;
-    min-height: 20%;
-    height: auto;
-    border-radius: 1.2rem;
-    border: 1px solid black;
-    background-color: black;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    margin-top: 0.3rem;
-     flex-shrink: 0;
-    margin-bottom: 0.3rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding-top: 0.2rem;
-    padding-bottom: 0.2rem;
-}
-.SessionContainerExerciseSets{
-    width:90%;
-    min-height: 100px;
-    
-    height: auto;
-     border-radius: 1.2rem;
-    border: 1px solid black;
-    background-color: black;
-    margin-top: 0.2rem;
-    margin-bottom: 0.2rem;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-
-    /* border-top: 1px solid white;
-    background-color: #f0f0f0; */
-    padding-top: 0.1rem;
-    padding-bottom: 0.1rem;
-    flex-shrink: 0;
-
+    align-items:center;
 }
-.SessionContainerExerciseSetsSetContainer{
-    width: 100%;
-    height: 2rem;
+.FolderSettingScreenInnerContainer{
+    width: 60%;
+    height: 50%;
+    background-color:black;
+    box-shadow: 1px 1px rgb(34, 34, 34);
+    border-radius: 0.4rem;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content:space-evenly;
+    justify-content:space-evenly
+
+}
+.FolderSettingScreenInnerContainer>span{
+     box-shadow: 1px 1px rgb(34, 34, 34);
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     border: 1px solid whitesmoke;
+     width: 70%;
+     height: 10%;
+     border-radius: 0.3rem;
+}
+.FolderSettingScreenInnerContainer>span>p{
+    font-size: 0.7rem;
+}
+.ChooseFolderFolderList>h5{
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 0.4rem;
+}
+.FolderSettingScreenContainerCancelBtn{
+     border: 1px solid whitesmoke;
+    margin-top: 0.2rem;
+}
+.ChooseFolderContainerFolder{
+    width: 65%;
+    height: 10%;
+   background-color: rgb(52, 51, 51,0.8);
+        box-shadow: 1px 1px rgb(34, 34, 34);
+    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
     flex-shrink: 0;
-    margin-top: 0.5rem;
-    margin-bottom: 0.7rem;
-    
-}
-/* .SessionContainerExerciseSetsSetContainer>input{
-    width: 40%;
-    height: 90%;
-} */
-.SessionContainerExercise{
-    
-    width: 100%;
-    height: 100%;
-    max-height: 2rem;
-    border-radius: 1.2rem;
-    border: 1px solid black;
-    background-color: black;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    margin-top: 0.3rem;
-     flex-shrink: 0;
-    margin-bottom: 0.3rem;
+    border-radius: 0.5rem;
+    border: 1px solid whitesmoke;
     display: flex;
+    justify-content: space-evenly;
     align-items: center;
-    justify-content: space-between;
-   
 }
-/* .ExerciseInputContainer */
-
-/* Optional scrollbar styling for dark theme */
-.ExerciseListContainer::-webkit-scrollbar {
-    width: 0px;
-}
-
-.ExerciseListContainer::-webkit-scrollbar-thumb {
-    background-color: #555; 
-    border-radius: 3px;
-}
-
-.ExerciseListContainer::-webkit-scrollbar-track {
-    background-color: #2b2b2b;
-}
-
-.ExerciseListItem {
-    background-color: #3a3a3a; /* slightly lighter than container for contrast */
-    color: #f0f0f0; /* light text for readability */
-    padding: 0.8rem 1rem;
-    border-radius: 1rem; /* soft rounded corners */
-    display: flex;
-    width: 87%;
-    height: 15%;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    font-weight: 500;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-.ExerciseListItem:hover {
-    background-color: #505050; /* slightly lighter on hover */
-    transform: translateY(-2px); /* subtle lift effect */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-}
-
-/* Optional: if item has an icon or GIF image */
-.ExerciseListItem img {
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 0.8rem;
-    object-fit: cover;
-}
-.Selected{
-    background-color: rgb(157, 224, 157,0.2);
-}
-.AddExerciseBox>img{
+.ChooseFolderContainerFolder>img{
     width: 1rem;
     height: 1rem;
 }
+.ChooseFolderContainerFolder>p{
+    font-size: 0.8rem;
+    font-weight: 400;
+
+}
+.ChooseFolderFolderListCancelBtn{
+    border: 1px solid whitesmoke;
+    margin-top: 0.2rem;
+}
+.NewCustomWorkplanCreateFolderInnercontainer>button{
+width: 80%;
+    height: 15%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+    box-shadow: 1px 1px rgb(34, 34, 34);
+    /* background-color: rgb(73, 73, 212); */
+}
+.NewCustomWorkplanCreateFolderInnercontainer>button>p{
+     font-size: 0.8rem;
+    font-weight: 300;
+}
+.NewCustomWorkplanCreateFolderInnercontainer>input{
+    width: 80%;
+    height: 15%;
+    border-radius: 0.4rem;
+      background-color: rgb(43, 42, 42);
+    box-shadow: 1px 1px rgb(96, 95, 95);
+    border: 2px solid rgb(74, 73, 73);
+    text-align: center;
+
+}
+.FolderComponent>img{
+    width: 0.7rem;
+    height: 0.7rem;
+    margin-right: 0.3rem;
+}
+.NewCustomWorkoutSecondSection>span{
+    width: 40%;
+    height: 70%;
+    border-radius: 0.5rem;
+    background-color: rgb(48, 45, 45);
+    margin-left: 0.4rem;
+    margin-right: 0.4rem;
+    box-shadow: 0.1rem 0.1rem rgb(20, 20, 20);
+}
+.NewCustomWorkoutUpperSection>span{
+    font-size: 1rem;
+    font-weight: 400;
+    margin-left: 0.6rem;
+    margin-right: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.NewCustomWorkoutUpperSection>span>img{
+    width: 1.2rem;
+    height: 1.2rem;
+}
+/* .NewCustomWorkoutUpperSection{
+    dis
+} */
