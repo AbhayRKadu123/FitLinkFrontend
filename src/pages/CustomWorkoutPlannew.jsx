@@ -3,17 +3,21 @@ import HeadingContainer from "../components/HeadingContainer"
 import Input from "../components/Input"
 import { useEffect, useState } from "react"
 import Button from "../components/Button"
-import { useGetRelatedExerciseDataQuery,useGetCustomWorkoutFoldersQuery,useAddCustomWorkoutAddFolderMutation} from "../features/api/WorkoutApi"
+import { useDeleteCustomWorkoutFolderMutation, useGetRelatedExerciseDataQuery, useGetCustomWorkoutFoldersQuery, useAddCustomWorkoutAddFolderMutation } from "../features/api/WorkoutApi"
 import Exercisedetail from "../components/Exercisedetail"
 import { toast } from "react-toastify"
 // import Input from "../components/Input"
 
-function FolderComponent({ name, isDefault, setFolderSettingScreen }) {
+function FolderComponent({ name, Id, isDefault, setFolderSettingScreen, Folderid, setFolderid,setFolderName,FolderName }) {
+
     return <div className="FolderComponent">
         <img src="Images/CustomWorkoutImages/RightArrow.png"></img>
 
         <p>{name}</p>
         {!isDefault && <img onClick={() => {
+            // console.log(Id)
+            setFolderid(Id);
+            setFolderName(name);
             setFolderSettingScreen((prev) => {
                 return !prev;
             })
@@ -27,35 +31,59 @@ export default function CustomWorkoutPlannew() {
     const [openCreateFolder, setopenCreateFolder] = useState(false);
     const [ChooseFolder, setChooseFolderScreen] = useState(false);
     const [FolderSettingScreen, setFolderSettingScreen] = useState(false);
-    const [FolderName,setFolderName]=useState("");
+    const [FolderName, setFolderName] = useState("");
+    const [Folderid, setFolderid] = useState(null);
+    const [openRenameFolder, setopenRenameFolder] = useState(false);
+
     // useGetCustomWorkoutFoldersQuery
-    const {data,isSuccess:Loaded,isLoading,refetch,isError,error} = useGetCustomWorkoutFoldersQuery();
+    const { data, isSuccess: Loaded, isLoading, refetch, isError, error } = useGetCustomWorkoutFoldersQuery();
     // useAddCustomWorkoutAddFolderMutation
-   const [AddFolder, { data:AddFolderData, isLoadingAddFolderLoading, isError:AddFolderError, error:AddFoldererr, isSuccess }] =
-  useAddCustomWorkoutAddFolderMutation();
-  useEffect(()=>{
-if( isSuccess){
-    toast.success("folder created successfully !")
-    setopenCreateFolder(false)
-    refetch();
-}
-  },[ isSuccess])
-  useEffect(()=>{
-if(AddFoldererr){
-    console.log("AddFoldererr",AddFoldererr)
-    toast.error(AddFoldererr?.data?.message||"server side error!")
-}
-  },[AddFoldererr])
-  useEffect(()=>{
-console.log("data",data?.Folders)
-  },[Loaded])
+    const [AddFolder, { data: AddFolderData, isLoadingAddFolderLoading, isError: AddFolderError, error: AddFoldererr, isSuccess }] =
+        useAddCustomWorkoutAddFolderMutation();
+    const [DeleteFolder, { data: DeleteFolderData, isLoadingDeleteFolderLoading, isError: DeleteFolderError, error: DeleteFoldererr, isSuccess: DeletionSuccessfull }] =
+        useDeleteCustomWorkoutFolderMutation();
+    //   usedeleteCustomWorkoutFolderMutation
+    useEffect(() => {
+        if (isSuccess) {
+            toast.success("folder created successfully !")
+            setopenCreateFolder(false)
+            refetch();
+        }
+    }, [isSuccess])
+    useEffect(() => {
+        console.log("Folderid", Folderid);
+    }, [Folderid])
+    useEffect(() => {
+        if (FolderSettingScreen == false) {
+            setFolderid(null)
+            setFolderName("")
+        }
+    }, [FolderSettingScreen])
+    useEffect(() => {
+        if (AddFoldererr) {
+            console.log("AddFoldererr", AddFoldererr)
+            toast.error(AddFoldererr?.data?.message || "server side error!")
+        }
+    }, [AddFoldererr])
+    useEffect(() => {
+        console.log("data", data?.Folders)
+    }, [Loaded])
+
+    useEffect(() => {
+        if (DeletionSuccessfull) {
+            console.log(DeleteFolderData)
+            setFolderSettingScreen(false);
+            refetch();
+            toast.success(DeleteFolderData?.message || "Folder Deleted successfully!")
+        }
+    }, [DeletionSuccessfull])
     return <div className="NewCustomWorkplancontainer">
         {FolderSettingScreen && <div className="FolderSettingScreenContainer">
             <div className="FolderSettingScreenInnerContainer">
                 <span><img src="Images/CustomWorkoutImages/sort.png"></img><p>Reorder folder</p></span>
-                <span><img src="Images/CustomWorkoutImages/edit.png"></img><p>Rename folder</p></span>
+                <span onClick={() => { setopenRenameFolder(true) }}><img src="Images/CustomWorkoutImages/edit.png"></img><p>Rename folder</p></span>
                 <span><img src="Images/CustomWorkoutImages/plus.png"></img><p>Add new Routine</p></span>
-                <span style={{border:"1px solid red",color:"red"}}><img src="Images/CustomWorkoutImages/Bin.png"></img><p>Delete folder</p></span>
+                <span onClick={async () => { await DeleteFolder(Folderid) }} style={{ border: "1px solid red", color: "red" }}><img src="Images/CustomWorkoutImages/Bin.png"></img><p>Delete folder</p></span>
 
             </div>
             <button onClick={() => {
@@ -66,14 +94,33 @@ console.log("data",data?.Folders)
         {openCreateFolder && <div className="NewCustomWorkplanCreateFoldercontainer">
             <div className="NewCustomWorkplanCreateFolderInnercontainer">
                 <p>Create New Folder</p>
-                <input value={FolderName} onChange={(event)=>{setFolderName(event.target.value)}}></input>
-                <button onClick={async()=>{
-                    await AddFolder({name:FolderName});
+                <input value={FolderName} onChange={(event) => { setFolderName(event.target.value) }}></input>
+                <button onClick={async () => {
+                    await AddFolder({ name: FolderName });
                     setFolderName("")
-                    
+
                 }} style={{ backgroundColor: 'rgb(73, 73, 212)' }}><p>Save</p></button>
                 <button onClick={() => {
                     setopenCreateFolder((prev) => {
+                        return !prev;
+                    })
+                }}><p>Cancel</p></button>
+
+
+            </div>
+        </div>}
+        {openRenameFolder && <div className="NewCustomWorkplanCreateFoldercontainer">
+            <div className="NewCustomWorkplanCreateFolderInnercontainer">
+                <p>Rename Folder</p>
+                <input value={FolderName} onChange={(event) => { setFolderName(event.target.value) }}></input>
+                <button onClick={async () => {
+                    // await AddFolder({ name: FolderName });
+                    console.log("updated folder name=",FolderName)
+                    setFolderName("")
+
+                }} style={{ backgroundColor: 'rgb(73, 73, 212)' }}><p>Save</p></button>
+                <button onClick={() => {
+                    setopenRenameFolder((prev) => {
                         return !prev;
                     })
                 }}><p>Cancel</p></button>
@@ -112,16 +159,16 @@ console.log("data",data?.Folders)
 
             </div>
             <div className="FolderContainer">
-                 <FolderComponent isDefault={true} name={"My Routine"} setFolderSettingScreen={setFolderSettingScreen}>
+                <FolderComponent isDefault={true} name={"My Routine"} setFolderSettingScreen={setFolderSettingScreen}>
 
                 </FolderComponent>
-                
-                {data?.Folders?.map((ele)=>{
-return <FolderComponent name={ele?.FolderName} setFolderSettingScreen={setFolderSettingScreen}>
 
-                </FolderComponent>
+                {data?.Folders?.map((ele) => {
+                    return <FolderComponent name={ele?.FolderName} Id={ele?._id} Folderid={Folderid} setFolderid={setFolderid} setFolderSettingScreen={setFolderSettingScreen} setFolderName={setFolderName} >
+
+                    </FolderComponent>
                 })}
-               
+
 
 
             </div>

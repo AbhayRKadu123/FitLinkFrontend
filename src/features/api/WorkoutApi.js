@@ -35,6 +35,8 @@ export const WorkoutApi = createApi({
       query: () => '/workout/getUserExercise'
 
     }),
+    // DeleteCustomWorkoutFolder
+    
     GetSelectedRoutineDays:builder.query({
       query:() =>`/workout/GetSelectedRoutineDays`
     }),
@@ -63,6 +65,7 @@ export const WorkoutApi = createApi({
       }),
       invalidatesTags: ["Workout"],
     }),
+   
 
     updateWorkoutRoutin: builder.mutation({
       query: (Data) => ({
@@ -227,11 +230,20 @@ AddProgressPhoto: builder.mutation({
     GetRelatedExerciseData:builder.query({
       // GetRelatedExerciseData
  query:({Val})=>`/Workout/GetRelatedExerciseData?Val=${Val}`
-    })
+    }),
+    deleteCustomWorkoutFolder: builder.mutation({
+  query: (id) => ({
+    url: `/workout/DeleteCustomWorkoutFolder/${id}`,
+    method: "DELETE",
+  }),
+  invalidatesTags: ["Workout"],
+}),
+
+    
 
   }),
  
 
 });
 
-export const {useAddCustomWorkoutAddFolderMutation,useGetCustomWorkoutFoldersQuery,useGetCurrentexeriseQuery,useGetRelatedExerciseDataQuery,useGetAllPointsSumQuery,useGetAllProgressPhotoQuery,useAddProgressPhotoMutation,useDeleteWorkoutRoutineExeriseMutation,useUpdateCustomWorkoutPlanMutation,useUpdateSelectedRoutinedaysMutation,useGetSelectedRoutineDaysQuery,useGetstoredselectedRoutineDaysQuery,useAddselectedRoutineDaysMutation,useGetAllExercisesLastSessionHistoryQuery,useGetLastSessionHistoryQuery,useUpdateDailyWorkoutSessionMutation,useGetUserProgressQuery,  useGetWorkoutBarChartDetailQuery,useGetWorkoutHistoryDetailQuery,useGetWorkoutHistoryQuery, useUpdateWorkoutSessionMutation, useGetDailySessionQuery, useGetWorkoutSessoinQuery, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation, useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutSessionMutation,useUpdateUserWorkoutHistoryMutation} = WorkoutApi;
+export const { useDeleteCustomWorkoutFolderMutation,useAddCustomWorkoutAddFolderMutation,useGetCustomWorkoutFoldersQuery,useGetCurrentexeriseQuery,useGetRelatedExerciseDataQuery,useGetAllPointsSumQuery,useGetAllProgressPhotoQuery,useAddProgressPhotoMutation,useDeleteWorkoutRoutineExeriseMutation,useUpdateCustomWorkoutPlanMutation,useUpdateSelectedRoutinedaysMutation,useGetSelectedRoutineDaysQuery,useGetstoredselectedRoutineDaysQuery,useAddselectedRoutineDaysMutation,useGetAllExercisesLastSessionHistoryQuery,useGetLastSessionHistoryQuery,useUpdateDailyWorkoutSessionMutation,useGetUserProgressQuery,  useGetWorkoutBarChartDetailQuery,useGetWorkoutHistoryDetailQuery,useGetWorkoutHistoryQuery, useUpdateWorkoutSessionMutation, useGetDailySessionQuery, useGetWorkoutSessoinQuery, useAddWorkoutRoutinMutation, useGetUserWorkoutRoutinQuery, useDeleteRoutineMutation, useUpdateWorkoutRoutinMutation, useUpdateUserActiveWorkoutPlanMutation, useAddWorkoutSessionMutation,useUpdateUserWorkoutHistoryMutation} = WorkoutApi;
